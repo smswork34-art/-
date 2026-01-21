@@ -17,47 +17,11 @@
             color: #1a1a1a;
             min-height: 100vh;
             padding: 16px;
-            position: relative;
-        }
-
-        /* Верхний бар с временем */
-        .status-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 44px;
-            background: transparent;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .time {
-            font-size: 15px;
-            font-weight: 600;
-            color: #1a1a1a;
-        }
-
-        .status-icons {
-            display: flex;
-            gap: 5px;
-        }
-
-        .status-icon {
-            width: 18px;
-            height: 18px;
-            background: #1a1a1a;
-            border-radius: 2px;
-            opacity: 0.8;
         }
 
         .container {
             max-width: 400px;
-            margin: 44px auto 80px;
+            margin: 0 auto;
             background: #ffffff;
             border-radius: 24px;
             overflow: hidden;
@@ -190,14 +154,14 @@
         .dots-container {
             width: 100%;
             height: 100%;
-            padding: 15px;
+            padding: 10px;
             display: grid;
-            gap: 10px;
+            gap: 8px;
         }
 
         .dot {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             background: white;
             border-radius: 50%;
             box-shadow: 
@@ -356,7 +320,7 @@
         .bet-controls {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 14px;
             margin-bottom: 28px;
         }
 
@@ -364,8 +328,8 @@
             background: white;
             border: 2px solid #e6f4ff;
             border-radius: 16px;
-            padding: 14px 8px;
-            font-size: 15px;
+            padding: 16px;
+            font-size: 16px;
             font-weight: 700;
             color: #2aabee;
             cursor: pointer;
@@ -388,12 +352,12 @@
 
         .play-button {
             width: 100%;
-            padding: 20px;
+            padding: 22px;
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
             border: none;
             border-radius: 20px;
             color: white;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -422,14 +386,14 @@
         .history {
             background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
             border-radius: 20px;
-            padding: 20px;
+            padding: 24px;
             border: 1px solid rgba(42, 171, 238, 0.15);
         }
 
         .history-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -443,8 +407,8 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 10px;
+            padding: 8px 16px;
+            border-radius: 12px;
             transition: all 0.2s;
         }
 
@@ -454,46 +418,46 @@
 
         .history-items {
             display: flex;
-            gap: 10px;
+            gap: 14px;
             overflow-x: auto;
-            padding-bottom: 8px;
+            padding-bottom: 10px;
             scrollbar-width: thin;
             scrollbar-color: #2aabee #e6f4ff;
         }
 
         .history-items::-webkit-scrollbar {
-            height: 4px;
+            height: 6px;
         }
 
         .history-items::-webkit-scrollbar-track {
             background: #e6f4ff;
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
         .history-items::-webkit-scrollbar-thumb {
             background: #2aabee;
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
         .history-item {
-            min-width: 50px;
-            height: 50px;
+            min-width: 60px;
+            height: 60px;
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 800;
             flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(42, 171, 238, 0.15);
+            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.15);
             border: 2px solid rgba(42, 171, 238, 0.1);
             transition: all 0.3s;
         }
 
         .history-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(42, 171, 238, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(42, 171, 238, 0.25);
         }
 
         .win { 
@@ -515,7 +479,7 @@
             right: 0;
             background: white;
             border-top: 1px solid #e6f4ff;
-            padding: 12px 20px;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-around;
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
@@ -526,14 +490,12 @@
             flex-direction: column;
             align-items: center;
             color: #888;
-            font-size: 11px;
-            gap: 4px;
+            font-size: 12px;
+            gap: 6px;
             cursor: pointer;
             transition: all 0.3s;
-            padding: 6px 12px;
-            border-radius: 12px;
-            flex: 1;
-            max-width: 80px;
+            padding: 8px 16px;
+            border-radius: 16px;
         }
 
         .nav-item:hover {
@@ -548,7 +510,7 @@
         }
 
         .nav-icon {
-            font-size: 22px;
+            font-size: 26px;
             transition: transform 0.3s;
         }
 
@@ -579,27 +541,26 @@
             animation: roll 1.2s linear forwards;
         }
 
-        /* Уведомление - как в скриншоте */
+        /* Уведомление */
         .notification {
             position: fixed;
-            top: 60px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
             background: white;
             color: #1a1a1a;
-            padding: 14px 28px;
-            border-radius: 25px;
+            padding: 16px 32px;
+            border-radius: 50px;
             font-weight: 600;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             z-index: 1000;
             transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             white-space: nowrap;
-            border: 1px solid rgba(42, 171, 238, 0.2);
+            border: 2px solid #e6f4ff;
             font-size: 16px;
             text-align: center;
-            min-width: 280px;
+            min-width: 300px;
             max-width: 90vw;
-            backdrop-filter: blur(10px);
         }
 
         .notification.win {
@@ -616,17 +577,6 @@
     </style>
 </head>
 <body>
-    <!-- Верхний статус бар -->
-    <div class="status-bar">
-        <div class="time" id="currentTime">8:55</div>
-        <div class="status-icons">
-            <div class="status-icon"></div>
-            <div class="status-icon"></div>
-            <div class="status-icon"></div>
-        </div>
-    </div>
-
-    <!-- Основной контейнер -->
     <div class="container">
         <!-- Header как в Telegram Wallet -->
         <div class="header">
@@ -635,7 +585,7 @@
             
             <div class="balance-card">
                 <div class="balance-label">Ваш баланс</div>
-                <div class="balance-amount" id="balanceAmount">
+                <div class="balance-amount">
                     1,500 <span>TON</span>
                 </div>
             </div>
@@ -715,7 +665,7 @@
             <div class="history">
                 <div class="history-title">
                     История игр
-                    <button class="history-refresh" id="refreshHistory">Обновить</button>
+                    <button class="history-refresh" id="refreshHistory">⟳ Обновить</button>
                 </div>
                 <div class="history-items" id="historyItems">
                     <!-- История будет добавляться динамически -->
@@ -750,9 +700,8 @@
         const playButton = document.getElementById('playButton');
         const betButtons = document.querySelectorAll('.bet-button');
         const historyItems = document.getElementById('historyItems');
-        const balanceAmount = document.getElementById('balanceAmount');
+        const balanceAmount = document.querySelector('.balance-amount');
         const refreshHistoryBtn = document.getElementById('refreshHistory');
-        const currentTime = document.getElementById('currentTime');
 
         // Переменные игры
         let currentBet = 10;
@@ -769,14 +718,6 @@
             5: 'rotateX(20deg) rotateY(-70deg)',
             6: 'rotateX(20deg) rotateY(200deg)'
         };
-
-        // Обновление времени
-        function updateTime() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            currentTime.textContent = `${hours}:${minutes}`;
-        }
 
         // Выбор ставки
         betButtons.forEach(button => {
@@ -860,7 +801,7 @@
             }, 10);
         }
 
-        // Обновление баланса (форматирование как в скриншоте - с пробелом)
+        // Обновление баланса
         function updateBalance(win) {
             const oldBalance = balance;
             
@@ -878,13 +819,11 @@
                 balanceAmount.style.transition = 'all 0.3s';
                 balanceAmount.style.transform = 'scale(1)';
                 balanceAmount.style.color = '#1a1a1a';
-                // Форматируем баланс как в скриншоте: "1 520 ТОН"
-                const formattedBalance = balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-                balanceAmount.innerHTML = `${formattedBalance} <span>TON</span>`;
+                balanceAmount.innerHTML = `${balance.toLocaleString()} <span>TON</span>`;
             }, 300);
         }
 
-        // Показать уведомление (как в скриншоте)
+        // Показать уведомление
         function showNotification(message, isWin) {
             const notification = document.createElement('div');
             notification.className = `notification ${isWin ? 'win' : 'lose'}`;
@@ -925,10 +864,10 @@
                 // Добавляем в историю
                 addToHistory(result, win);
                 
-                // Показываем результат (ТОЧНО как в скриншоте)
+                // Показываем результат
                 setTimeout(() => {
                     const message = win ? 
-                        `Вы выиграли ${currentBet * 2} TON!` : 
+                        `🎉 Вы выиграли ${currentBet * 2} TON!` : 
                         `Выпало ${result}. Повезет в следующий раз!`;
                     
                     showNotification(message, win);
@@ -968,18 +907,10 @@
             initialResults.forEach(item => {
                 addToHistory(item.result, item.win);
             });
-            
-            // Начальный баланс с форматированием
-            const formattedBalance = balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-            balanceAmount.innerHTML = `${formattedBalance} <span>TON</span>`;
         }
 
         // Установка начального положения кубика (грань 1)
         dice.style.transform = rotationMap[1];
-
-        // Обновляем время каждую минуту
-        updateTime();
-        setInterval(updateTime, 60000);
 
         // Запуск при загрузке
         initHistory();
