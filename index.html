@@ -102,7 +102,7 @@
             width: 100px;
             height: 100px;
             margin: 0 auto 28px;
-            perspective: 800px;
+            perspective: 600px;
             position: relative;
         }
 
@@ -113,7 +113,8 @@
             top: 0;
             left: 0;
             transform-style: preserve-3d;
-            transition: transform 0.8s ease-out;
+            transition: transform 1s ease-out;
+            transform: rotateX(20deg) rotateY(20deg);
         }
 
         .dice-face {
@@ -121,155 +122,398 @@
             width: 100px;
             height: 100px;
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-radius: 20px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0;
             backface-visibility: hidden;
-            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3),
-                        0 8px 20px rgba(42, 171, 238, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                inset 0 0 15px rgba(255, 255, 255, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+                0 5px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
 
-        /* Точки для кубика */
-        .dice-dots {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        /* Добавляем легкую тень на грани для объема */
+        .dice-face::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,0.1) 0%, 
+                rgba(255,255,255,0) 20%,
+                rgba(0,0,0,0.05) 80%, 
+                rgba(0,0,0,0.1) 100%);
+            border-radius: 12px;
+        }
+
+        /* Контейнер для точек */
+        .dots-container {
             width: 100%;
             height: 100%;
             padding: 15px;
-        }
-
-        .dot-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: grid;
+            gap: 10px;
         }
 
         .dot {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
             background: white;
             border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 
+                0 2px 3px rgba(0, 0, 0, 0.3),
+                inset 0 1px 2px rgba(255, 255, 255, 0.4);
+            justify-self: center;
+            align-self: center;
         }
 
         /* Расположение граней в 3D пространстве */
         .face-1 { 
-            transform: translateZ(70px);
+            transform: translateZ(50px);
         }
         .face-2 { 
-            transform: rotateY(90deg) translateZ(70px);
+            transform: rotateY(90deg) translateZ(50px);
         }
         .face-3 { 
-            transform: rotateX(90deg) translateZ(70px);
+            transform: rotateX(90deg) translateZ(50px);
         }
         .face-4 { 
-            transform: rotateX(-90deg) translateZ(70px);
+            transform: rotateX(-90deg) translateZ(50px);
         }
         .face-5 { 
-            transform: rotateY(-90deg) translateZ(70px);
+            transform: rotateY(-90deg) translateZ(50px);
         }
         .face-6 { 
-            transform: rotateY(180deg) translateZ(70px);
+            transform: rotateY(180deg) translateZ(50px);
         }
 
-        /* Распределение точек для каждой грани */
-        .face-1 .dice-dots {
-            justify-content: center;
-            align-items: center;
-        }
-        .face-1 .dot-row {
-            justify-content: center;
-        }
-
-        .face-2 .dice-dots {
-            justify-content: space-between;
-        }
-        .face-2 .dot-row:first-child .dot:first-child {
-            margin-right: auto;
-        }
-        .face-2 .dot-row:last-child .dot:last-child {
-            margin-left: auto;
+        /* Конфигурации точек для каждой грани */
+        /* Грань 1: одна точка в центре */
+        .face-1 .dots-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+            place-items: center;
         }
 
-        .face-3 .dice-dots {
-            justify-content: space-between;
+        /* Грань 2: две точки по диагонали */
+        .face-2 .dots-container {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows:;
+            grid-template-rows: 1fr 1fr;
         }
-        .face-3 .dot-row:first-child .dot:first-child {
-            margin-right: auto;
+        .face-2 . 1fr 1fr;
         }
-        .face-3 .dot-row:nth-child(2) {
-            justify-content: center;
+        .face-2 .dot:nth-child(1) {
+            grid-column: 1dot:nth-child(1) {
+            grid-column: 1;
+            grid-row: 1;
+            grid-row: 1;
         }
-        .face-3 .dot-row:last-child .dot:last-child {
-            margin-left: auto;
+        .face;
         }
-
-        .face-4 .dice-dots {
-            justify-content: space-between;
-        }
-        .face-4 .dot-row {
-            justify-content: space-between;
-        }
-
-        .face-5 .dice-dots {
-            justify-content: space-between;
-        }
-        .face-5 .dot-row:first-child,
-        .face-5 .dot-row:last-child {
-            justify-content: space-between;
-        }
-        .face-5 .dot-row:nth-child(2) {
-            justify-content: center;
+        .face-2 .dot:nth-child(-2 .dot:nth-child(2) {
+            grid-column: 2) {
+            grid-column: 2;
+            grid-row:2;
+            grid-row: 2;
         }
 
-        .face-6 .dice-dots {
-            justify-content: space-between;
+        /* Г 2;
         }
-        .face-6 .dot-row {
-            justify-content: space-between;
+
+        /* Грань 3: три точки по диагонали */
+        .face-3 .dots-container {
+            grid-template-columns: рань 3: три точки по диагонали */
+        .face-3 .dots-container {
+            grid-template-columns: 1fr 1fr 1fr1fr 1fr 1fr;
+            grid-template-rows;
+            grid-template-rows: 1fr 1fr : 1fr 1fr 1fr;
+        }
+        .face1fr;
+        }
+       -3 .dot:nth .face-3 .dot:nth-child(1) {
+            grid-column-child(1) {
+            grid-column: 1;
+            grid-row:: 1;
+            grid 1;
+        }
+       -row: 1;
+        }
+        .face-3 .dot .face-3 .dot:nth-child(2):nth-child(2) {
+            grid-column: 2;
+ {
+            grid-column: 2;
+            grid-row: 2;
+            grid-row: 2;
+               }
+        .face-3 }
+        .face-3 .dot:nth-child(3) .dot:nth-child(3) {
+            grid-column: 3;
+ {
+            grid-column: 3            grid-row: 3;
+       ;
+            grid-row: 3 }
+
+        /* Грань;
+        }
+
+        /* Грань 4: четыре точки в углах 4: четыре точки в */
+        .face-4 .dots-container {
+            grid углах */
+        .face-4 .dots-container {
+            grid-template-columns: 1-template-columns: 1fr 1fr;
+            grid-templatefr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+        .face--rows: 1fr 1fr;
+        }
+        .4 .dot {
+face-4 .dot {
+            justify-self: center;
+            align-self: center;
+        }
+        .            justify-self: center;
+            align-self: center;
+        }
+        .face-4 .dot:nth-child(1) {
+            grid-column: 1;
+            grid-rowface-4 .dot:nth-child(1) {
+            grid-column: 1;
+            grid-row: 1;
+       : 1;
+        }
+ }
+        .face-4 .        .face-4 .dot:ndot:nth-child(2) {
+th-child(2) {
+            grid            grid-column: 2;
+           -column: 2;
+            grid-row: 1;
+ grid-row: 1;
+        }
+        }
+        .face-4 .        .face-4 .dot:nth-child(3dot:nth-child(3) {
+            grid-column: 1;
+           ) {
+            grid-column: 1;
+            grid-row: 2;
+ grid-row: 2;
+        }
+        .face-        }
+        .face-4 .dot:nth-child(4) {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        /* Грань 5: пять точек (как на игральной кости) */
+        .face-5 .dots-container {
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+        }
+        .face-5 .dot:nth-child(1) {
+            grid-column: 4 .dot:nth-child(4) {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        /* Грань 5: пять точек (как на игральной кости) */
+        .face-5 .dots-container {
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+        }
+        .face-5 .dot:nth-child(1) {
+            grid-column1;
+            grid-row: 1;
+        }
+        .face-5 .dot:nth-child(2) {
+            grid-column: 3;
+            grid-row:: 1;
+            grid-row: 1;
+        }
+        .face-5 .dot:nth-child(2) {
+            grid-column: 3;
+            grid-row: 1;
+        }
+        1;
+        }
+        .face .face-5 .dot:nth-5 .dot:nth-child(-child(3) {
+           3) {
+            grid-column grid-column: 2;
+: 2;
+            grid            grid-row: 2-row: 2;
+        }
+       ;
+        }
+        .face-5 .face-5 .dot:nth-child(4) {
+            .dot:nth-child(4) grid-column: 1;
+            grid {
+            grid-column: -row: 3;
+        }
+       1;
+            grid-row: 3;
+        }
+        .face-5 .face-5 .dot .dot:nth-child(5):nth-child(5) {
+            grid-column: 3;
+            grid {
+            grid-column: 3;
+            grid-row:-row: 3;
+        }
+
+        /* Грань 3;
+        }
+
+        /* Грань 6: шесть 6: шесть точек в два точек в два ряда */
+        . ряда */
+        .face-6 .dots-container {
+            grid-templateface-6 .dots-container {
+            grid-template-columns: -columns: 1fr 11fr 1fr;
+            gridfr;
+            grid-template--template-rows: 1frrows: 1fr 1fr 1fr 1fr;
+ 1fr;
+        }
+        .face-6 .dot {
+            justify-self: center;
+            align-self: center;
+        }
+        .face-6 .dot:nth-child(1) {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .face-6 .dot:nth-child(2) {
+        }
+        .face-6 .dot {
+            justify-self: center;
+            align-self: center;
+        }
+        .face-6 .dot:nth-child(1) {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .face-6 .dot:nth-child(2) {
+            grid-column:            grid-column: 2;
+            grid-row: 1;
+        }
+        .face-6 .dot:nth-child(3) {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .face-6 .dot:nth-child(4) {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        .face-6 .dot:nth-child(3) {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .face-6 .dot:nth-child(4) {
+            grid-column: 2;
+            2;
+            grid-row: 2;
+        }
+        .face-6 .dot:nth-child grid-row: 2;
+        }
+        .face-6 .dot:n(5) {
+            grid-column:th-child(5) {
+            grid-column: 1;
+            1;
+            grid-row:  grid-row: 3;
+        }
+3;
+        }
+        .        .face-6 .face-6 .dot:nth-childdot:nth-child(6) {
+(6) {
+            grid-column:            grid-column: 2;
+            2;
+            grid-row grid-row: 3;
+: 3;
+        }
+
+        .bet-controls {
         }
 
         .bet-controls {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+            gap: 14            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 14px;
+            marginpx;
             margin-bottom: 28px;
         }
 
+        .bet-button-bottom: 28px;
+        }
+
         .bet-button {
+            background: {
             background: white;
-            border: 2px solid #e6f4ff;
-            border-radius: 16px;
-            padding: 16px;
+ white;
+            border:             border: 2px solid #2px solid #e6f4e6f4ff;
+            borderff;
+            border-radius: 16-radius: 16px;
+px;
+            padding:             padding: 16px;
             font-size: 16px;
-            font-weight: 700;
-            color: #2aabee;
+           16px;
+            font-size: 16px;
+            font-weight:  font-weight: 700;
+            color: #2aabee700;
+            color: #;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
+           2aabee;
+            cursor: pointer;
+            transition: all transition: all 0.3s cubic-bezier(0. 0.3s cubic-bezier(0.4, 04, 0, 0.2, 1);
+           , 0.2, 1);
+            box-shadow:  box-shadow: 0 4px0 4px 15px rgba 15px rgba(42, (42, 171,171, 238, 0.1);
+        }
+
+        . 238, 0.1);
         }
 
         .bet-button:hover {
+bet-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.2);
-            border-color: #2aabee;
+                       transform: translateY(-3px);
+            box-shadow:  box-shadow: 0 6px0 6px 20px rgba 20px rgba(42, (42, 171,171, 238 238, , 0.2);
+0.2);
+            border-color:            border-color: #2aab #2aabee;
+ee;
         }
 
+        .bet        }
+
         .bet-button.active {
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-color: #2aabee;
+-button.active {
+            background: linear            background: linear-gradient(135deg-gradient(135deg, #2a, #2aabeeabee 0%, #229ed 0%, #229ed9 9 100%);
+           100%);
+            border-color: # border-color: #2aabee;
             color: white;
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.3);
+            box2aabee;
+            color: white;
+            box-shadow:-shadow: 0 6px 20px rgba( 0 6px 42, 171, 238, 0.3);
         }
 
         .play-button {
             width: 100%;
             padding: 22px;
-            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            background: linear-gradient(135deg, #2aabee 0%,20px rgba(42, 171, 238, 0.3);
+        }
+
+        .play-button {
+            width: 100%;
+            padding: 22px;
+            background: linear-gradient(135deg, #2aabee  #229ed9 100%);
+            border0%, #229ed9: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(42, 171, 238 100%);
             border: none;
             border-radius: 20px;
             color: white;
@@ -277,15 +521,23 @@
             font-weight: 800;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(42, 171, 238, 0.3);
-            letter-spacing: 0.5px;
+            box-shadow: 0 8px 25px rgba(42, 0.3);
+            letter-spacing: 0., 171, 238, 0.3);
+            letter5px;
+            position: relative;
+            overflow: hidden;
+       -spacing: 0.5px;
             position: relative;
             overflow: hidden;
         }
 
+        }
+
         .play-button:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 35px rgba(42, 171, 238, 0.4);
+ .play-button:hover {
+            transform: translateY(-4px);
+            box            box-shadow: 0-shadow: 0 12 12px 35pxpx 35px rgba(42, rgba(42, 171, 238, 171, 238, 0 0.4);
         }
 
         .play-button:active {
@@ -300,36 +552,87 @@
 
         /* История */
         .history {
-            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            background.4);
+        }
+
+        .play-button:active {
+            transform: translateY(-1px);
+        }
+
+        .play-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* История */
+        .history {
+            background:: linear-gradient(135deg, #f8fbff 0%, #f0f7 linear-gradient(135deg, #f8fbff 0%, #ff 100%);
+            border-radiusf0f7ff : 20px;
+            padding: 24px;
+            border: 1px solid rgba(42100%);
             border-radius: 20px;
             padding: 24px;
-            border: 1px solid rgba(42, 171, 238, 0.15);
+            border, 171, 238, : 1px solid rgba(42, 171, 238, 0.0.15);
+        }
+
+        .15);
         }
 
         .history-title {
-            font-size: 18px;
-            font-weight: 700;
+            font-sizehistory-title {
+            font-size: : 18px;
+            font-weight18px;
+            font-weight: : 700;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align700;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items:-items: center;
+            color center;
             color: #1a1a1a;
         }
 
-        .history-refresh {
-            background: none;
-            border: none;
-            color: #2aabee;
-            font-size: 14px;
-            font-weight: 600;
+       : #1a1a1a;
+        }
+
+        .history-refresh .history-refresh {
+            {
+            background: background: none;
+ none;
+            border            border: none;
+           : none;
+            color: color: #2aabee;
+ #2aabee;
+            font-size: 14            font-size: 14px;
+            font-weight: 600px;
+            font-weight:;
             cursor: pointer;
-            padding: 8px 16px;
+            padding 600;
+            cursor: pointer;
+            padding: 8px: 8px 16px;
+            border-radius: 12 16px;
             border-radius: 12px;
             transition: all 0.2s;
         }
 
-        .history-refresh:hover {
-            background: rgba(42, 171, 238, 0.1);
+        .history-refresh:hoverpx;
+            transition: all 0.2s;
+        }
+
+ {
+            background: rgba(42,        .history-refresh:hover {
+            background: rgba(42, 171, 238, 171, 238, 0 0.1);
+        }
+
+        .history-items {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding-bottom: 10.1);
         }
 
         .history-items {
@@ -337,119 +640,233 @@
             gap: 14px;
             overflow-x: auto;
             padding-bottom: 10px;
+            scrollbar-widthpx;
             scrollbar-width: thin;
-            scrollbar-color: #2aabee #e6f4ff;
+            scrollbar-color:: thin;
+            scrollbar-color: #2aabee #e6 #2aabee #e6f4ff;
         }
 
-        .history-items::-webkit-scrollbar {
+f4ff;
+        }
+
+        .        .history-items::-webkit-scrollhistory-items::-webkit-scrollbar {
+            height: 6pxbar {
             height: 6px;
         }
 
-        .history-items::-webkit-scrollbar-track {
-            background: #e6f4ff;
+        .history-items::-;
+        }
+
+        .history-items::-webkit-scrollbarwebkit-scrollbar-track {
+            background: #e6-track {
+            background: #f4e6f4ff;
             border-radius: 3px;
         }
 
-        .history-items::-webkit-scrollbar-thumb {
-            background: #2aabee;
+ff;
             border-radius: 3px;
+        }
+
+        .history-items::-webkit        .history-items::-webkit-scrollbar-thumb {
+            background-scrollbar-thumb {
+            background: #2aabee: #2aabee;
+            border-radius: 3px;
+            border-radius: 3px;
+        }
+
+        .history;
         }
 
         .history-item {
-            min-width: 70px;
-            height: 70px;
+            min-width: 60px;
+            height: -item {
+            min-width: 60px;
+            height:60px;
+            background: 60px;
             background: white;
-            border-radius: 16px;
+            border-radius:  white;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+           12px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 800;
-            flex-shrink: 0;
-            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.15);
-            border: 2px solid rgba(42, 171, 238, 0.1);
-            transition: all 0.3s;
+            flex align-items: center;
+            font-size: 24px;
+            font-weight: 800;
+-shrink: 0            flex-shrink: 0;
+            box-shadow: 0 ;
+            box-shadow: 0 4px 15px rgba4px 15px rgba(42, (42, 171, 238, 0.15);
+171, 238, 0.15);
+            border: 2px solid rgba            border: 2px solid rgba(42, 171, 238(42, 171,, 0.1);
+ 238, 0.1);
+            transition: all 0            transition: all 0.3s;
         }
 
         .history-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(42, 171, 238, 0.25);
+            transform: translate.3s;
+        }
+
+        .history-item:hover {
+            transformY(-3px);
+           : translateY(-3px);
+            box-shadow: 0 8px box-shadow: 0 8px 20px rgba(42, 171, 238, 0.25);
+        }
+
+        . 20px rgba(42, 171, 238, 0.25);
         }
 
         .win { 
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            background:win { 
+            background: linear-gradient(135deg, #4 linear-gradient(135deg,CAF50  #4CAF50 0%, #45a049 100%);
             color: white;
-            border-color: rgba(76, 175, 80, 0.3);
+            border-color0%, #45a049 100%);
+            color: white;
+           : rgba(76,  border-color: rgba(76, 175, 80, 0.175, 80, 3);
+        }
+        .0.3);
         }
         .lose { 
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            background: linearlose { 
+            background: linear-gradient(135deg, #-gradient(135deg, #ff6b6b ff6b6b 0%, #ff5252 1000%, #ff5252 100%);
             color: white;
-            border-color: rgba(255, 107, 107, 0.3);
+%);
+            color: white            border-color: rgba(255;
+            border-color: rgba(255, 107, 107, , 107, 107, 0.3);
+0.3);
         }
 
         /* Нижнее меню */
+        }
+
+        /* Нижнее мен        .bottom-nav {
+           ю */
         .bottom-nav {
             position: fixed;
-            bottom: 0;
+            bottom position: fixed;
+            bottom: : 0;
             left: 0;
+            left: 00;
+            right: ;
             right: 0;
+            background: white0;
             background: white;
+            border-top: 1px;
             border-top: 1px solid #e6f4ff;
-            padding: 16px 24px;
+ solid #e6f4ff;
+            padding: 16px            padding: 16px 24px;
             display: flex;
             justify-content: space-around;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+ 24px;
+            display: flex;
+            justify-content: space            box-shadow: 0-around;
+            box-shadow: 0 -4px 20px rgba( -4px 20px0, 0,  rgba(0, 0, 0, 0.05);
+       0, 0.05 }
+
+        .nav);
         }
 
         .nav-item {
+            display: flex-item {
             display: flex;
+           ;
+            flex-direction: column;
             flex-direction: column;
             align-items: center;
+            align-items: center;
             color: #888;
+            font-size: color: #888;
             font-size: 12px;
+            12px;
             gap: 6px;
-            cursor: pointer;
+            cursor: pointer gap: 6px;
+            cursor;
+            transition: all : pointer;
             transition: all 0.3s;
+           0.3s;
             padding: 8px 16px;
+            border-radius: 16px padding: 8px 16px;
             border-radius: 16px;
         }
 
+        .nav;
+        }
+
         .nav-item:hover {
-            background: rgba(42, 171, 238, 0.08);
-            color: #2aabee;
+            background:-item:hover {
+            background: rgba( rgba(42, 17142, 171, 238,, 238, 0.08 0.08);
+           );
+            color: #2aab color: #2aabee;
         }
 
         .nav-item.active {
-            color: #2aabee;
-            background: rgba(42, 171, 238, 0.12);
+            color: #2aee;
+        }
+
+        .nav-item.active {
+            color: #abee;
+            background: rgba(42, 171, 2aabee;
+            background: rgba(42, 171238, 0.12);
+           , 238, 0.12 font-weight: 600;
+);
             font-weight: 600;
         }
 
+        .nav-icon        }
+
         .nav-icon {
-            font-size: 26px;
-            transition: transform 0.3s;
+            {
+            font-size: 26px font-size: 26px;
+            transition: transform 0.;
+            transition: transform 3s;
+        }
+
+       0.3s;
         }
 
         .nav-item:hover .nav-icon {
+ .nav-item:hover .nav            transform: translateY(--icon {
             transform: translateY(-2px);
         }
 
-        /* Анимация кости - плавный один оборот */
+       2px);
+        }
+
+        /* А /* Анимация кости - планимация кости - плавный один оборот */
+вный один оборот */
         @keyframes roll {
-            0% { 
-                transform: rotateX(0) rotateY(0) rotateZ(0); 
+            0        @keyframes roll {
+            0% {% { 
+                transform: rotateX 
+                transform: rotateX(0) rotateY((0) rotateY(0) rotateZ(0); 
             }
             25% { 
-                transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg); 
+               0) rotateZ(0); 
+            }
+            25% { transform: rotateX(180deg) 
+                transform: rotateX(180deg) rotateY(90deg) rotateY(90deg) rotateZ(45deg); 
+            rotateZ(45deg); }
+            50% { 
+ 
             }
             50% { 
-                transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); 
+                transform: rotateX(360deg                transform: rotateX() rotateY(180deg360deg) rotateY(180deg) rotateZ(90deg) rotateZ(90deg); 
+); 
             }
+            75% {            }
             75% { 
-                transform: rotateX(540deg) rotateY(270deg) rotateZ(135deg); 
+                
+                transform: rotateX transform: rotateX(540deg) rotateY(270deg) rotateZ(135(540deg) rotateY(270deg) rotateZ(135deg); 
+            }
+            100% { 
+                transform: var(--finaldeg); 
             }
             100% { 
                 transform: var(--final-rotation); 
+-rotation); 
             }
         }
 
@@ -464,14 +881,36 @@
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
             background: white;
-            color: #1a1a1a;
-            padding: 16px 32px;
+            color            }
+        }
+
+        .rolling {
+            animation: roll 1.2s linear forwards;
+        }
+
+        /* Уведомление */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: white;
+            color: #: #1a1a1a;
+            padding: 161a1a1a;
+            padding: 16px 32pxpx 32px;
             border-radius: 50px;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            z-index: 1000;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+           ;
+            border-radius: 50px;
+            font-weight:  font-weight: 600;
+            box-shadow: 0 10600;
+            box-shadow: 0 10px 30pxpx 30px rgba(0,0, rgba(0,0,0,0.15);
+            z-index:0,0.15);
+            z-index: 100 1000;
+            transition0;
+            transition: transform 0.5s cubic-bez: transform 0.5ier(0.34,s cubic-bezier(0. 1.56, 0.34, 1.56, 0.64, 164, 1);
+           );
             white-space: nowrap;
+ white-space: nowrap;
             border: 2px solid #e6f4ff;
             font-size: 16px;
             text-align: center;
@@ -482,309 +921,565 @@
         .notification.win {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
-            border-color: rgba(76, 175, 80, 0.3);
+            border-color: rgba(76, 175,             border: 2px solid #e6f4ff;
+            font-size: 16px;
+            text-align: center;
+            min-width: 300px;
+            max-width: 90vw;
+        }
+
+        .notification.win {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border-color: rgba(76, 175, 80, 0.380, 0.3);
         }
 
         .notification.lose {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            background: linear-gradient(135deg, #ff6b);
+        }
+
+        .notification.lose {
+            background: linear-gradient(135deg,6b 0%, #ff5252 100%);
+            #ff6b6b 0%, #ff5252 100% color: white;
+            border-color:);
             color: white;
-            border-color: rgba(255, 107, 107, 0.3);
+            border rgba(255, 107-color: rgba(, 107, 0.3255, 107, 107, 0.3);
+        }
+   );
         }
     </style>
+</ </style>
 </head>
 <body>
-    <div class="container">
+head>
+<body>
+       <div class="container">
+        <!-- Header как в Telegram Wallet <div class="container">
         <!-- Header как в Telegram Wallet -->
-        <div class="header">
-            <div class="header-title">🎲 Dice Casino</div>
-            <div class="header-subtitle">Играйте в реальном времени</div>
+        -->
+        <div class="header <div class="header">
+">
+            <div class="header            <div class="header-title">🎲 Dice Casino</div>
+           -title">🎲 Dice Casino</div>
+            <div class=" <div class="header-subtitleheader-subtitle">Играйте в">Играйте в реальном реальном времени</div>
+ времени</div>
             
             <div class="balance-card">
-                <div class="balance-label">Ваш баланс</div>
-                <div class="balance-amount">
-                    1,500 <span>TON</span>
+                           
+            <div class="balance-card">
+                <div class=" <div class="balance-label">Ваbalance-label">Ваш баланс</ш баланс</div>
+div>
+                <div class="                <div class="balance-amount">
+                    1,500balance-amount">
+                    1, <span>TON</span>
+                </500 <span>TON</span>
                 </div>
             </div>
+            </div>
+div>
         </div>
 
-        <!-- Основной контент -->
+               </div>
+
+        <!-- Основной <!-- Основной контент -->
         <div class="content">
-            <div class="game-area">
-                <div class="dice-container">
-                    <div class="dice" id="dice">
-                        <!-- Грань 1 -->
-                        <div class="dice-face face-1">
-                            <div class="dice-dots">
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                </div>
-                            </div>
+            контент -->
+        <div class="content">
+            <div <div class="game-area class="game-area">
+               ">
+                <div class=" <div class="dice-container">
+dice-container">
+                    <div class                    <div class="dice"="dice" id="dice id="dice">
+                       ">
+                        <!-- Грань <!-- Грань 1 -->
+                        <div class="dice 1 -->
+                        <div class="-face face-1">
+                            <divdice-face face-1 class="dots-container">
+                               ">
+                            <div class="dots-container <div class="dot"></div>
+">
+                                <div class="dot"></                            </div>
                         </div>
+                            </div>
+div>
+                        <!-- Грань                         </div>
                         <!-- Грань 2 -->
-                        <div class="dice-face face-2">
-                            <div class="dice-dots">
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                </div>
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                </div>
+                       2 -->
+                        <div class <div class="dice-face face-="dice-face face-2">
+                            <div class="dots-container">
+2">
+                            <div class="dots-container">
+                                <div class="dot"></div>
+                                <div                                <div class="dot"></div>
+                                <div class="dot"></ class="dot"></div>
+                            </div>
                             </div>
                         </div>
-                        <!-- Грань 3 -->
-                        <div class="dice-face face-3">
-                            <div class="dice-dots">
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                </div>
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                </div>
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                </div>
+div>
+                        </div>
+                        <!--                        <!-- Грань  Грань 3 -->
+                        <div class="dice-face3 -->
+                        <div class face-3">
+                           ="dice-face face-3">
+                            <div class="dots <div class="dots-container">
+                               -container">
+                                <div class="dot <div class="dot"></div"></div>
+                                <div>
+                                <div class="dot"></ class="dot"></div>
+div>
+                                <div class                                <div class="dot"></div="dot"></div>
                             </div>
                         </div>
-                        <!-- Грань 4 -->
+                        <!-->
+                            </div>
+                        </div Грань 4 -->
+                       >
+                        <!-- Грань  <div class="dice-face4 -->
                         <div class="dice-face face-4">
-                            <div class="dice-dots">
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                    <div class="dot"></div>
-                                </div>
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                    <div class="dot"></div>
-                                </div>
+                            face-4">
+                            <div <div class="dots-container class="dots-container">
+                                <div">
+                                <div class="dot"></ class="dot"></div>
+div>
+                                <div class                                <div class="dot"></div="dot"></div>
+                                <div>
+                                <div class=" class="dot"></div>
+dot"></div>
+                                <div class                                <div class="dot"></div="dot"></div>
+                           >
                             </div>
                         </div>
-                        <!-- Грань 5 -->
-                        <div class="dice-face face-5">
-                            <div class="dice-dots">
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                    <div class="dot"></div>
-                                </div>
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                </div>
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                    <div class="dot"></div>
-                                </div>
+                        </div>
+                        </div>
+                        <!-- Грань <!-- Грань 5 -->
+ 5 -->
+                        <div                        <div class="dice class="dice-face face-5-face face-5">
+                           ">
+                            <div class=" <div class="dots-container">
+                                <div class="dot"></div>
+dots-container">
+                                                               <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot <div class="dot"></div>
+                                <div class="dot"></"></div>
+                                <div class="dot"></div>
+                            </div>
                             </div>
                         </div>
-                        <!-- Грань 6 -->
-                        <div class="dice-face face-6">
-                            <div class="dice-dots">
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                    <div class="dot"></div>
-                                </div>
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                    <div class="dot"></div>
-                                </div>
-                                <div class="dot-row">
-                                    <div class="dot"></div>
-                                    <div class="dot"></div>
-                                </div>
-                            </div>
                         </div>
+                        <!--div>
+                        <!-- Гран Грань 6 -->
+ь 6 -->
+                        <div class                        <div class="dice-face="dice-face face-6">
+ face-6">
+                            <                            <div class="dotsdiv class="dots-container">
+                               -container">
+                                <div class="dot <div class="dot"></div>
+                               "></div>
+                                <div <div class="dot"></ class="dot"></div>
+                               div>
+                                <div class="dot <div class="dot"></div"></div>
+                                <div>
+                                <div class="dot"></ class="dot"></div>
+                               div>
+                                <div class <div class="dot"></div="dot"></div>
+                               >
+                                <div class="dot"></ <div class="dot"></div>
+                           div>
+                            </div>
+ </div>
+                        </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
 
-                <div class="bet-controls">
-                    <button class="bet-button active" data-bet="10">10 TON</button>
-                    <button class="bet-button" data-bet="50">50 TON</button>
-                    <button class="bet-button" data-bet="100">100 TON</button>
                 </div>
 
-                <button class="play-button" id="playButton">
-                    <span>🎲 Крутить кость</span>
+                               <div class <div class="bet-controls">
+                   ="bet-controls">
+                    <button class=" <button class="bet-buttonbet-button active" data-b active" data-bet="et="10">10 TON</10">10 TON</button>
+                   button>
+                    <button class <button class="bet-button"="bet-button" data-bet="50">50 TON</button>
+                    <button class="bet data-bet="50">50 TON</button>
+                    <button class="bet-button" data-b-button" data-bet="100">et="100">100 T100 TON</button>
+ON</button>
+                </div>
+
+                </div>
+
+                <button class                <button class="play="play-button" id="-button" id="playButton">
+                   playButton">
+                    <span> <span>🎲 К🎲 Крутить костьрутить кость</span>
+               </span>
                 </button>
-            </div>
+            </button>
+            </div </div>
+
+            <!-- История>
 
             <!-- История игр -->
-            <div class="history">
-                <div class="history-title">
-                    История игр
-                    <button class="history-refresh" id="refreshHistory">⟳ Обновить</button>
+            игр -->
+            <div class=" <div class="history">
+history">
+                <div class                <div class="history-title">
+="history-title">
+                    История игр                    История игр
+                   
+                    <button class=" <button class="history-refresh"history-refresh" id="refreshHistory id="refreshHistory">">⟳ Обновить</button⟳ Обновить</button>
+               >
                 </div>
-                <div class="history-items" id="historyItems">
-                    <!-- История будет добавляться динамически -->
                 </div>
+                <div class=" <div class="history-items" idhistory-items" id="history="historyItems">
+                    <!--Items">
+                    <!-- История будет добавляться История будет добавляться динамически -->
+                </div>
+            </div динамически -->
+                </div>
+        </div>
+   >
             </div>
         </div>
     </div>
 
-    <!-- Нижняя навигация -->
-    <div class="bottom-nav">
-        <div class="nav-item active">
-            <div class="nav-icon">🎲</div>
-            <div>Играть</div>
+    </div>
+
+    <!-- Нижняя <!-- Нижняя навигация навигация -->
+    <div class -->
+    <div class="bottom="bottom-nav">
+       -nav">
+        <div class <div class="nav-item active">
+           ="nav-item active">
+            <div <div class="nav-icon class="nav-icon">">🎲</div>
+🎲</div>
+            <            <div>Играть</div>Играть</div>
+div>
         </div>
-        <div class="nav-item">
-            <div class="nav-icon">💰</div>
+        </div>
+        <div        <div class="nav-item">
+ class="nav-item">
+                       <div class="nav <div class="nav-icon">-icon">💰</div>
+            <div>Депозит💰</div>
             <div>Депозит</div>
+       </div>
         </div>
-        <div class="nav-item">
-            <div class="nav-icon">📊</div>
-            <div>Статистика</div>
         </div>
-        <div class="nav-item">
+        <div <div class="nav-item class="nav-item">
+            <">
+            <div class="nav-icondiv class="nav-icon">">📊</div>
+📊</div>
+            <div            <div>Статистика</div>
+        </div>
+>Статистика</div>
+        </div>
+        <div        <div class="nav-item">
             <div class="nav-icon">👤</div>
             <div>Профиль</div>
         </div>
-    </div>
+    class="nav-item">
+            <div class="nav-icon">👤</div>
+            <div>Профиль</div>
+        </div>
+    </div </div>
 
     <script>
         // Элементы
-        const dice = document.getElementById('dice');
+        const dice = document.getElementById('dice>
+
+    <script>
+        // Элементы
+        const dice');
         const playButton = document.getElementById('playButton');
-        const betButtons = document.querySelectorAll('.bet-button');
-        const historyItems = document.getElementById('historyItems');
-        const balanceAmount = document.querySelector('.balance-amount');
+        const = document.getElementById('dice');
+        const playButton = document.getElementById('playButton');
+        const betButtons betButtons = document.querySelectorAll = document.querySelectorAll('.bet-button('.bet-button');
+        const historyItems');
+        const historyItems = document = document.getElementById('historyItems.getElementById('historyItems');
+        const balance');
+        const balanceAmount = document.querySelectorAmount = document.querySelector('.balance('.balance-amount');
+        const refreshHistoryBtn = document.getElementById('-amount');
         const refreshHistoryBtn = document.getElementById('refreshHistory');
 
         // Переменные игры
-        let currentBet = 10;
-        let balance = 1500;
+refreshHistory');
+
+        // Переменные игры
+        let currentBet        let currentBet = 10;
+        let balance = 150 = 10;
+        let balance =0;
+        let history = 1500;
         let history = [];
         let isRolling = false;
 
-        // Маппинг вращений для каждой грани
+        // Маппинг вращений для каждой грани (с [];
+        let isRolling = false;
+
+        // Маппинг вращений для каждой грани (с учетом начального на учетом начального наклона)
+        constклона)
         const rotationMap = {
-            1: 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)',
-            2: 'rotateY(-90deg)',
-            3: 'rotateX(90deg)',
-            4: 'rotateX(-90deg)',
-            5: 'rotateY(90deg)',
-            6: 'rotateY(180deg)'
+            1: 'rotateX(20 rotationMap = {
+            1: 'deg) rotateY(20deg)rotateX(20deg) rotateY(20deg)',
+            ',
+            2: 'rotate2: 'rotateX(X(20deg20deg) rotateY(110deg) rotateY(110deg)',
+            3)',
+            3: ': 'rotateX(110deg)rotateX(110deg) rotateY rotateY(20deg)(20deg)',
+            4: 'rotateX(-70deg',
+            4: 'rotateX(-) rotateY(20deg)70deg) rotateY(20deg)',
+            5',
+            5: 'rotateX(20deg): 'rotateX(20deg) rotateY(- rotateY(-70deg)',
+            6: 'rotateX(20deg) rotateY(200deg)'
         };
 
-        // Выбор ставки
-        betButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                if (isRolling) return;
+        // Выбор70deg)',
+            6: 'rotateX(20deg) rotateY(200deg)'
+        };
+
+        // Выбор став ставки
+        betButtonsки
+        betButtons.forEach(.forEach(button => {
+            button.addEventListenerbutton => {
+            button.addEventListener('('click', () => {
+click', () => {
+                if                if (isRolling (isRolling) return) return;
                 
-                betButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                currentBet = parseInt(button.dataset.bet);
+                betButtons.forEach;
                 
-                // Анимация нажатия
-                button.style.transform = 'scale(0.95)';
-                setTimeout(() => {
+                betButtons.forEach(btn(btn => btn.classList.remove('active => btn.classList.remove('active'));
+               '));
+                button.classList.add(' button.classList.add('active');
+active');
+                currentBet = parseInt(                currentBet = parseInt(button.datbutton.dataset.bet);
+                
+aset.bet);
+                
+                               // Анимация нажа // Анимация нажатия
+тия
+                button.style.transform =                button.style.transform = ' 'scale(0.95)scale(0.95)';
+';
+                setTimeout(()                setTimeout(() => {
+                    button.style.transform = '';
+                }, => {
                     button.style.transform = '';
                 }, 150);
             });
+        150);
+            });
         });
 
-        // Функция броска кости
+        });
+
+        // Функция броска // Функция броска кости
+        function rollDice кости
         function rollDice() {
-            return Math.floor(Math.random() * 6) + 1;
+            return Math.floor() {
+            return Math.floor(Math.random(Math.random() * 6) +() * 6) + 1;
         }
 
-        // Анимация броска (один плавный оборот)
+        1;
+        }
+
+        // А // Анимация броска (одинимация броска (один плавный оборот)
+        function animateDice(result, callback) {
+            isRollн плавный оборот)
         function animateDice(result, callback) {
             isRolling = true;
-            playButton.disabled = true;
+            playButtoning = true;
+            play.disabled = true;
             
-            // Сбрасываем трансформацию для анимации
-            dice.style.transform = 'rotateX(0) rotateY(0) rotateZ(0)';
+           Button.disabled = true;
             
-            // Устанавливаем финальное вращение в CSS переменной
-            dice.style.setProperty('--final-rotation', rotationMap[result]);
+            // Сбрасываем транс // Сбрасываем трансформацию для анимации
+           формацию для анимации
+            dice.style.transform = 'rotate dice.style.transform = 'rotateX(20deg) rotateX(20deg) rotateY(20deg)';
             
-            // Запускаем анимацию (1 плавный оборот)
+           Y(20deg)';
+            
+            // Устанавливаем фина // Устанавливаем финальное вращение в CSS переменльное вращение в CSS переменнойной
+            dice.style.setProperty('
+            dice.style.setProperty('--final-rotation', rotation--final-rotation', rotationMap[result]);
+            
+            // ЗаMap[result]);
+            
+            // Запускаем апускаем анимацию
+            dice.classList.add('rollingнимацию
             dice.classList.add('rolling');
             
+            // Анима');
+            
             // Анимация кнопки
-            playButton.style.transform = 'scale(0.98)';
+           ция кнопки
+            playButton.style.transform = 'scale( playButton.style.transform = 'scale(0.98)';
+            
+0.98)';
             
             setTimeout(() => {
+                           setTimeout(() => {
                 dice.classList.remove('rolling');
-                dice.style.transform = rotationMap[result];
+                dice dice.classList.remove('rolling');
+                dice.style.transform = rotationMap.style.transform = rotationMap[result];
+                playButton.style.transform =[result];
                 playButton.style.transform = '';
+                
+                if (callback '';
                 
                 if (callback) callback();
                 
+                // Включа) callback();
+                
                 // Включаем кнопку
-                setTimeout(() => {
+                setTimeoutем кнопку
+               (() => {
+                    isRolling setTimeout(() => {
                     isRolling = false;
+                    playButton = false;
                     playButton.disabled = false;
                 }, 300);
                 
-            }, 1200);
+            }, .disabled = false;
+                }, 300);
+                
+           1200);
         }
 
-        // Добавление в историю
-        function addToHistory(result, win) {
+        // Доба }, 1200);
+        }
+
+       вление в историю
+ // Добавление в историю
+        function addToHistory(result        function addToHistory(result, win) {
+            const historyItem, win) {
             const historyItem = document.createElement('div');
+            historyItem.className = `history = document.createElement('div');
             historyItem.className = `history-item ${win ? 'win' : 'lose'}`;
-            historyItem.textContent = result;
+-item ${win ? 'win' : 'lose'}`;
+            historyItem.text            historyItem.textContent = result;
+            
+            historyItems.prepContent = result;
             
             historyItems.prepend(historyItem);
-            history.unshift({ result, win, timestamp: Date.now() });
+           end(historyItem);
+            history.unshift({ result, history.unshift({ result, win, timestamp: Date.now() });
+ win, timestamp: Date.now() });
             
-            // Ограничиваем историю 12 последними играми
-            if (history.length > 12) {
+            // Ограничи            
+            // Ограничиваем историю 12 последними играваем историю 12 последними играми
+            if (history.length >ми
+            if (history 12) {
+                history.pop();
+                if (historyItems.children.length > 12) {
+                    historyItems.removeChild(historyItems.length > 12) {
                 history.pop();
                 if (historyItems.children.length > 12) {
                     historyItems.removeChild(historyItems.lastChild);
                 }
             }
             
+            // Анимация по.lastChild);
+                }
+            }
+            
             // Анимация появления
+            historyItem.styleявления
             historyItem.style.opacity = '0';
             historyItem.style.transform = 'translateY(20px)';
             setTimeout(() => {
-                historyItem.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                historyItem.style.opacity = '1';
+                historyItem.style.transition = 'all 0.opacity = '0';
+            historyItem.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                historyItem.style.transition = 'all.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                history 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                historyItem.style.opacity = 'Item.style.opacity = '1';
+                historyItem.style.transform =1';
                 historyItem.style.transform = 'translateY(0)';
+            'translateY(0) }, 10);
+        }
+
+        // Обновление баланса
+';
             }, 10);
         }
 
         // Обновление баланса
-        function updateBalance(win) {
-            const oldBalance = balance;
+        function updateBalance(win        function updateBalance(win) {
+            const oldBalance = balance) {
+            const oldBalance;
+            
+            if (win = balance;
             
             if (win) {
-                balance += currentBet * 2; // Выигрыш 2x ставки
+                balance += current) {
+                balance += currentBet *Bet * 2; // 2; // Выигрыш 2x ставки
+            } else {
+                balance Выигрыш 2x ставки
             } else {
                 balance -= currentBet;
             }
             
+            -= currentBet;
+            }
+ // Анимация изменения балан            
             // Анимация изменения баланса
-            balanceAmount.style.transform = 'scale(1.05)';
-            balanceAmount.style.color = win ? '#4CAF50' : '#ff5252';
+            balanceAmount.styleса
+            balanceAmount.style.transform = 'scale(1.05.transform = 'scale(1.05)';
+            balanceAmount.style.color =)';
+            balanceAmount.style win ? '#4CAF50' : '#ff5252';
             
             setTimeout(() => {
                 balanceAmount.style.transition = 'all 0.3s';
                 balanceAmount.style.transform = 'scale(1)';
-                balanceAmount.style.color = '#1a1a1a';
-                balanceAmount.innerHTML = `${balance.toLocaleString()} <span>TON</span>`;
+               .color = win ? '#4CAF50' : '#ff5252';
+            
+            setTimeout(() => {
+                balanceAmount.style.transition = 'all 0.3s';
+                balanceAmount.style.transform = 'scale(1)';
+                balanceAmount.style.color = '#1a balanceAmount.style.color = '#1a1a';
+               1a1a1a';
+                balanceAmount.innerHTML = `${balance balanceAmount.innerHTML = `${balance.toLocaleString()} <span>TON.toLocaleString()} <span>TON</span>`;
+            },</span>`;
             }, 300);
         }
 
         // Показать уведомление
         function showNotification(message, isWin) {
             const notification = document.createElement('div');
-            notification.className = `notification ${isWin ? 'win' : 'lose'}`;
+            notification.class 300);
+        }
+
+        // Показать уведомление
+        function showNotification(message, isWin) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${Name = `notification ${isWin ? 'win' : 'lose'}`;
             notification.textContent = message;
             
             document.body.appendChild(notification);
             
+           isWin ? 'win' : 'lose'}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+ // Показываем
+            
             // Показываем
             setTimeout(() => {
+                           setTimeout(() => {
                 notification.style.transform = 'translateX(-50%) translateY(0)';
+ notification.style.transform = 'translateX(-50%) translateY(0            }, 10);
+            
+            //)';
             }, 10);
             
-            // Убираем через 3 секунды
+ Убираем через 3            // Убираем через 3 секунды
+            setTimeout(() секунды
             setTimeout(() => {
-                notification.style.transform = 'translateX(-50%) translateY(-100px)';
+ => {
+                notification                notification.style.transform = 'translateX(-50%) translateY(-.style.transform = 'translateX(-50%) translate100px)';
                 setTimeout(() => notification.remove(), 500);
-            }, 3000);
+Y(-100px)';
+                setTimeout(() => notification.remove(), 500);
+            }, 300            }, 3000);
         }
 
         // Обработчик игры
@@ -798,19 +1493,51 @@
 
             // Бросок кости
             const result = rollDice();
-            const win = result >= 4; // Выигрыш от 4 до 6
+            const win = result >= 4; // Выигры0);
+        }
 
-            // Анимация и обработка результата
-            animateDice(result, () => {
+        // Обработчик игры
+        playButton.addEventListener('click', () => {
+            if (isRolling) return;
+            
+            if (balance < currentBet) {
+                showNotification('💰 Недостаточно средств! Пополните баланс.', false);
+                return;
+            }
+
+            // Бросок кости
+            const result = rollDice();
+            const win = result >= 4; // Выш от 4 до 6
+
+            // Анимация иигрыш от 4 до 6
+
+            // Анимация и обработка результата обработка результата
+           
+            animateDice(result, () animateDice(result, () => {
                 // Обновляем баланс
-                updateBalance(win);
+ => {
+                // Обновляем баланс
+                updateBalance(                updateBalance(win);
                 
-                // Добавляем в историю
+                // Добавляем в историwin);
+                
+                // Добавляемю
+ в историю
                 addToHistory(result, win);
                 
-                // Показываем результат
+                // П                addToHistory(result, win);
+                
+                // Показываем результатоказываем результат
+               
                 setTimeout(() => {
+                    const setTimeout(() => {
                     const message = win ? 
+                        `🎉 Вы выиграли ${currentBet * 2} TON!` : 
+                        `Выпало ${result}. Повезет в следующий раз!`;
+                    
+                    showNotification(message, win);
+                }, 500);
+            message = win ? 
                         `🎉 Вы выиграли ${currentBet * 2} TON!` : 
                         `Выпало ${result}. Повезет в следующий раз!`;
                     
@@ -819,33 +1546,61 @@
             });
         });
 
-        // Обновление истории
-        refreshHistoryBtn.addEventListener('click', () => {
-            refreshHistoryBtn.style.transform = 'rotate(360deg)';
+        });
+        });
+
+        // Об // Обновление истории
+новление истории
+        refreshHistoryBtn        refreshHistoryBtn.addEventListener('click',.addEventListener('click', () => () => {
+            refreshHistoryBtn.style {
+            refreshHistoryBtn.style.transform =.transform = 'rotate(360 'rotate(360deg)deg)';
+            refreshHistoryBtn.style.transition = 'transform ';
             refreshHistoryBtn.style.transition = 'transform 0.5s';
             
-            // Очищаем и снова добавляем историю для демонстрации
+            // Очи0.5s';
+            
+            // Очищаем и сщаем и снова добавляем историю для демонстрациинова добавляем историю для демонстрации
+            historyItems
             historyItems.innerHTML = '';
             history.forEach(item => {
+                addToHistory(item.result,.innerHTML = '';
+            history.forEach(item => {
                 addToHistory(item.result, item.win);
+ item.win);
             });
             
+                       });
+            
             setTimeout(() => {
-                refreshHistoryBtn.style.transform = '';
+ setTimeout(() => {
+                refresh                refreshHistoryBtn.style.transform = '';
+            }, 500);
+       HistoryBtn.style.transform = '';
             }, 500);
         });
 
-        // Инициализация начальной истории
-        function initHistory() {
+        });
+
+        // Инициали // Инициализация начальной историизация начальной истории
+        function init
+        function initHistory()History() {
+            const initial {
             const initialResults = [
-                { result: 6, win: true },
-                { result: 2, win: false },
+               Results = [
+                { result:  { result: 6,6, win: true },
+                win: true },
+                { result: 2, win: false { result: 2, win: false },
+                { result },
                 { result: 4, win: true },
-                { result: 1, win: false },
+                {: 4, win: true },
+ result: 1, win: false },
                 { result: 5, win: true },
-                { result: 3, win: false },
+                {                { result: 1, win: false },
+                { result: 5, win: true },
+                { result: 3 result: 3, win: false },
                 { result: 6, win: true },
-                { result: 4, win: true }
+, win: false },
+                { result: 6, win:                { result: 4, win: true }
             ];
             
             initialResults.forEach(item => {
@@ -856,8 +1611,23 @@
         // Установка начального положения кубика (грань 1)
         dice.style.transform = rotationMap[1];
 
+ true },
+                { result: 4, win: true }
+            ];
+            
+            initialResults.forEach(item => {
+                addToHistory(item.result, item.win);
+            });
+        }
+
+        // Установка начального положения кубика (грань 1)
+        dice.style.transform = rotationMap        // Запуск при загрузке
+        initHistory();
+[1];
+
         // Запуск при загрузке
         initHistory();
+    </script>
     </script>
 </body>
 </html>
