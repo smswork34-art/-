@@ -99,124 +99,139 @@
         }
 
         .dice-container {
-            width: 180px;
-            height: 180px;
+            width: 140px;
+            height: 140px;
             margin: 0 auto 28px;
-            perspective: 1200px;
+            perspective: 800px;
+            position: relative;
         }
 
         .dice {
             width: 100%;
             height: 100%;
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
             transform-style: preserve-3d;
-            transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.8s ease-out;
         }
 
         .dice-face {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 140px;
+            height: 140px;
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-radius: 25px;
+            border-radius: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 56px;
-            font-weight: 800;
-            color: white;
+            font-size: 0;
             backface-visibility: hidden;
             box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3),
-                        0 10px 30px rgba(42, 171, 238, 0.3);
+                        0 8px 20px rgba(42, 171, 238, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        .dot {
-            width: 22px;
-            height: 22px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        /* Точки для кубика */
+        .dice-dots {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
         }
 
-        .face-1 { 
-            transform: translateZ(90px);
-            justify-content: center;
+        .dot-row {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
+        .dot {
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Расположение граней в 3D пространстве */
+        .face-1 { 
+            transform: translateZ(70px);
+        }
         .face-2 { 
-            transform: rotateY(90deg) translateZ(90px);
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            padding: 30px;
+            transform: rotateY(90deg) translateZ(70px);
         }
-
         .face-3 { 
-            transform: rotateY(180deg) translateZ(90px);
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            padding: 25px;
+            transform: rotateX(90deg) translateZ(70px);
         }
-
         .face-4 { 
-            transform: rotateY(-90deg) translateZ(90px);
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            padding: 30px;
+            transform: rotateX(-90deg) translateZ(70px);
         }
-
         .face-5 { 
-            transform: rotateX(90deg) translateZ(90px);
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            padding: 25px;
+            transform: rotateY(-90deg) translateZ(70px);
         }
-
         .face-6 { 
-            transform: rotateX(-90deg) translateZ(90px);
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            padding: 30px;
+            transform: rotateY(180deg) translateZ(70px);
         }
 
-        /* Позиции точек для каждой грани */
-        .face-1 .dot {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        /* Распределение точек для каждой грани */
+        .face-1 .dice-dots {
+            justify-content: center;
+            align-items: center;
+        }
+        .face-1 .dot-row {
+            justify-content: center;
         }
 
-        .face-2 .dot:nth-child(1) { top: 30px; left: 30px; }
-        .face-2 .dot:nth-child(2) { bottom: 30px; right: 30px; }
+        .face-2 .dice-dots {
+            justify-content: space-between;
+        }
+        .face-2 .dot-row:first-child .dot:first-child {
+            margin-right: auto;
+        }
+        .face-2 .dot-row:last-child .dot:last-child {
+            margin-left: auto;
+        }
 
-        .face-3 .dot:nth-child(1) { top: 30px; left: 30px; }
-        .face-3 .dot:nth-child(2) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .face-3 .dot:nth-child(3) { bottom: 30px; right: 30px; }
+        .face-3 .dice-dots {
+            justify-content: space-between;
+        }
+        .face-3 .dot-row:first-child .dot:first-child {
+            margin-right: auto;
+        }
+        .face-3 .dot-row:nth-child(2) {
+            justify-content: center;
+        }
+        .face-3 .dot-row:last-child .dot:last-child {
+            margin-left: auto;
+        }
 
-        .face-4 .dot:nth-child(1) { top: 30px; left: 30px; }
-        .face-4 .dot:nth-child(2) { top: 30px; right: 30px; }
-        .face-4 .dot:nth-child(3) { bottom: 30px; left: 30px; }
-        .face-4 .dot:nth-child(4) { bottom: 30px; right: 30px; }
+        .face-4 .dice-dots {
+            justify-content: space-between;
+        }
+        .face-4 .dot-row {
+            justify-content: space-between;
+        }
 
-        .face-5 .dot:nth-child(1) { top: 30px; left: 30px; }
-        .face-5 .dot:nth-child(2) { top: 30px; right: 30px; }
-        .face-5 .dot:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .face-5 .dot:nth-child(4) { bottom: 30px; left: 30px; }
-        .face-5 .dot:nth-child(5) { bottom: 30px; right: 30px; }
+        .face-5 .dice-dots {
+            justify-content: space-between;
+        }
+        .face-5 .dot-row:first-child,
+        .face-5 .dot-row:last-child {
+            justify-content: space-between;
+        }
+        .face-5 .dot-row:nth-child(2) {
+            justify-content: center;
+        }
 
-        .face-6 .dot:nth-child(1) { top: 30px; left: 30px; }
-        .face-6 .dot:nth-child(2) { top: 30px; right: 30px; }
-        .face-6 .dot:nth-child(3) { top: 50%; left: 30px; transform: translateY(-50%); }
-        .face-6 .dot:nth-child(4) { top: 50%; right: 30px; transform: translateY(-50%); }
-        .face-6 .dot:nth-child(5) { bottom: 30px; left: 30px; }
-        .face-6 .dot:nth-child(6) { bottom: 30px; right: 30px; }
+        .face-6 .dice-dots {
+            justify-content: space-between;
+        }
+        .face-6 .dot-row {
+            justify-content: space-between;
+        }
 
         .bet-controls {
             display: grid;
@@ -277,25 +292,10 @@
             transform: translateY(-1px);
         }
 
-        .play-button::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to right,
-                transparent 20%,
-                rgba(255, 255, 255, 0.3) 50%,
-                transparent 80%
-            );
-            transform: rotate(30deg);
-            transition: transform 0.8s;
-        }
-
-        .play-button:hover::after {
-            transform: rotate(30deg) translateX(100%);
+        .play-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
         }
 
         /* История */
@@ -434,33 +434,61 @@
             transform: translateY(-2px);
         }
 
-        /* Анимация кости */
+        /* Анимация кости - плавный один оборот */
         @keyframes roll {
-            0% { transform: rotateX(0) rotateY(0) rotateZ(0) scale(1); }
-            25% { transform: rotateX(720deg) rotateY(360deg) rotateZ(180deg) scale(1.1); }
-            50% { transform: rotateX(1440deg) rotateY(720deg) rotateZ(360deg) scale(1); }
-            75% { transform: rotateX(2160deg) rotateY(1080deg) rotateZ(540deg) scale(0.95); }
-            100% { transform: var(--final-rotation) scale(1); }
+            0% { 
+                transform: rotateX(0) rotateY(0) rotateZ(0); 
+            }
+            25% { 
+                transform: rotateX(180deg) rotateY(90deg) rotateZ(45deg); 
+            }
+            50% { 
+                transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); 
+            }
+            75% { 
+                transform: rotateX(540deg) rotateY(270deg) rotateZ(135deg); 
+            }
+            100% { 
+                transform: var(--final-rotation); 
+            }
         }
 
         .rolling {
-            animation: roll 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: roll 1.2s linear forwards;
         }
 
-        /* Блестящие частицы */
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        /* Уведомление */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: white;
+            color: #1a1a1a;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            white-space: nowrap;
+            border: 2px solid #e6f4ff;
+            font-size: 16px;
+            text-align: center;
+            min-width: 300px;
+            max-width: 90vw;
         }
 
-        .sparkle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: sparkle 0.6s ease-out;
+        .notification.win {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .notification.lose {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            border-color: rgba(255, 107, 107, 0.3);
         }
     </style>
 </head>
@@ -486,42 +514,82 @@
                     <div class="dice" id="dice">
                         <!-- Грань 1 -->
                         <div class="dice-face face-1">
-                            <div class="dot"></div>
+                            <div class="dice-dots">
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Грань 2 -->
                         <div class="dice-face face-2">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
+                            <div class="dice-dots">
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                </div>
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Грань 3 -->
                         <div class="dice-face face-3">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
+                            <div class="dice-dots">
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                </div>
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                </div>
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Грань 4 -->
                         <div class="dice-face face-4">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
+                            <div class="dice-dots">
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Грань 5 -->
                         <div class="dice-face face-5">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
+                            <div class="dice-dots">
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                </div>
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Грань 6 -->
                         <div class="dice-face face-6">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
+                            <div class="dice-dots">
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                                <div class="dot-row">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -589,10 +657,10 @@
         const rotationMap = {
             1: 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)',
             2: 'rotateY(-90deg)',
-            3: 'rotateY(-180deg)',
-            4: 'rotateY(90deg)',
-            5: 'rotateX(-90deg)',
-            6: 'rotateX(90deg)'
+            3: 'rotateX(90deg)',
+            4: 'rotateX(-90deg)',
+            5: 'rotateY(90deg)',
+            6: 'rotateY(180deg)'
         };
 
         // Выбор ставки
@@ -617,26 +685,7 @@
             return Math.floor(Math.random() * 6) + 1;
         }
 
-        // Создание блестящих частиц
-        function createSparkles() {
-            const diceContainer = document.querySelector('.dice-container');
-            for (let i = 0; i < 15; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = Math.random() * 180 + 'px';
-                sparkle.style.top = Math.random() * 180 + 'px';
-                sparkle.style.animationDelay = Math.random() * 0.5 + 's';
-                sparkle.style.opacity = 0;
-                
-                diceContainer.appendChild(sparkle);
-                
-                setTimeout(() => {
-                    sparkle.remove();
-                }, 600);
-            }
-        }
-
-        // Анимация броска
+        // Анимация броска (один плавный оборот)
         function animateDice(result, callback) {
             isRolling = true;
             playButton.disabled = true;
@@ -647,10 +696,7 @@
             // Устанавливаем финальное вращение в CSS переменной
             dice.style.setProperty('--final-rotation', rotationMap[result]);
             
-            // Создаем частицы
-            createSparkles();
-            
-            // Запускаем анимацию
+            // Запускаем анимацию (1 плавный оборот)
             dice.classList.add('rolling');
             
             // Анимация кнопки
@@ -663,32 +709,20 @@
                 
                 if (callback) callback();
                 
-                // Включаем кнопку через задержку
+                // Включаем кнопку
                 setTimeout(() => {
                     isRolling = false;
                     playButton.disabled = false;
-                }, 500);
+                }, 300);
                 
-            }, 1800);
+            }, 1200);
         }
 
         // Добавление в историю
         function addToHistory(result, win) {
             const historyItem = document.createElement('div');
             historyItem.className = `history-item ${win ? 'win' : 'lose'}`;
-            
-            // Создаем точки для отображения результата
-            for (let i = 0; i < result; i++) {
-                const dot = document.createElement('div');
-                dot.style.cssText = `
-                    width: 6px;
-                    height: 6px;
-                    background: white;
-                    border-radius: 50%;
-                    margin: 1px;
-                `;
-                historyItem.appendChild(dot);
-            }
+            historyItem.textContent = result;
             
             historyItems.prepend(historyItem);
             history.unshift({ result, win, timestamp: Date.now() });
@@ -733,12 +767,32 @@
             }, 300);
         }
 
+        // Показать уведомление
+        function showNotification(message, isWin) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${isWin ? 'win' : 'lose'}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Показываем
+            setTimeout(() => {
+                notification.style.transform = 'translateX(-50%) translateY(0)';
+            }, 10);
+            
+            // Убираем через 3 секунды
+            setTimeout(() => {
+                notification.style.transform = 'translateX(-50%) translateY(-100px)';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
         // Обработчик игры
         playButton.addEventListener('click', () => {
             if (isRolling) return;
             
             if (balance < currentBet) {
-                alert('💰 Недостаточно средств! Пополните баланс.');
+                showNotification('💰 Недостаточно средств! Пополните баланс.', false);
                 return;
             }
 
@@ -758,37 +812,9 @@
                 setTimeout(() => {
                     const message = win ? 
                         `🎉 Вы выиграли ${currentBet * 2} TON!` : 
-                        `😔 Выпало ${result}. Повезет в следующий раз!`;
+                        `Выпало ${result}. Повезет в следующий раз!`;
                     
-                    // Создаем уведомление
-                    const notification = document.createElement('div');
-                    notification.textContent = message;
-                    notification.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        left: 50%;
-                        transform: translateX(-50%) translateY(-100px);
-                        background: ${win ? '#4CAF50' : '#ff5252'};
-                        color: white;
-                        padding: 16px 32px;
-                        border-radius: 50px;
-                        font-weight: 600;
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                        z-index: 1000;
-                        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-                        white-space: nowrap;
-                    `;
-                    
-                    document.body.appendChild(notification);
-                    
-                    setTimeout(() => {
-                        notification.style.transform = 'translateX(-50%) translateY(0)';
-                    }, 10);
-                    
-                    setTimeout(() => {
-                        notification.style.transform = 'translateX(-50%) translateY(-100px)';
-                        setTimeout(() => notification.remove(), 500);
-                    }, 3000);
+                    showNotification(message, win);
                 }, 500);
             });
         });
@@ -827,21 +853,11 @@
             });
         }
 
+        // Установка начального положения кубика (грань 1)
+        dice.style.transform = rotationMap[1];
+
         // Запуск при загрузке
         initHistory();
-        
-        // Добавляем hover эффект для кубика
-        dice.parentElement.addEventListener('mouseenter', () => {
-            if (!isRolling) {
-                dice.style.transform = rotationMap[Math.floor(Math.random() * 6) + 1];
-            }
-        });
-        
-        dice.parentElement.addEventListener('mouseleave', () => {
-            if (!isRolling) {
-                dice.style.transform = rotationMap[1];
-            }
-        });
     </script>
 </body>
 </html>
