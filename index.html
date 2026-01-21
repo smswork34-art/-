@@ -709,14 +709,14 @@
         let history = [];
         let isRolling = false;
 
-        // Маппинг вращений для каждой грани (с учетом начального наклона)
+        // Маппинг вращений для каждой грани (с учетом начального наклона 20deg для X и Y)
         const rotationMap = {
-            1: 'rotateX(20deg) rotateY(20deg)',
-            2: 'rotateX(20deg) rotateY(110deg)',
-            3: 'rotateX(110deg) rotateY(20deg)',
-            4: 'rotateX(-70deg) rotateY(20deg)',
-            5: 'rotateX(20deg) rotateY(-70deg)',
-            6: 'rotateX(20deg) rotateY(200deg)'
+            1: 'rotateX(0deg) rotateY(0deg)', // Грань 1 вперед
+            2: 'rotateY(-90deg)', // Грань 2 слева
+            3: 'rotateX(-90deg)', // Грань 3 сверху
+            4: 'rotateX(90deg)', // Грань 4 снизу
+            5: 'rotateY(90deg)', // Грань 5 справа
+            6: 'rotateY(180deg)' // Грань 6 сзади
         };
 
         // Выбор ставки
@@ -747,7 +747,7 @@
             playButton.disabled = true;
             
             // Сбрасываем трансформацию для анимации
-            dice.style.transform = 'rotateX(20deg) rotateY(20deg)';
+            dice.style.transform = 'rotateX(0) rotateY(0)';
             
             // Устанавливаем финальное вращение в CSS переменной
             dice.style.setProperty('--final-rotation', rotationMap[result]);
