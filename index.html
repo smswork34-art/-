@@ -526,12 +526,144 @@
         }
 
         .nav-icon {
-            font-size: 26px;
+            font-size: 22px;
             transition: transform 0.3s;
         }
 
         .nav-item:hover .nav-icon {
             transform: translateY(-2px);
+        }
+
+        /* Иконки SVG для навигации */
+        .icon-dice {
+            background: #2aabee;
+            width: 22px;
+            height: 22px;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
+        .icon-deposit {
+            background: #888;
+            width: 22px;
+            height: 22px;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
+        .icon-stats {
+            background: #888;
+            width: 22px;
+            height: 22px;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-6h4v6z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
+        .icon-profile {
+            background: #888;
+            width: 22px;
+            height: 22px;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>') no-repeat center;
+            mask-size: contain;
+        }
+
+        .nav-item.active .icon-dice {
+            background: #2aabee;
+        }
+
+        .nav-item.active .icon-deposit,
+        .nav-item.active .icon-stats,
+        .nav-item.active .icon-profile {
+            background: #2aabee;
+        }
+
+        .nav-item:hover .icon-dice,
+        .nav-item:hover .icon-deposit,
+        .nav-item:hover .icon-stats,
+        .nav-item:hover .icon-profile {
+            background: #2aabee;
+        }
+
+        /* Страница депозита (скрыта по умолчанию) */
+        .deposit-page {
+            display: none;
+        }
+
+        .deposit-header {
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            padding: 28px 24px;
+            position: relative;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .deposit-methods {
+            padding: 24px;
+        }
+
+        .method-card {
+            background: white;
+            border: 2px solid #e6f4ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .method-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.2);
+            border-color: #2aabee;
+        }
+
+        .method-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .method-info {
+            flex: 1;
+        }
+
+        .method-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .method-description {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .method-arrow {
+            color: #2aabee;
+            font-size: 20px;
         }
 
         /* Анимация кости - более реалистичная */
@@ -596,8 +728,8 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header как в Telegram Wallet -->
+    <!-- Главная страница игры -->
+    <div class="container game-page" id="gamePage">
         <div class="header">
             <div class="header-title">🎲 Dice Casino</div>
             <div class="header-subtitle">Играйте в реальном времени</div>
@@ -610,7 +742,6 @@
             </div>
         </div>
 
-        <!-- Основной контент -->
         <div class="content">
             <div class="game-area">
                 <div class="dice-container">
@@ -693,22 +824,71 @@
         </div>
     </div>
 
+    <!-- Страница депозита -->
+    <div class="container deposit-page" id="depositPage">
+        <div class="deposit-header">
+            <button class="back-button" id="backButton">
+                ← Назад
+            </button>
+            <div class="header-title">💰 Пополнение баланса</div>
+            <div class="header-subtitle">Выберите способ пополнения</div>
+        </div>
+
+        <div class="deposit-methods">
+            <div class="method-card">
+                <div class="method-icon">💳</div>
+                <div class="method-info">
+                    <div class="method-title">Банковская карта</div>
+                    <div class="method-description">Visa, Mastercard, Мир</div>
+                </div>
+                <div class="method-arrow">→</div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">📱</div>
+                <div class="method-info">
+                    <div class="method-title">Мобильный платеж</div>
+                    <div class="method-description">Билайн, МТС, Мегафон</div>
+                </div>
+                <div class="method-arrow">→</div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">💎</div>
+                <div class="method-info">
+                    <div class="method-title">Криптовалюта</div>
+                    <div class="method-description">TON, USDT, Bitcoin</div>
+                </div>
+                <div class="method-arrow">→</div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">🤖</div>
+                <div class="method-info">
+                    <div class="method-title">Telegram бот</div>
+                    <div class="method-description">Быстро и безопасно</div>
+                </div>
+                <div class="method-arrow">→</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Нижняя навигация -->
     <div class="bottom-nav">
-        <div class="nav-item active">
-            <div class="nav-icon">🎲</div>
+        <div class="nav-item active" data-page="game">
+            <div class="nav-icon icon-dice"></div>
             <div>Играть</div>
         </div>
-        <div class="nav-item">
-            <div class="nav-icon">💰</div>
+        <div class="nav-item" data-page="deposit">
+            <div class="nav-icon icon-deposit"></div>
             <div>Депозит</div>
         </div>
-        <div class="nav-item">
-            <div class="nav-icon">📊</div>
+        <div class="nav-item" data-page="stats">
+            <div class="nav-icon icon-stats"></div>
             <div>Статистика</div>
         </div>
-        <div class="nav-item">
-            <div class="nav-icon">👤</div>
+        <div class="nav-item" data-page="profile">
+            <div class="nav-icon icon-profile"></div>
             <div>Профиль</div>
         </div>
     </div>
@@ -721,6 +901,10 @@
         const historyItems = document.getElementById('historyItems');
         const balanceAmount = document.querySelector('.balance-amount');
         const refreshHistoryBtn = document.getElementById('refreshHistory');
+        const navItems = document.querySelectorAll('.nav-item');
+        const gamePage = document.getElementById('gamePage');
+        const depositPage = document.getElementById('depositPage');
+        const backButton = document.getElementById('backButton');
 
         // Переменные игры
         let currentBet = 10;
@@ -728,15 +912,46 @@
         let history = [];
         let isRolling = false;
 
-        // Маппинг вращений для каждой грани (с учетом начального наклона 15deg для X и Y)
+        // Маппинг вращений для каждой грани
         const rotationMap = {
-            1: 'rotateX(0deg) rotateY(0deg)', // Грань 1 вперед
-            2: 'rotateY(-90deg)', // Грань 2 слева
-            3: 'rotateX(-90deg)', // Грань 3 сверху
-            4: 'rotateX(90deg)', // Грань 4 снизу
-            5: 'rotateY(90deg)', // Грань 5 справа
-            6: 'rotateY(180deg)' // Грань 6 сзади
+            1: 'rotateX(0deg) rotateY(0deg)',
+            2: 'rotateY(-90deg)',
+            3: 'rotateX(-90deg)',
+            4: 'rotateX(90deg)',
+            5: 'rotateY(90deg)',
+            6: 'rotateY(180deg)'
         };
+
+        // Навигация
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                
+                // Обновляем активный элемент навигации
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Показываем соответствующую страницу
+                if (page === 'game') {
+                    gamePage.style.display = 'block';
+                    depositPage.style.display = 'none';
+                } else if (page === 'deposit') {
+                    gamePage.style.display = 'none';
+                    depositPage.style.display = 'block';
+                }
+                // Для других страниц можно добавить позже
+            });
+        });
+
+        // Кнопка "Назад" на странице депозита
+        backButton.addEventListener('click', () => {
+            gamePage.style.display = 'block';
+            depositPage.style.display = 'none';
+            
+            // Обновляем навигацию
+            navItems.forEach(nav => nav.classList.remove('active'));
+            navItems[0].classList.add('active'); // Первый элемент (Играть)
+        });
 
         // Выбор ставки
         betButtons.forEach(button => {
@@ -760,21 +975,15 @@
             return Math.floor(Math.random() * 6) + 1;
         }
 
-        // Анимация броска (один плавный оборот)
+        // Анимация броска
         function animateDice(result, callback) {
             isRolling = true;
             playButton.disabled = true;
             
-            // Сбрасываем трансформацию для анимации
             dice.style.transform = 'rotateX(0) rotateY(0)';
-            
-            // Устанавливаем финальное вращение в CSS переменной
             dice.style.setProperty('--final-rotation', rotationMap[result]);
-            
-            // Запускаем анимацию
             dice.classList.add('rolling');
             
-            // Анимация кнопки
             playButton.style.transform = 'scale(0.98)';
             
             setTimeout(() => {
@@ -784,7 +993,6 @@
                 
                 if (callback) callback();
                 
-                // Включаем кнопку
                 setTimeout(() => {
                     isRolling = false;
                     playButton.disabled = false;
@@ -802,7 +1010,6 @@
             historyItems.prepend(historyItem);
             history.unshift({ result, win, timestamp: Date.now() });
             
-            // Ограничиваем историю 12 последними играми
             if (history.length > 12) {
                 history.pop();
                 if (historyItems.children.length > 12) {
@@ -810,7 +1017,6 @@
                 }
             }
             
-            // Анимация появления
             historyItem.style.opacity = '0';
             historyItem.style.transform = 'translateY(20px)';
             setTimeout(() => {
@@ -822,15 +1028,12 @@
 
         // Обновление баланса
         function updateBalance(win) {
-            const oldBalance = balance;
-            
             if (win) {
-                balance += currentBet * 2; // Выигрыш 2x ставки
+                balance += currentBet * 2;
             } else {
                 balance -= currentBet;
             }
             
-            // Анимация изменения баланса
             balanceAmount.style.transform = 'scale(1.05)';
             balanceAmount.style.color = win ? '#4CAF50' : '#ff5252';
             
@@ -850,12 +1053,10 @@
             
             document.body.appendChild(notification);
             
-            // Показываем
             setTimeout(() => {
                 notification.style.transform = 'translateX(-50%) translateY(0)';
             }, 10);
             
-            // Убираем через 3 секунды
             setTimeout(() => {
                 notification.style.transform = 'translateX(-50%) translateY(-100px)';
                 setTimeout(() => notification.remove(), 500);
@@ -871,19 +1072,13 @@
                 return;
             }
 
-            // Бросок кости
             const result = rollDice();
-            const win = result >= 4; // Выигрыш от 4 до 6
+            const win = result >= 4;
 
-            // Анимация и обработка результата
             animateDice(result, () => {
-                // Обновляем баланс
                 updateBalance(win);
-                
-                // Добавляем в историю
                 addToHistory(result, win);
                 
-                // Показываем результат
                 setTimeout(() => {
                     const message = win ? 
                         `🎉 Вы выиграли ${currentBet * 2} TON!` : 
@@ -899,7 +1094,6 @@
             refreshHistoryBtn.style.transform = 'rotate(360deg)';
             refreshHistoryBtn.style.transition = 'transform 0.5s';
             
-            // Очищаем и снова добавляем историю для демонстрации
             historyItems.innerHTML = '';
             history.forEach(item => {
                 addToHistory(item.result, item.win);
@@ -928,7 +1122,7 @@
             });
         }
 
-        // Установка начального положения кубика (грань 1)
+        // Установка начального положения кубика
         dice.style.transform = rotationMap[1];
 
         // Запуск при загрузке
