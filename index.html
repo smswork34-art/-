@@ -13,8 +13,8 @@
         }
 
         body {
-            background: #1a1a1a;
-            color: #ffffff;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f4ff 100%);
+            color: #1a1a1a;
             min-height: 100vh;
             padding: 16px;
         }
@@ -22,75 +22,87 @@
         .container {
             max-width: 400px;
             margin: 0 auto;
-            background: #212121;
-            border-radius: 20px;
+            background: #ffffff;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(42, 171, 238, 0.15);
+            border: 1px solid rgba(42, 171, 238, 0.1);
         }
 
         /* Header стиль как в Telegram Wallet */
         .header {
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            padding: 24px 20px;
+            padding: 28px 24px;
             position: relative;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
         }
 
         .header-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 4px;
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .header-subtitle {
             font-size: 14px;
-            opacity: 0.9;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
         }
 
         .balance-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 16px;
-            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .balance-label {
             font-size: 14px;
-            opacity: 0.8;
-            margin-bottom: 8px;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
 
         .balance-amount {
-            font-size: 32px;
-            font-weight: 700;
+            font-size: 36px;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 8px;
+            color: #1a1a1a;
         }
 
         .balance-amount span {
-            font-size: 16px;
-            opacity: 0.9;
+            font-size: 18px;
+            color: #2aabee;
+            font-weight: 700;
         }
 
         /* Основной контент */
         .content {
-            padding: 20px;
+            padding: 24px;
         }
 
         .game-area {
-            background: #2d2d2d;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
             text-align: center;
+            border: 1px solid rgba(42, 171, 238, 0.15);
         }
 
         .dice-container {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 24px;
-            perspective: 1000px;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 28px;
+            perspective: 1200px;
         }
 
         .dice {
@@ -98,7 +110,7 @@
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.5s;
+            transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .dice-face {
@@ -106,113 +118,273 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
-            border-radius: 20px;
+            border-radius: 25px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 48px;
-            font-weight: bold;
+            font-size: 56px;
+            font-weight: 800;
             color: white;
             backface-visibility: hidden;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3),
+                        0 10px 30px rgba(42, 171, 238, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        .face-1 { transform: translateZ(75px); }
-        .face-2 { transform: rotateY(90deg) translateZ(75px); }
-        .face-3 { transform: rotateY(180deg) translateZ(75px); }
-        .face-4 { transform: rotateY(-90deg) translateZ(75px); }
-        .face-5 { transform: rotateX(90deg) translateZ(75px); }
-        .face-6 { transform: rotateX(-90deg) translateZ(75px); }
+        .dot {
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .face-1 { 
+            transform: translateZ(90px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .face-2 { 
+            transform: rotateY(90deg) translateZ(90px);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            padding: 30px;
+        }
+
+        .face-3 { 
+            transform: rotateY(180deg) translateZ(90px);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            padding: 25px;
+        }
+
+        .face-4 { 
+            transform: rotateY(-90deg) translateZ(90px);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            padding: 30px;
+        }
+
+        .face-5 { 
+            transform: rotateX(90deg) translateZ(90px);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            padding: 25px;
+        }
+
+        .face-6 { 
+            transform: rotateX(-90deg) translateZ(90px);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            padding: 30px;
+        }
+
+        /* Позиции точек для каждой грани */
+        .face-1 .dot {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .face-2 .dot:nth-child(1) { top: 30px; left: 30px; }
+        .face-2 .dot:nth-child(2) { bottom: 30px; right: 30px; }
+
+        .face-3 .dot:nth-child(1) { top: 30px; left: 30px; }
+        .face-3 .dot:nth-child(2) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .face-3 .dot:nth-child(3) { bottom: 30px; right: 30px; }
+
+        .face-4 .dot:nth-child(1) { top: 30px; left: 30px; }
+        .face-4 .dot:nth-child(2) { top: 30px; right: 30px; }
+        .face-4 .dot:nth-child(3) { bottom: 30px; left: 30px; }
+        .face-4 .dot:nth-child(4) { bottom: 30px; right: 30px; }
+
+        .face-5 .dot:nth-child(1) { top: 30px; left: 30px; }
+        .face-5 .dot:nth-child(2) { top: 30px; right: 30px; }
+        .face-5 .dot:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .face-5 .dot:nth-child(4) { bottom: 30px; left: 30px; }
+        .face-5 .dot:nth-child(5) { bottom: 30px; right: 30px; }
+
+        .face-6 .dot:nth-child(1) { top: 30px; left: 30px; }
+        .face-6 .dot:nth-child(2) { top: 30px; right: 30px; }
+        .face-6 .dot:nth-child(3) { top: 50%; left: 30px; transform: translateY(-50%); }
+        .face-6 .dot:nth-child(4) { top: 50%; right: 30px; transform: translateY(-50%); }
+        .face-6 .dot:nth-child(5) { bottom: 30px; left: 30px; }
+        .face-6 .dot:nth-child(6) { bottom: 30px; right: 30px; }
 
         .bet-controls {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 14px;
+            margin-bottom: 28px;
         }
 
         .bet-button {
-            background: #2d2d2d;
-            border: 2px solid #3d3d3d;
-            border-radius: 12px;
-            padding: 12px;
+            background: white;
+            border: 2px solid #e6f4ff;
+            border-radius: 16px;
+            padding: 16px;
             font-size: 16px;
-            font-weight: 600;
-            color: white;
+            font-weight: 700;
+            color: #2aabee;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(42, 171, 238, 0.1);
         }
 
         .bet-button:hover {
-            background: #3d3d3d;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.2);
+            border-color: #2aabee;
         }
 
         .bet-button.active {
-            background: #2aabee;
+            background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
             border-color: #2aabee;
+            color: white;
+            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.3);
         }
 
         .play-button {
             width: 100%;
-            padding: 18px;
+            padding: 22px;
             background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
             border: none;
-            border-radius: 16px;
+            border-radius: 20px;
             color: white;
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 800;
             cursor: pointer;
-            transition: transform 0.2s;
-            margin-bottom: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(42, 171, 238, 0.3);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
         }
 
         .play-button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(42, 171, 238, 0.4);
         }
 
         .play-button:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+        }
+
+        .play-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                transparent 20%,
+                rgba(255, 255, 255, 0.3) 50%,
+                transparent 80%
+            );
+            transform: rotate(30deg);
+            transition: transform 0.8s;
+        }
+
+        .play-button:hover::after {
+            transform: rotate(30deg) translateX(100%);
         }
 
         /* История */
         .history {
-            background: #2d2d2d;
-            border-radius: 16px;
-            padding: 20px;
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(42, 171, 238, 0.15);
         }
 
         .history-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: #1a1a1a;
+        }
+
+        .history-refresh {
+            background: none;
+            border: none;
+            color: #2aabee;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .history-refresh:hover {
+            background: rgba(42, 171, 238, 0.1);
         }
 
         .history-items {
             display: flex;
-            gap: 12px;
+            gap: 14px;
             overflow-x: auto;
-            padding-bottom: 8px;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #2aabee #e6f4ff;
+        }
+
+        .history-items::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .history-items::-webkit-scrollbar-track {
+            background: #e6f4ff;
+            border-radius: 3px;
+        }
+
+        .history-items::-webkit-scrollbar-thumb {
+            background: #2aabee;
+            border-radius: 3px;
         }
 
         .history-item {
-            min-width: 60px;
-            height: 60px;
-            background: #3d3d3d;
-            border-radius: 12px;
+            min-width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 16px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 28px;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 6px 20px rgba(42, 171, 238, 0.15);
+            border: 2px solid rgba(42, 171, 238, 0.1);
+            transition: all 0.3s;
+        }
+
+        .history-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(42, 171, 238, 0.25);
         }
 
         .win { 
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border-color: rgba(76, 175, 80, 0.3);
         }
         .lose { 
-            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            border-color: rgba(255, 107, 107, 0.3);
         }
 
         /* Нижнее меню */
@@ -221,11 +393,12 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: #212121;
-            border-top: 1px solid #3d3d3d;
-            padding: 12px 20px;
+            background: white;
+            border-top: 1px solid #e6f4ff;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-around;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
         }
 
         .nav-item {
@@ -234,27 +407,60 @@
             align-items: center;
             color: #888;
             font-size: 12px;
-            gap: 4px;
+            gap: 6px;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 16px;
+        }
+
+        .nav-item:hover {
+            background: rgba(42, 171, 238, 0.08);
+            color: #2aabee;
         }
 
         .nav-item.active {
             color: #2aabee;
+            background: rgba(42, 171, 238, 0.12);
+            font-weight: 600;
         }
 
         .nav-icon {
-            font-size: 24px;
+            font-size: 26px;
+            transition: transform 0.3s;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: translateY(-2px);
         }
 
         /* Анимация кости */
         @keyframes roll {
-            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
-            100% { transform: rotateX(720deg) rotateY(720deg) rotateZ(720deg); }
+            0% { transform: rotateX(0) rotateY(0) rotateZ(0) scale(1); }
+            25% { transform: rotateX(720deg) rotateY(360deg) rotateZ(180deg) scale(1.1); }
+            50% { transform: rotateX(1440deg) rotateY(720deg) rotateZ(360deg) scale(1); }
+            75% { transform: rotateX(2160deg) rotateY(1080deg) rotateZ(540deg) scale(0.95); }
+            100% { transform: var(--final-rotation) scale(1); }
         }
 
         .rolling {
-            animation: roll 1.5s ease-out;
+            animation: roll 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Блестящие частицы */
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle 0.6s ease-out;
         }
     </style>
 </head>
@@ -262,13 +468,13 @@
     <div class="container">
         <!-- Header как в Telegram Wallet -->
         <div class="header">
-            <div class="header-title">Telegram Dice Casino</div>
-            <div class="header-subtitle">Официальная игра в кости</div>
+            <div class="header-title">🎲 Dice Casino</div>
+            <div class="header-subtitle">Играйте в реальном времени</div>
             
             <div class="balance-card">
                 <div class="balance-label">Ваш баланс</div>
                 <div class="balance-amount">
-                    1,000 <span>TON</span>
+                    1,500 <span>TON</span>
                 </div>
             </div>
         </div>
@@ -278,12 +484,45 @@
             <div class="game-area">
                 <div class="dice-container">
                     <div class="dice" id="dice">
-                        <div class="dice-face face-1">1</div>
-                        <div class="dice-face face-2">2</div>
-                        <div class="dice-face face-3">3</div>
-                        <div class="dice-face face-4">4</div>
-                        <div class="dice-face face-5">5</div>
-                        <div class="dice-face face-6">6</div>
+                        <!-- Грань 1 -->
+                        <div class="dice-face face-1">
+                            <div class="dot"></div>
+                        </div>
+                        <!-- Грань 2 -->
+                        <div class="dice-face face-2">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <!-- Грань 3 -->
+                        <div class="dice-face face-3">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <!-- Грань 4 -->
+                        <div class="dice-face face-4">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <!-- Грань 5 -->
+                        <div class="dice-face face-5">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <!-- Грань 6 -->
+                        <div class="dice-face face-6">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -293,14 +532,16 @@
                     <button class="bet-button" data-bet="100">100 TON</button>
                 </div>
 
-                <button class="play-button" id="playButton">Крутить кость</button>
+                <button class="play-button" id="playButton">
+                    <span>🎲 Крутить кость</span>
+                </button>
             </div>
 
             <!-- История игр -->
             <div class="history">
                 <div class="history-title">
                     История игр
-                    <span style="font-size: 14px; opacity: 0.8;">Обновить</span>
+                    <button class="history-refresh" id="refreshHistory">⟳ Обновить</button>
                 </div>
                 <div class="history-items" id="historyItems">
                     <!-- История будет добавляться динамически -->
@@ -317,7 +558,7 @@
         </div>
         <div class="nav-item">
             <div class="nav-icon">💰</div>
-            <div>Пополнить</div>
+            <div>Депозит</div>
         </div>
         <div class="nav-item">
             <div class="nav-icon">📊</div>
@@ -336,18 +577,38 @@
         const betButtons = document.querySelectorAll('.bet-button');
         const historyItems = document.getElementById('historyItems');
         const balanceAmount = document.querySelector('.balance-amount');
+        const refreshHistoryBtn = document.getElementById('refreshHistory');
 
         // Переменные игры
         let currentBet = 10;
-        let balance = 1000;
+        let balance = 1500;
         let history = [];
+        let isRolling = false;
+
+        // Маппинг вращений для каждой грани
+        const rotationMap = {
+            1: 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)',
+            2: 'rotateY(-90deg)',
+            3: 'rotateY(-180deg)',
+            4: 'rotateY(90deg)',
+            5: 'rotateX(-90deg)',
+            6: 'rotateX(90deg)'
+        };
 
         // Выбор ставки
         betButtons.forEach(button => {
             button.addEventListener('click', () => {
+                if (isRolling) return;
+                
                 betButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
                 currentBet = parseInt(button.dataset.bet);
+                
+                // Анимация нажатия
+                button.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 150);
             });
         });
 
@@ -356,67 +617,131 @@
             return Math.floor(Math.random() * 6) + 1;
         }
 
+        // Создание блестящих частиц
+        function createSparkles() {
+            const diceContainer = document.querySelector('.dice-container');
+            for (let i = 0; i < 15; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 180 + 'px';
+                sparkle.style.top = Math.random() * 180 + 'px';
+                sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+                sparkle.style.opacity = 0;
+                
+                diceContainer.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 600);
+            }
+        }
+
         // Анимация броска
         function animateDice(result, callback) {
+            isRolling = true;
+            playButton.disabled = true;
+            
+            // Сбрасываем трансформацию для анимации
+            dice.style.transform = 'rotateX(0) rotateY(0) rotateZ(0)';
+            
+            // Устанавливаем финальное вращение в CSS переменной
+            dice.style.setProperty('--final-rotation', rotationMap[result]);
+            
+            // Создаем частицы
+            createSparkles();
+            
+            // Запускаем анимацию
             dice.classList.add('rolling');
+            
+            // Анимация кнопки
+            playButton.style.transform = 'scale(0.98)';
             
             setTimeout(() => {
                 dice.classList.remove('rolling');
-                // Устанавливаем результат
-                const rotationMap = {
-                    1: 'rotateX(0deg) rotateY(0deg)',
-                    2: 'rotateY(-90deg)',
-                    3: 'rotateY(-180deg)',
-                    4: 'rotateY(90deg)',
-                    5: 'rotateX(-90deg)',
-                    6: 'rotateX(90deg)'
-                };
-                
                 dice.style.transform = rotationMap[result];
+                playButton.style.transform = '';
                 
                 if (callback) callback();
-            }, 1500);
+                
+                // Включаем кнопку через задержку
+                setTimeout(() => {
+                    isRolling = false;
+                    playButton.disabled = false;
+                }, 500);
+                
+            }, 1800);
         }
 
         // Добавление в историю
         function addToHistory(result, win) {
             const historyItem = document.createElement('div');
             historyItem.className = `history-item ${win ? 'win' : 'lose'}`;
-            historyItem.textContent = result;
+            
+            // Создаем точки для отображения результата
+            for (let i = 0; i < result; i++) {
+                const dot = document.createElement('div');
+                dot.style.cssText = `
+                    width: 6px;
+                    height: 6px;
+                    background: white;
+                    border-radius: 50%;
+                    margin: 1px;
+                `;
+                historyItem.appendChild(dot);
+            }
             
             historyItems.prepend(historyItem);
-            history.unshift({ result, win });
+            history.unshift({ result, win, timestamp: Date.now() });
             
-            // Ограничиваем историю 10 последними играми
-            if (history.length > 10) {
+            // Ограничиваем историю 12 последними играми
+            if (history.length > 12) {
                 history.pop();
-                if (historyItems.children.length > 10) {
+                if (historyItems.children.length > 12) {
                     historyItems.removeChild(historyItems.lastChild);
                 }
             }
+            
+            // Анимация появления
+            historyItem.style.opacity = '0';
+            historyItem.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                historyItem.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                historyItem.style.opacity = '1';
+                historyItem.style.transform = 'translateY(0)';
+            }, 10);
         }
 
         // Обновление баланса
         function updateBalance(win) {
+            const oldBalance = balance;
+            
             if (win) {
                 balance += currentBet * 2; // Выигрыш 2x ставки
             } else {
                 balance -= currentBet;
             }
             
-            balanceAmount.innerHTML = `${balance.toLocaleString()} <span>TON</span>`;
+            // Анимация изменения баланса
+            balanceAmount.style.transform = 'scale(1.05)';
+            balanceAmount.style.color = win ? '#4CAF50' : '#ff5252';
+            
+            setTimeout(() => {
+                balanceAmount.style.transition = 'all 0.3s';
+                balanceAmount.style.transform = 'scale(1)';
+                balanceAmount.style.color = '#1a1a1a';
+                balanceAmount.innerHTML = `${balance.toLocaleString()} <span>TON</span>`;
+            }, 300);
         }
 
         // Обработчик игры
         playButton.addEventListener('click', () => {
+            if (isRolling) return;
+            
             if (balance < currentBet) {
-                alert('Недостаточно средств на балансе!');
+                alert('💰 Недостаточно средств! Пополните баланс.');
                 return;
             }
 
-            // Отключаем кнопку на время анимации
-            playButton.disabled = true;
-            
             // Бросок кости
             const result = rollDice();
             const win = result >= 4; // Выигрыш от 4 до 6
@@ -429,15 +754,59 @@
                 // Добавляем в историю
                 addToHistory(result, win);
                 
-                // Включаем кнопку обратно
-                playButton.disabled = false;
-                
                 // Показываем результат
                 setTimeout(() => {
-                    alert(win ? `🎉 Поздравляем! Вы выиграли ${currentBet * 2} TON!` : 
-                                 `😔 Выпало ${result}. Попробуйте еще раз!`);
-                }, 300);
+                    const message = win ? 
+                        `🎉 Вы выиграли ${currentBet * 2} TON!` : 
+                        `😔 Выпало ${result}. Повезет в следующий раз!`;
+                    
+                    // Создаем уведомление
+                    const notification = document.createElement('div');
+                    notification.textContent = message;
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        left: 50%;
+                        transform: translateX(-50%) translateY(-100px);
+                        background: ${win ? '#4CAF50' : '#ff5252'};
+                        color: white;
+                        padding: 16px 32px;
+                        border-radius: 50px;
+                        font-weight: 600;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                        z-index: 1000;
+                        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+                        white-space: nowrap;
+                    `;
+                    
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.style.transform = 'translateX(-50%) translateY(0)';
+                    }, 10);
+                    
+                    setTimeout(() => {
+                        notification.style.transform = 'translateX(-50%) translateY(-100px)';
+                        setTimeout(() => notification.remove(), 500);
+                    }, 3000);
+                }, 500);
             });
+        });
+
+        // Обновление истории
+        refreshHistoryBtn.addEventListener('click', () => {
+            refreshHistoryBtn.style.transform = 'rotate(360deg)';
+            refreshHistoryBtn.style.transition = 'transform 0.5s';
+            
+            // Очищаем и снова добавляем историю для демонстрации
+            historyItems.innerHTML = '';
+            history.forEach(item => {
+                addToHistory(item.result, item.win);
+            });
+            
+            setTimeout(() => {
+                refreshHistoryBtn.style.transform = '';
+            }, 500);
         });
 
         // Инициализация начальной истории
@@ -447,7 +816,10 @@
                 { result: 2, win: false },
                 { result: 4, win: true },
                 { result: 1, win: false },
-                { result: 5, win: true }
+                { result: 5, win: true },
+                { result: 3, win: false },
+                { result: 6, win: true },
+                { result: 4, win: true }
             ];
             
             initialResults.forEach(item => {
@@ -457,6 +829,19 @@
 
         // Запуск при загрузке
         initHistory();
+        
+        // Добавляем hover эффект для кубика
+        dice.parentElement.addEventListener('mouseenter', () => {
+            if (!isRolling) {
+                dice.style.transform = rotationMap[Math.floor(Math.random() * 6) + 1];
+            }
+        });
+        
+        dice.parentElement.addEventListener('mouseleave', () => {
+            if (!isRolling) {
+                dice.style.transform = rotationMap[1];
+            }
+        });
     </script>
 </body>
 </html>
