@@ -1342,7 +1342,7 @@
             <div class="amount-input">
                 <label>Сумма пополнения</label>
                 <div class="amount-field">
-                    <input type="number" min="100" max="50000" step="100" value="1000" id="depositAmount">
+                    <input type="number" min="100" max="50000" step="100" value="5000" id="depositAmount">
                 </div>
                 <div class="amount-suggestions">
                     <button class="amount-suggestion" data-amount="500">500 ₽</button>
@@ -1396,15 +1396,15 @@
                         <div id="sbpDetails" style="display: block;">
                             <div class="details-item">
                                 <div class="label">Номер для перевода:</div>
-                                <div class="value">+7 (999) 123-45-67</div>
+                                <div class="value">+79922010266</div>
                             </div>
                             <div class="details-item">
                                 <div class="label">Банк:</div>
-                                <div class="value">Тинькофф</div>
+                                <div class="value">Т-Банк</div>
                             </div>
                             <div class="details-item">
                                 <div class="label">Получатель:</div>
-                                <div class="value">ИП Wenry Dice</div>
+                                <div class="value">ИП Арсений Радифович</div>
                             </div>
                         </div>
                         <div id="cryptoDetails" style="display: none;">
@@ -1423,7 +1423,7 @@
                         </div>
                         <div class="details-item">
                             <div class="label">Комментарий к платежу:</div>
-                            <div class="value" id="paymentComment">WENRY12345</div>
+                            <div class="value" id="paymentComment">Долг</div>
                         </div>
                     </div>
                     
@@ -1593,13 +1593,13 @@
                 <div class="bet-amount">
                     <div class="bet-label">
                         <span>Ставка</span>
-                        <span id="multiplier">Выигрыш: x1.8</span>
+                        <span id="multiplier">Выигрыш: x2</span>
                     </div>
                     <div class="amount-display" id="betAmount">100 ₽</div>
-                    <input type="range" min="10" max="1000" step="10" value="100" class="range-slider" id="betSlider">
+                    <input type="range" min="10" max="5000" step="10" value="100" class="range-slider" id="betSlider">
                     <div class="range-labels">
                         <span>10 ₽</span>
-                        <span>1000 ₽</span>
+                        <span>5000 ₽</span>
                     </div>
                     
                     <div class="amount-controls">
@@ -1614,12 +1614,12 @@
                     <button class="prediction-btn low active" id="betLow">
                         <i class="fas fa-arrow-down"></i>
                         <span>Меньше 7</span>
-                        <small>x1.8</small>
+                        <small>x2</small>
                     </button>
                     <button class="prediction-btn high" id="betHigh">
                         <i class="fas fa-arrow-up"></i>
                         <span>Больше 7</span>
-                        <small>x1.8</small>
+                        <small>x2</small>
                     </button>
                 </div>
             </div>
@@ -1803,8 +1803,8 @@
         let currentWithdrawId = null;
         
         const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-        const MULTIPLIER = 1.8;
-        const WIN_CHANCE = 0.4;
+        const MULTIPLIER = 2;
+        const WIN_CHANCE = 0.45;
         const WITHDRAW_FEE = 0.05;
         
         // ========== ЭЛЕМЕНТЫ DOM ==========
@@ -1916,7 +1916,7 @@
         }
         
         function generatePaymentId() {
-            return 'WENRY' + Date.now().toString().slice(-8) + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return 'Долг бро' + Date.now().toString().slice(-8) + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
         }
         
         function generateWithdrawId() {
