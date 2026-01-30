@@ -2112,50 +2112,90 @@ async function initTonConnect() {
     try {
         console.log('Инициализация TonConnect...');
         
-        // Создаем упрощенный манифест локально
+        // Упрощенный локальный манифест
         const manifest = {
             url: window.location.origin,
             name: "Wenry Dice",
             iconUrl: "https://raw.githubusercontent.com/ton-connect/demo-ton-wallet/main/src/assets/toncoin.png",
-            termsOfUseUrl: "https://smswork34-art.github.io/-/terms.html",
-            privacyPolicyUrl: "https://smswork34-art.github.io/-/privacy.html"
+            termsOfUseUrl: window.location.origin + "/terms.html",
+            privacyPolicyUrl: window.location.origin + "/privacy.html"
         };
         
-        // Инициализируем TonConnect
+        // Инициализация
         tonConnect = new TonConnectSDK.TonConnect({ manifest });
         
-        // Восстанавливаем соединение если было
+        // Восстановление подключения
         try {
-            const wallets = await tonConnect.getConnectedWallets();
-            if (wallets && wallets.length > 0) {
+            const connectedWallets = await tonConnect.getConnectedWallets();
+            if (connectedWallets && connectedWallets.length > 0) {
                 isTonConnected = true;
-                tonAccount = wallets[0];
-                console.log('Кошелек уже подключен:', tonAccount);
+                tonAccount = connectedWallets[0];
+                console.log('Восстановлено подключение:', tonAccount);
                 updateWalletConnectionUI();
             }
         } catch (e) {
-            console.log('Нет сохраненного подключения');
+            console.log('Нет сохраненных подключений:', e.message);
         }
         
-        // Подписываемся на изменения
-        tonConnect.onStatusChange((wallet) => {
-            console.log('Статус изменился:', wallet);
-            if (wallet) {
+        // Слушатель изменений статуса
+        tonConnect.onStatusChange((walletInfo) => {
+            console.log('Статус кошелька изменен:', walletInfo);
+            
+            if (walletInfo) {
                 isTonConnected = true;
-                tonAccount = wallet;
+                tonAccount = walletInfo;
+                showNotification('Успешно!', 'Кошелек подключен', 'success');
             } else {
                 isTonConnected = false;
                 tonAccount = null;
+                showNotification('Отключено', 'Кошелек отключен', 'info');
             }
+            
             updateWalletConnectionUI();
+            
+            // Обновляем UI модального окна если оно открыто
+            if (depositModal.classList.contains('active')) {
+                if (isTonConnected) {
+                    tonConnectBtn.style.display = 'none';
+                    depositConfirmBtn.style.display = 'flex';
+                    depositConfirmBtn.disabled = false;
+                    depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${depositAmountInput.value} TON`;
+                } else {
+                    tonConnectBtn.style.display = 'flex';
+                    depositConfirmBtn.style.display = 'none';
+                    tonConnectBtn.disabled = false;
+                    tonConnectBtn.innerHTML = '<i class="fas fa-wallet"></i> Подключить TonKeeper';
+                }
+            }
         });
         
+        console.log('TonConnect инициализирован');
         return tonConnect;
+        
     } catch (error) {
         console.error('Ошибка инициализации TonConnect:', error);
         return null;
+
+// Добавьте в конец initTonConnect
+setTimeout(async () => {
+    try {
+        if (tonConnect) {
+            const wallets = await tonConnect.getWallets();
+            console.log('Проверка кошельков:', wallets.length, 'найдено');
+            
+            if (wallets.length === 0) {
+                console.warn('TonKeeper не обнаружен');
+                // Можно показать подсказку
+            }
+        }
+    } catch (e) {
+        console.log('Не удалось проверить кошельки:', e);
+    }
+}, 2000);
+
     }
 }
+
         
         function updateWalletConnectionUI() {
             if (isTonConnected && tonAccount) {
@@ -2167,47 +2207,89 @@ async function initTonConnect() {
             }
         }
         
-// ДОБАВЬТЕ В НАЧАЛЕ функции connectTonKeeper():
-async function connectTonKeeper() {
+ async function connectTonKeeper() {
     console.log('Кнопка "Подключить TonKeeper" нажата!');
     
     try {
-        // Проверяем инициализацию
+        // === ДОБАВЛЕНО: Проверка на мобильное устройство ===
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isInTelegram = window.Telegram && window.Telegram.WebApp;
+        
+        if (isMobile && isInTelegram) {
+            console.log('Мобильное устройство в Telegram - показываем инструкцию');
+            showNotification('📱 Инструкция', 
+                '1. Нажмите "Открыть" в TonKeeper\n' +
+                '2. Подтвердите подключение\n' +
+                '3. Вернитесь в это окно', 
+                'info');
+        }
+        // === КОНЕЦ ДОБАВЛЕНИЯ ===
+        
+        // Показываем загрузку
+        const originalText = tonConnectBtn.innerHTML;
+        tonConnectBtn.innerHTML = '<div class="loader"></div> Подключение...';
+        tonConnectBtn.disabled = true;
+        
+        // Инициализируем если нужно
         if (!tonConnect) {
-            console.log('Инициализируем TonConnect...');
             await initTonConnect();
         }
         
-        // Показываем уведомление
-        showNotification('Подключение', 'Откройте TonKeeper для подключения...', 'info');
-        
-        // Получаем список кошельков
+        console.log('Получаем список кошельков...');
         const wallets = await tonConnect.getWallets();
-        console.log('Найдено кошельков:', wallets.length);
+        console.log('Доступные кошельки:', wallets);
         
-        if (wallets.length === 0) {
-            showNotification('Ошибка', 'Не найден TonKeeper. Установите приложение.', 'error');
-            return;
+        if (!wallets || wallets.length === 0) {
+            throw new Error('Кошельки не найдены. Установите TonKeeper.');
         }
         
-        // Ищем TonKeeper или берем первый доступный
-        const wallet = wallets.find(w => w.name.toLowerCase().includes('tonkeeper')) || wallets[0];
-        console.log('Выбран кошелек:', wallet.name);
+        // Ищем TonKeeper
+        let walletToConnect = wallets.find(w => 
+            w.name.toLowerCase().includes('tonkeeper') || 
+            w.appName.toLowerCase().includes('tonkeeper')
+        );
+        
+        // Если не нашли TonKeeper, берем первый доступный
+        if (!walletToConnect && wallets.length > 0) {
+            walletToConnect = wallets[0];
+        }
+        
+        if (!walletToConnect) {
+            throw new Error('Не удалось найти подходящий кошелек');
+        }
+        
+        console.log('Подключаемся к кошельку:', walletToConnect.name);
+        
+        // Правильный способ подключения
+        const connectionSource = {
+            universalLink: walletToConnect.universalLink,
+            bridgeUrl: walletToConnect.bridgeUrl || 'https://bridge.tonapi.io/bridge'
+        };
         
         // Подключаемся
-        await tonConnect.connect({
-            universalLink: wallet.universalLink,
-            bridgeUrl: 'https://bridge.tonapi.io/bridge'
-        });
+        await tonConnect.connect(connectionSource);
         
-        console.log('Запрос на подключение отправлен!');
+        console.log('Запрос на подключение отправлен в кошелек!');
+        
+        // Не показываем уведомление - кошелек сам покажет
         
     } catch (error) {
-        console.error('Ошибка при подключении:', error);
-        showNotification('Ошибка', 'Не удалось подключиться: ' + (error.message || 'неизвестная ошибка'), 'error');
+        console.error('Ошибка подключения:', error);
+        
+        // Восстанавливаем кнопку
+        tonConnectBtn.innerHTML = '<i class="fas fa-wallet"></i> Подключить TonKeeper';
+        tonConnectBtn.disabled = false;
+        
+        if (error.message && error.message.includes('User rejected')) {
+            showNotification('Отменено', 'Вы отменили подключение', 'error');
+        } else if (error.message && error.message.includes('Кошельки не найдены')) {
+            showNotification('Внимание', 'Установите TonKeeper из официального магазина', 'info');
+        } else {
+            showNotification('Ошибка', error.message || 'Не удалось подключиться', 'error');
+        }
     }
 }
-        
+       
         function showWalletSelectionModal(walletsList) {
             // Создаем модальное окно для выбора кошелька
             const modalHtml = `
