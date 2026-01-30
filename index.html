@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎲 Wenry Dice | Telegram Casino</title>
 
-<!-- Добавьте после <title>: -->
-<meta name="tonconnect-manifest" content="https://smswork34-art.github.io/-/ton-connect-manifest.json">
-    
     <!-- TON Connect Manifest -->
-    <link rel="manifest" href="https://smswork34-art.github.io/-/ton-connect-manifest.json">
+    <meta name="tonconnect-manifest" content="https://smswork34-art.github.io/smswork34-art/tonconnect-manifest.json">
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
+    <!-- Обновленная версия TON Connect UI -->
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     
     <style>
         :root {
@@ -1445,6 +1443,19 @@
             color: #0098EA;
             word-break: break-all;
         }
+
+        /* TON Connect UI стили */
+        .ton-connect-button-container {
+            margin: 20px 0;
+        }
+
+        .ton-connect-button-container .tc_btn {
+            width: 100% !important;
+            border-radius: 12px !important;
+            padding: 16px !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+        }
     </style>
 </head>
 <body>
@@ -1488,24 +1499,8 @@
                 </div>
             </div>
             
-            <div style="margin: 25px 0;">
-                <label style="display: block; margin-bottom: 15px; color: var(--accent); text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 1rem;">
-                    Способ оплаты
-                </label>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <button class="payment-method-compact active" id="tonkeeperBtn">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #0098EA 0%, #0088FF 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid rgba(0,152,234,0.3);">
-                                <i class="fas fa-coins"></i>
-                            </div>
-                            <div style="text-align: left;">
-                                <div style="font-weight: 700; margin-bottom: 3px; font-size: 1rem;">TonKeeper</div>
-                                <div style="font-size: 0.85rem; color: var(--text-secondary);">Через TON Connect</div>
-                            </div>
-                        </div>
-                        <i class="fas fa-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>
-                    </button>
-                </div>
+            <div class="ton-connect-button-container" id="tonConnectContainer">
+                <!-- TON Connect кнопка будет здесь -->
             </div>
             
             <div class="payment-details" id="depositDetails" style="display: none;">
@@ -1543,12 +1538,8 @@
             <button class="modal-btn" id="depositNextBtn">
                 <i class="fas fa-credit-card"></i> Продолжить
             </button>
-<!-- В модальном окне депозита найдите эту кнопку: -->
-<button class="ton-payment-btn" id="tonConnectBtn" style="display: none;">
-    <i class="fas fa-wallet"></i> Подключить TonKeeper
-</button>
-            <button class="modal-btn" id="depositConfirmBtn" style="display: none;">
-                <i class="fas fa-check"></i> Подтвердить депозит
+            <button class="ton-payment-btn" id="sendPaymentBtn" style="display: none;">
+                <i class="fas fa-coins"></i> Отправить платеж
             </button>
         </div>
     </div>
@@ -1936,7 +1927,7 @@
         const WIN_CHANCE = 0.4;
         
         // TON Connect
-        let tonConnect = null;
+        let tonConnectUI = null;
         let isTonConnected = false;
         let tonAccount = null;
         
@@ -2007,9 +1998,8 @@
         const depositBonus = document.getElementById('depositBonus');
         const depositTotal = document.getElementById('depositTotal');
         const depositNextBtn = document.getElementById('depositNextBtn');
-        const depositConfirmBtn = document.getElementById('depositConfirmBtn');
-        const tonConnectBtn = document.getElementById('tonConnectBtn');
-        const tonkeeperBtn = document.getElementById('tonkeeperBtn');
+        const sendPaymentBtn = document.getElementById('sendPaymentBtn');
+        const tonConnectContainer = document.getElementById('tonConnectContainer');
         const depositDetails = document.getElementById('depositDetails');
         const walletConnectionStatus = document.getElementById('walletConnectionStatus');
         const connectedWalletAddress = document.getElementById('connectedWalletAddress');
@@ -2095,7 +2085,6 @@
         }
         
         function validateTonAddress(address) {
-            // Простая валидация TON адреса
             if (!address) return false;
             const tonRegex = /^(UQ|EQ|0Q)[A-Za-z0-9_-]{48}$/;
             return tonRegex.test(address);
@@ -2108,286 +2097,111 @@
         }
         
         // ========== TON CONNECT ИНИЦИАЛИЗАЦИЯ ==========
-async function initTonConnect() {
-    try {
-        console.log('Инициализация TonConnect...');
-        
-        // Упрощенный локальный манифест
-        const manifest = {
-            url: window.location.origin,
-            name: "Wenry Dice",
-            iconUrl: "https://raw.githubusercontent.com/ton-connect/demo-ton-wallet/main/src/assets/toncoin.png",
-            termsOfUseUrl: window.location.origin + "/terms.html",
-            privacyPolicyUrl: window.location.origin + "/privacy.html"
-        };
-        
-        // Инициализация
-        tonConnect = new TonConnectSDK.TonConnect({ manifest });
-        
-        // Восстановление подключения
-        try {
-            const connectedWallets = await tonConnect.getConnectedWallets();
-            if (connectedWallets && connectedWallets.length > 0) {
-                isTonConnected = true;
-                tonAccount = connectedWallets[0];
-                console.log('Восстановлено подключение:', tonAccount);
-                updateWalletConnectionUI();
-            }
-        } catch (e) {
-            console.log('Нет сохраненных подключений:', e.message);
-        }
-        
-        // Слушатель изменений статуса
-        tonConnect.onStatusChange((walletInfo) => {
-            console.log('Статус кошелька изменен:', walletInfo);
-            
-            if (walletInfo) {
-                isTonConnected = true;
-                tonAccount = walletInfo;
-                showNotification('Успешно!', 'Кошелек подключен', 'success');
-            } else {
-                isTonConnected = false;
-                tonAccount = null;
-                showNotification('Отключено', 'Кошелек отключен', 'info');
-            }
-            
-            updateWalletConnectionUI();
-            
-            // Обновляем UI модального окна если оно открыто
-            if (depositModal.classList.contains('active')) {
-                if (isTonConnected) {
-                    tonConnectBtn.style.display = 'none';
-                    depositConfirmBtn.style.display = 'flex';
-                    depositConfirmBtn.disabled = false;
-                    depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${depositAmountInput.value} TON`;
-                } else {
-                    tonConnectBtn.style.display = 'flex';
-                    depositConfirmBtn.style.display = 'none';
-                    tonConnectBtn.disabled = false;
-                    tonConnectBtn.innerHTML = '<i class="fas fa-wallet"></i> Подключить TonKeeper';
-                }
-            }
-        });
-        
-        console.log('TonConnect инициализирован');
-        return tonConnect;
-        
-    } catch (error) {
-        console.error('Ошибка инициализации TonConnect:', error);
-        return null;
-
-// Добавьте в конец initTonConnect
-setTimeout(async () => {
-    try {
-        if (tonConnect) {
-            const wallets = await tonConnect.getWallets();
-            console.log('Проверка кошельков:', wallets.length, 'найдено');
-            
-            if (wallets.length === 0) {
-                console.warn('TonKeeper не обнаружен');
-                // Можно показать подсказку
-            }
-        }
-    } catch (e) {
-        console.log('Не удалось проверить кошельки:', e);
-    }
-}, 2000);
-
-    }
-}
-
-        
-        function updateWalletConnectionUI() {
-            if (isTonConnected && tonAccount) {
-                const shortAddress = formatAddress(tonAccount.account.address);
-                connectedWalletAddress.textContent = shortAddress;
-                walletConnectionStatus.style.display = 'flex';
-            } else {
-                walletConnectionStatus.style.display = 'none';
-            }
-        }
-        
- async function connectTonKeeper() {
-    console.log('Кнопка "Подключить TonKeeper" нажата!');
-    
-    try {
-        // === ДОБАВЛЕНО: Проверка на мобильное устройство ===
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const isInTelegram = window.Telegram && window.Telegram.WebApp;
-        
-        if (isMobile && isInTelegram) {
-            console.log('Мобильное устройство в Telegram - показываем инструкцию');
-            showNotification('📱 Инструкция', 
-                '1. Нажмите "Открыть" в TonKeeper\n' +
-                '2. Подтвердите подключение\n' +
-                '3. Вернитесь в это окно', 
-                'info');
-        }
-        // === КОНЕЦ ДОБАВЛЕНИЯ ===
-        
-        // Показываем загрузку
-        const originalText = tonConnectBtn.innerHTML;
-        tonConnectBtn.innerHTML = '<div class="loader"></div> Подключение...';
-        tonConnectBtn.disabled = true;
-        
-        // Инициализируем если нужно
-        if (!tonConnect) {
-            await initTonConnect();
-        }
-        
-        console.log('Получаем список кошельков...');
-        const wallets = await tonConnect.getWallets();
-        console.log('Доступные кошельки:', wallets);
-        
-        if (!wallets || wallets.length === 0) {
-            throw new Error('Кошельки не найдены. Установите TonKeeper.');
-        }
-        
-        // Ищем TonKeeper
-        let walletToConnect = wallets.find(w => 
-            w.name.toLowerCase().includes('tonkeeper') || 
-            w.appName.toLowerCase().includes('tonkeeper')
-        );
-        
-        // Если не нашли TonKeeper, берем первый доступный
-        if (!walletToConnect && wallets.length > 0) {
-            walletToConnect = wallets[0];
-        }
-        
-        if (!walletToConnect) {
-            throw new Error('Не удалось найти подходящий кошелек');
-        }
-        
-        console.log('Подключаемся к кошельку:', walletToConnect.name);
-        
-        // Правильный способ подключения
-        const connectionSource = {
-            universalLink: walletToConnect.universalLink,
-            bridgeUrl: walletToConnect.bridgeUrl || 'https://bridge.tonapi.io/bridge'
-        };
-        
-        // Подключаемся
-        await tonConnect.connect(connectionSource);
-        
-        console.log('Запрос на подключение отправлен в кошелек!');
-        
-        // Не показываем уведомление - кошелек сам покажет
-        
-    } catch (error) {
-        console.error('Ошибка подключения:', error);
-        
-        // Восстанавливаем кнопку
-        tonConnectBtn.innerHTML = '<i class="fas fa-wallet"></i> Подключить TonKeeper';
-        tonConnectBtn.disabled = false;
-        
-        if (error.message && error.message.includes('User rejected')) {
-            showNotification('Отменено', 'Вы отменили подключение', 'error');
-        } else if (error.message && error.message.includes('Кошельки не найдены')) {
-            showNotification('Внимание', 'Установите TonKeeper из официального магазина', 'info');
-        } else {
-            showNotification('Ошибка', error.message || 'Не удалось подключиться', 'error');
-        }
-    }
-}
-       
-        function showWalletSelectionModal(walletsList) {
-            // Создаем модальное окно для выбора кошелька
-            const modalHtml = `
-                <div class="modal-overlay active" id="walletSelectModal">
-                    <div class="modal">
-                        <div class="modal-header">
-                            <h2 class="modal-title"><i class="fas fa-wallet"></i> Выберите кошелек</h2>
-                            <button class="close-modal" id="closeWalletModal">&times;</button>
-                        </div>
-                        <div style="margin: 20px 0;">
-                            <div style="display: flex; flex-direction: column; gap: 10px;" id="walletList">
-                                ${walletsList.map(wallet => `
-                                    <button class="payment-method-compact wallet-option" data-wallet='${JSON.stringify(wallet).replace(/'/g, "\\'")}'>
-                                        <div style="display: flex; align-items: center; gap: 15px;">
-                                            <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #0098EA 0%, #0088FF 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid rgba(0,152,234,0.3);">
-                                                <i class="fas fa-wallet"></i>
-                                            </div>
-                                            <div style="text-align: left;">
-                                                <div style="font-weight: 700; margin-bottom: 3px; font-size: 1rem;">${wallet.name || wallet.appName}</div>
-                                                <div style="font-size: 0.85rem; color: var(--text-secondary);">${wallet.appName || wallet.name}</div>
-                                            </div>
-                                        </div>
-                                        <i class="fas fa-arrow-right" style="color: var(--text-secondary);"></i>
-                                    </button>
-                                `).join('')}
-                            </div>
-                        </div>
-                        <div style="text-align: center; margin-top: 20px;">
-                            <p style="color: var(--text-secondary); font-size: 0.8rem;">
-                                Установите TonKeeper из официального магазина
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Добавляем модалку в DOM
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            
-            // Обработчики событий
-            const walletSelectModal = document.getElementById('walletSelectModal');
-            const closeWalletModal = document.getElementById('closeWalletModal');
-            const walletOptions = document.querySelectorAll('.wallet-option');
-            
-            closeWalletModal.addEventListener('click', () => {
-                walletSelectModal.remove();
-            });
-            
-            walletSelectModal.addEventListener('click', (e) => {
-                if (e.target === walletSelectModal) {
-                    walletSelectModal.remove();
-                }
-            });
-            
-            walletOptions.forEach(option => {
-                option.addEventListener('click', async () => {
-                    const walletData = JSON.parse(option.getAttribute('data-wallet'));
-                    
-                    try {
-                        const connectionSource = {
-                            jsBridgeKey: walletData.jsBridgeKey,
-                            universalLink: walletData.universalLink
-                        };
-                        
-                        await tonConnect.connect(connectionSource);
-                        walletSelectModal.remove();
-                        
-                    } catch (error) {
-                        console.error('Ошибка подключения к кошельку:', error);
-                        showNotification('Ошибка', 'Не удалось подключиться к кошельку', 'error');
+        function initTonConnect() {
+            try {
+                console.log('Инициализация TON Connect...');
+                
+                const manifestUrl = window.location.origin + '/tonconnect-manifest.json';
+                
+                // Используем правильный манифест URL
+                const correctedManifestUrl = 'https://smswork34-art.github.io/smswork34-art/tonconnect-manifest.json';
+                
+                tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+                    manifestUrl: correctedManifestUrl,
+                    buttonRootId: 'tonConnectContainer',
+                    actionsConfiguration: {
+                        twaReturnUrl: 'https://t.me/DiceCasinoMini_Bot'
+                    },
+                    uiPreferences: {
+                        theme: 'DARK',
+                        borderRadius: 's'
                     }
                 });
-            });
+                
+                tonConnectUI.onStatusChange(async (walletInfo) => {
+                    console.log('Статус кошелька изменен:', walletInfo);
+                    
+                    if (walletInfo) {
+                        isTonConnected = true;
+                        tonAccount = walletInfo;
+                        
+                        const shortAddress = formatAddress(tonAccount.account.address);
+                        connectedWalletAddress.textContent = shortAddress;
+                        walletConnectionStatus.style.display = 'flex';
+                        
+                        showNotification('Успешно!', 'Кошелек подключен', 'success');
+                        
+                        // Если открыто модальное окно депозита, показываем кнопку отправки
+                        if (depositModal.classList.contains('active')) {
+                            updateDepositModalForConnectedWallet();
+                        }
+                    } else {
+                        isTonConnected = false;
+                        tonAccount = null;
+                        walletConnectionStatus.style.display = 'none';
+                        showNotification('Отключено', 'Кошелек отключен', 'info');
+                        
+                        if (depositModal.classList.contains('active')) {
+                            updateDepositModalForDisconnectedWallet();
+                        }
+                    }
+                });
+                
+                console.log('TON Connect инициализирован');
+                return tonConnectUI;
+                
+            } catch (error) {
+                console.error('Ошибка инициализации TON Connect:', error);
+                showNotification('Ошибка', 'Не удалось инициализировать кошелек', 'error');
+                return null;
+            }
         }
         
-        async function sendTonTransaction(amount, toAddress) {
+        function updateDepositModalForConnectedWallet() {
+            depositNextBtn.style.display = 'none';
+            sendPaymentBtn.style.display = 'flex';
+            sendPaymentBtn.disabled = false;
+            sendPaymentBtn.innerHTML = `<i class="fas fa-coins"></i> Отправить ${depositAmountInput.value} TON`;
+            depositDetails.style.display = 'block';
+        }
+        
+        function updateDepositModalForDisconnectedWallet() {
+            depositNextBtn.style.display = 'flex';
+            sendPaymentBtn.style.display = 'none';
+            depositDetails.style.display = 'none';
+        }
+        
+        async function sendTonTransaction(amount) {
             try {
-                if (!tonConnect || !tonAccount) {
+                if (!tonConnectUI || !tonAccount) {
                     showNotification('Ошибка', 'Кошелек не подключен', 'error');
                     return false;
                 }
                 
                 const transaction = {
-                    validUntil: Math.floor(Date.now() / 1000) + 300, // 5 минут
+                    validUntil: Math.floor(Date.now() / 1000) + 300,
                     messages: [
                         {
-                            address: toAddress,
-                            amount: (amount * 1000000000).toString(), // TON в нанотонах
+                            address: RECEIVER_WALLET_ADDRESS,
+                            amount: (amount * 1000000000).toString()
                         }
                     ]
                 };
                 
                 console.log('Отправка транзакции:', transaction);
-                const result = await tonConnect.sendTransaction(transaction);
+                
+                sendPaymentBtn.disabled = true;
+                sendPaymentBtn.innerHTML = '<div class="loader"></div> Отправка...';
+                
+                const result = await tonConnectUI.sendTransaction(transaction);
                 console.log('Транзакция отправлена:', result);
+                
                 return true;
             } catch (error) {
                 console.error('Ошибка отправки транзакции:', error);
+                
+                sendPaymentBtn.disabled = false;
+                sendPaymentBtn.innerHTML = `<i class="fas fa-coins"></i> Отправить ${depositAmountInput.value} TON`;
                 
                 if (error.message && error.message.includes('User rejected')) {
                     showNotification('Отменено', 'Пользователь отклонил транзакцию', 'error');
@@ -2416,12 +2230,10 @@ setTimeout(async () => {
         }
         
         function updateBonusUI() {
-            // Обновляем прогресс бонуса
             const progressPercent = Math.min((bonusData.totalDeposited / BONUS_THRESHOLD) * 100, 100);
             bonusProgressBar.style.width = progressPercent + '%';
             bonusProgressText.textContent = `${bonusData.totalDeposited}/${BONUS_THRESHOLD} TON`;
             
-            // Обновляем статистику бонусов
             const totalAvailableBonus = bonusData.availableBonus + bonusData.activeBonus;
             bonusAmount.textContent = totalAvailableBonus + ' TON';
             
@@ -2429,11 +2241,9 @@ setTimeout(async () => {
                 const wageringPercent = (bonusData.wageringDone / bonusData.wageringRequired) * 100;
                 wageringProgress.textContent = `${bonusData.wageringDone.toFixed(1)}x`;
                 
-                // Обновляем кнопку активации
                 activateBonusBtn.disabled = true;
                 activateBonusBtn.innerHTML = '<i class="fas fa-gift"></i> Бонус активен';
                 
-                // Проверяем истечение срока бонуса
                 if (bonusData.bonusExpiresAt && new Date() > bonusData.bonusExpiresAt) {
                     bonusData.bonusActive = false;
                     bonusData.activeBonus = 0;
@@ -2443,7 +2253,6 @@ setTimeout(async () => {
             } else {
                 wageringProgress.textContent = '0x';
                 
-                // Проверяем доступен ли бонус для активации
                 if (bonusData.availableBonus > 0) {
                     activateBonusBtn.disabled = false;
                     activateBonusBtn.innerHTML = `<i class="fas fa-gift"></i> Активировать ${bonusData.availableBonus} TON`;
@@ -2459,9 +2268,7 @@ setTimeout(async () => {
         function addDepositToBonus(amount) {
             bonusData.totalDeposited += amount;
             
-            // Проверяем, достигли ли порога для бонуса
             if (bonusData.totalDeposited >= BONUS_THRESHOLD && !bonusData.bonusActive) {
-                // Сбрасываем счетчик и добавляем бонус
                 bonusData.totalDeposited = 0;
                 bonusData.availableBonus += BONUS_AMOUNT;
                 showNotification('🎁 Бонус доступен!', `Вы получили бонус +${BONUS_AMOUNT} TON! Активируйте его в разделе "Бонусы"`, 'success');
@@ -2479,12 +2286,10 @@ setTimeout(async () => {
                 bonusData.wageringDone = 0;
                 bonusData.bonusActivatedAt = new Date();
                 
-                // Устанавливаем срок действия бонуса (7 дней)
                 const expiryDate = new Date();
                 expiryDate.setDate(expiryDate.getDate() + BONUS_EXPIRY_DAYS);
                 bonusData.bonusExpiresAt = expiryDate;
                 
-                // Добавляем бонус к балансу (только для игр)
                 showNotification('Бонус активирован!', `Активирован бонус ${bonusData.activeBonus} TON. Сделайте отыгрыш ${WAGERING_REQUIREMENT}x для вывода`, 'success');
                 updateBonusUI();
             }
@@ -2492,17 +2297,13 @@ setTimeout(async () => {
         
         function updateWagering(betAmount, winAmount) {
             if (bonusData.bonusActive && bonusData.activeBonus > 0) {
-                // Учитываем ставку в отыгрыше
                 bonusData.wageringDone += betAmount;
                 
-                // Если выиграли, учитываем выигрыш
                 if (winAmount > 0) {
                     bonusData.wageringDone += winAmount;
                 }
                 
-                // Проверяем выполнены ли требования
                 if (bonusData.wageringDone >= bonusData.wageringRequired) {
-                    // Бонус отыгран, можно выводить
                     bonusData.bonusActive = false;
                     bonusData.activeBonus = 0;
                     bonusData.wageringDone = 0;
@@ -2563,14 +2364,12 @@ setTimeout(async () => {
                 resultMessage.textContent = `ПОБЕДА! +${winAmount} TON (${dice1}+${dice2}=${total})`;
                 resultMessage.className = 'result-message win-message';
                 
-                // Обновляем отыгрыш бонуса
                 updateWagering(betAmount, winAmount);
             } else {
                 balance -= betAmount;
                 resultMessage.textContent = `ПРОИГРЫШ! -${betAmount} TON (${dice1}+${dice2}=${total})`;
                 resultMessage.className = 'result-message lose-message';
                 
-                // Обновляем отыгрыш бонуса (только ставка)
                 updateWagering(betAmount, 0);
             }
             
@@ -2599,7 +2398,7 @@ setTimeout(async () => {
             
             historyItem.innerHTML = `
                 <div class="history-info">
-                    <div class="history-dice">${diceFaces[game.dice1-1]}${diceFaces[game.dice2-1]}</div>
+                    <div class="history-dice">${diceFaces[dice1-1]}${diceFaces[dice2-1]}</div>
                     <div class="history-details">
                         <h4>${dice1} + ${dice2} = ${total}</h4>
                         <p>${time} • ${isBetLow ? 'Меньше 7' : 'Больше 7'}</p>
@@ -2661,7 +2460,6 @@ setTimeout(async () => {
                 return;
             }
             
-            // Сортируем по дате (новые сверху)
             const sortedHistory = [...withdrawHistory].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             
             sortedHistory.forEach(withdraw => {
@@ -2708,42 +2506,21 @@ setTimeout(async () => {
         }
         
         // ========== ДЕПОЗИТ ==========
-function openDepositModal() {
-    depositDetails.style.display = 'none';
-    depositNextBtn.style.display = 'flex';
-    depositConfirmBtn.style.display = 'none';
-    tonConnectBtn.style.display = 'none';
-    
-    // === ДОБАВЬТЕ ЭТОТ КОД ===
-    console.log('=== DEBUG: Открыто модальное окно депозита ===');
-    console.log('1. TonConnect инициализирован:', tonConnect ? 'Да' : 'Нет');
-    console.log('2. Кошелек подключен:', isTonConnected);
-    console.log('3. Текущий аккаунт:', tonAccount);
-    console.log('4. Баланс пользователя:', balance);
-    console.log('5. Текущий пользователь Telegram:', currentUser);
-    // === КОНЕЦ ОТЛАДОЧНОГО КОДА ===
-    
-    // Обновляем статус подключения кошелька
-    updateWalletConnectionUI();
-    
-    // Проверяем подключен ли кошелек
-    if (isTonConnected && tonAccount) {
-        tonConnectBtn.style.display = 'none';
-        depositConfirmBtn.style.display = 'flex';
-        depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${depositAmountInput.value} TON`;
-        
-        console.log('DEBUG: Кошелек уже подключен, показываем кнопку подтверждения');
-    } else {
-        tonConnectBtn.style.display = 'flex';
-        depositConfirmBtn.style.display = 'none';
-        
-        console.log('DEBUG: Кошелек не подключен, показываем кнопку подключения');
-    }
-    
-    currentPaymentId = generatePaymentId();
-    
-    depositModal.classList.add('active');
-}
+        function openDepositModal() {
+            depositDetails.style.display = 'none';
+            depositNextBtn.style.display = 'flex';
+            sendPaymentBtn.style.display = 'none';
+            
+            currentPaymentId = generatePaymentId();
+            
+            if (isTonConnected && tonAccount) {
+                updateDepositModalForConnectedWallet();
+            } else {
+                updateDepositModalForDisconnectedWallet();
+            }
+            
+            depositModal.classList.add('active');
+        }
         
         function handleDepositNext() {
             const amount = parseInt(depositAmountInput.value) || 10;
@@ -2752,7 +2529,6 @@ function openDepositModal() {
                 return;
             }
             
-            // Проверяем бонус
             let bonus = 0;
             if (amount >= 100) {
                 bonus = BONUS_AMOUNT;
@@ -2767,39 +2543,27 @@ function openDepositModal() {
             depositDetails.style.display = 'block';
             depositNextBtn.style.display = 'none';
             
-            // Проверяем подключен ли кошелек
             if (isTonConnected && tonAccount) {
-                tonConnectBtn.style.display = 'none';
-                depositConfirmBtn.style.display = 'flex';
-                depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${amount} TON`;
-            } else {
-                tonConnectBtn.style.display = 'flex';
-                depositConfirmBtn.style.display = 'none';
+                sendPaymentBtn.style.display = 'flex';
+                sendPaymentBtn.disabled = false;
+                sendPaymentBtn.innerHTML = `<i class="fas fa-coins"></i> Отправить ${amount} TON`;
             }
         }
         
-        async function handleDepositConfirm() {
+        async function handleSendPayment() {
             const amount = parseInt(depositAmountInput.value) || 10;
             
-            // Проверяем бонус
             let bonus = 0;
             if (amount >= 100) {
                 bonus = BONUS_AMOUNT;
             }
             
-            // Показываем загрузку
-            depositConfirmBtn.disabled = true;
-            depositConfirmBtn.innerHTML = '<div class="loader"></div> Отправка...';
-            
-            // Отправляем транзакцию
-            const success = await sendTonTransaction(amount, RECEIVER_WALLET_ADDRESS);
+            const success = await sendTonTransaction(amount);
             
             if (success) {
-                // Успешный депозит
                 balance += amount;
                 addDepositToBonus(amount);
                 
-                // Добавляем в историю депозитов
                 depositHistory.push({
                     id: currentPaymentId,
                     amount: amount,
@@ -2812,7 +2576,6 @@ function openDepositModal() {
                 saveDepositHistory();
                 updateBalance();
                 
-                // Отправляем уведомление в бота
                 const message = `🎲 <b>WENRY DICE | Новый депозит</b>\n\n` +
                               `ID: <code>${currentPaymentId}</code>\n` +
                               `Игрок: <b>${currentUser?.first_name || 'Неизвестно'}</b>\n` +
@@ -2824,16 +2587,12 @@ function openDepositModal() {
                 
                 await sendTelegramMessage(ADMIN_ID, message);
                 
-                // Закрываем модалку
                 setTimeout(() => {
                     depositModal.classList.remove('active');
-                    depositConfirmBtn.disabled = false;
-                    depositConfirmBtn.innerHTML = '<i class="fas fa-check"></i> Подтвердить депозит';
+                    sendPaymentBtn.disabled = false;
+                    sendPaymentBtn.innerHTML = '<i class="fas fa-coins"></i> Отправить платеж';
                     showNotification('Успешно!', `Баланс пополнен на ${amount} TON${bonus > 0 ? ` (+${bonus} TON бонус)` : ''}`, 'success');
                 }, 1500);
-            } else {
-                depositConfirmBtn.disabled = false;
-                depositConfirmBtn.innerHTML = '<i class="fas fa-check"></i> Подтвердить депозит';
             }
         }
         
@@ -2850,7 +2609,6 @@ function openDepositModal() {
             tonWalletInput.style.display = 'block';
             tonWalletAddress.value = '';
             
-            // Устанавливаем максимальную сумму вывода как текущий баланс
             withdrawAmountInput.max = Math.floor(balance);
             
             currentWithdrawId = generateWithdrawId();
@@ -2871,7 +2629,6 @@ function openDepositModal() {
                 return;
             }
             
-            // Проверяем адрес кошелька
             const walletAddress = tonWalletAddress.value.trim();
             if (!validateTonAddress(walletAddress)) {
                 showNotification('Ошибка', 'Введите корректный адрес кошелька TON', 'error');
@@ -2896,28 +2653,24 @@ function openDepositModal() {
                 return;
             }
             
-            // Проверяем активен ли бонус
             if (bonusData.bonusActive) {
                 showNotification('Ошибка', 'Завершите отыгрыш бонуса перед выводом', 'error');
                 return;
             }
             
-            // Показываем загрузку
             withdrawConfirmBtn.disabled = true;
             withdrawConfirmBtn.innerHTML = '<div class="loader"></div> Обработка...';
             
-            // Вычитаем средства сразу (как указано в требованиях)
             balance -= amount;
             updateBalance();
             
-            // Добавляем вывод в историю
             const withdrawData = {
                 id: currentWithdrawId,
                 amount: amount,
                 netAmount: amount,
                 method: 'ton',
                 wallet: walletAddress,
-                status: 'pending', // Ожидание выплаты администратором
+                status: 'pending',
                 timestamp: new Date()
             };
             
@@ -2925,7 +2678,6 @@ function openDepositModal() {
             saveWithdrawHistory();
             updateWithdrawHistory();
             
-            // Отправляем заявку в бота (БЕЗ КНОПОК)
             const message = `🎲 <b>WENRY DICE | Новая заявка на вывод</b>\n\n` +
                           `ID: <code>${currentWithdrawId}</code>\n` +
                           `Игрок: <b>${currentUser?.first_name || 'Неизвестно'}</b>\n` +
@@ -2937,10 +2689,8 @@ function openDepositModal() {
             
             await sendTelegramMessage(ADMIN_ID, message);
             
-            // Показываем уведомление пользователю
             showNotification('✅ Заявка принята!', `Средства будут отправлены в течение 8 часов. Сумма ${amount} TON списана с баланса.`, 'success');
             
-            // Закрываем модалку через 2 секунды
             setTimeout(() => {
                 withdrawModal.classList.remove('active');
                 withdrawConfirmBtn.disabled = false;
@@ -2966,13 +2716,11 @@ function openDepositModal() {
         }
         
         function loadSavedData() {
-            // Баланс
             const savedBalance = localStorage.getItem('wenry_balance');
             if (savedBalance) {
                 balance = parseInt(savedBalance);
             }
             
-            // История игр
             const savedHistory = localStorage.getItem('wenry_history');
             if (savedHistory) {
                 try {
@@ -3004,7 +2752,6 @@ function openDepositModal() {
                 }
             }
             
-            // История депозитов
             const savedDeposits = localStorage.getItem('wenry_deposits');
             if (savedDeposits) {
                 try {
@@ -3014,7 +2761,6 @@ function openDepositModal() {
                 }
             }
             
-            // История выводов
             const savedWithdrawals = localStorage.getItem('wenry_withdrawals');
             if (savedWithdrawals) {
                 try {
@@ -3024,12 +2770,10 @@ function openDepositModal() {
                 }
             }
             
-            // Бонусы
             const savedBonus = localStorage.getItem('wenry_bonus');
             if (savedBonus) {
                 try {
                     bonusData = JSON.parse(savedBonus);
-                    // Конвертируем строки дат обратно в объекты Date
                     if (bonusData.bonusActivatedAt) {
                         bonusData.bonusActivatedAt = new Date(bonusData.bonusActivatedAt);
                     }
@@ -3044,13 +2788,11 @@ function openDepositModal() {
         
         // ========== ИНИЦИАЛИЗАЦИЯ ==========
         document.addEventListener('DOMContentLoaded', async function() {
-            // Инициализация Telegram
             tg.ready();
             tg.expand();
             tg.setHeaderColor('#0f0f0f');
             tg.setBackgroundColor('#0f0f0f');
             
-            // Получаем данные пользователя
             if (tg.initDataUnsafe.user) {
                 currentUser = tg.initDataUnsafe.user;
                 userName.textContent = currentUser.first_name || 'Игрок';
@@ -3066,19 +2808,15 @@ function openDepositModal() {
                 }
             }
             
-            // Загружаем сохраненные данные
             loadSavedData();
-            
-            // Обновляем данные
             updateBalance();
             updateBetAmount();
             updateStats();
             updateWithdrawHistory();
             updateBonusUI();
             
-            // Инициализируем TonConnect (асинхронно, не блокируем UI)
-            setTimeout(async () => {
-                await initTonConnect();
+            setTimeout(() => {
+                initTonConnect();
             }, 1000);
             
             // ========== ОБРАБОТЧИКИ СОБЫТИЙ ==========
@@ -3124,9 +2862,7 @@ function openDepositModal() {
             });
             
             depositNextBtn.addEventListener('click', handleDepositNext);
-            depositConfirmBtn.addEventListener('click', handleDepositConfirm);
-            
-            tonConnectBtn.addEventListener('click', connectTonKeeper);
+            sendPaymentBtn.addEventListener('click', handleSendPayment);
             
             // Вывод кнопки
             withdrawBtns.forEach(btn => {
