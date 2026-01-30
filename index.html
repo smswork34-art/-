@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎲 Wenry Dice | Telegram Casino</title>
+    
+    <!-- TON Connect Manifest -->
+    <link rel="manifest" href="https://smswork34-art.github.io/-/ton-connect-manifest.json">
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://ton-connect.github.io/tonconnect-sdk/tonconnect-sdk.min.js"></script>
+    
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
@@ -81,6 +87,17 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .dice-icon {
+            width: 32px;
+            height: 32px;
+            fill: #ff6b00;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 0, 0.5));
         }
 
         .app-subtitle {
@@ -686,6 +703,7 @@
             font-size: 1.2rem;
         }
 
+        /* Модальные окна */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -806,7 +824,7 @@
         }
 
         .amount-field::after {
-            content: '₽';
+            content: 'TON';
             position: absolute;
             right: 20px;
             top: 50%;
@@ -1106,49 +1124,21 @@
             box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
         }
 
-        .bank-selection {
-            margin-bottom: 25px;
+        .withdraw-method-container {
+            margin: 25px 0;
         }
 
-        .bank-selection label {
+        .withdraw-method-label {
             display: block;
-            margin-bottom: 10px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+            text-align: center;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-size: 1rem;
         }
 
-        .bank-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .bank-option {
-            background: var(--surface);
-            border: 2px solid rgba(255, 107, 0, 0.2);
-            border-radius: 10px;
-            padding: 15px;
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .bank-option:hover {
-            background: rgba(255, 107, 0, 0.1);
-            border-color: rgba(255, 107, 0, 0.5);
-            transform: translateY(-3px);
-        }
-
-        .bank-option.active {
-            border-color: var(--accent);
-            background: rgba(255, 107, 0, 0.1);
-            box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
-        }
-
+        /* История выводов - УПРОЩЕННАЯ ВЕРСИЯ */
         .withdraw-history-container {
             background: var(--card-bg);
             border-radius: var(--border-radius);
@@ -1176,24 +1166,12 @@
             align-items: center;
             transition: var(--transition);
             border: 1px solid transparent;
-            border-left: 4px solid;
+            border-left: 4px solid var(--accent);
         }
 
         .withdraw-history-item:hover {
             transform: translateX(5px);
             background: rgba(255, 107, 0, 0.05);
-        }
-
-        .withdraw-history-item.pending {
-            border-left-color: var(--pending-color);
-        }
-
-        .withdraw-history-item.completed {
-            border-left-color: var(--win-color);
-        }
-
-        .withdraw-history-item.cancelled {
-            border-left-color: var(--cancelled-color);
         }
 
         .withdraw-history-info {
@@ -1224,230 +1202,7 @@
             font-size: 1.3rem;
             font-weight: 900;
             letter-spacing: 1px;
-        }
-
-        .withdraw-history-amount.pending {
-            color: var(--pending-color);
-        }
-
-        .withdraw-history-amount.completed {
-            color: var(--win-color);
-        }
-
-        .withdraw-history-amount.cancelled {
-            color: var(--cancelled-color);
-        }
-
-        .withdraw-history-status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-        }
-
-        .status-pending {
-            background: rgba(255, 170, 0, 0.1);
-            color: var(--pending-color);
-            border: 1px solid var(--pending-color);
-        }
-
-        .status-completed {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--win-color);
-            border: 1px solid var(--win-color);
-        }
-
-        .status-cancelled {
-            background: rgba(136, 136, 136, 0.1);
-            color: var(--cancelled-color);
-            border: 1px solid var(--cancelled-color);
-        }
-
-        .partnership-container {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255, 107, 0, 0.1);
-        }
-
-        .partnership-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .partnership-stat {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(255, 107, 0, 0.1);
-            transition: var(--transition);
-        }
-
-        .partnership-stat:hover {
-            transform: translateY(-3px);
-            border-color: rgba(255, 107, 0, 0.3);
-            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.1);
-        }
-
-        .partnership-stat-value {
-            font-size: 1.8rem;
-            font-weight: 900;
-            margin-bottom: 5px;
             color: var(--accent);
-            text-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
-        }
-
-        .partnership-stat-label {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .referral-link-container {
-            background: rgba(255, 107, 0, 0.05);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 107, 0, 0.1);
-        }
-
-        .referral-link-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .referral-link {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .referral-link input {
-            flex: 1;
-            padding: 15px;
-            background: var(--surface);
-            border: 2px solid rgba(255, 107, 0, 0.2);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .referral-link input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
-        }
-
-        .copy-btn {
-            padding: 15px 25px;
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: var(--transition);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-
-        .copy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
-        }
-
-        .info-box {
-            background: rgba(0, 255, 136, 0.1);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 2px solid rgba(0, 255, 136, 0.3);
-        }
-
-        .info-box .title {
-            color: var(--win-color);
-            font-weight: 700;
-            margin-bottom: 10px;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .info-box ul {
-            padding-left: 20px;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        .info-box li {
-            margin-bottom: 5px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 15px;
-            background: var(--surface);
-            border: 2px solid rgba(255, 107, 0, 0.2);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            transition: var(--transition);
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-            font-family: inherit;
-        }
-
-        .form-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ff6b00' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 16px;
-            padding-right: 40px;
         }
 
         @media (max-width: 480px) {
@@ -1455,10 +1210,6 @@
                 width: 80px;
                 height: 80px;
                 font-size: 2.8rem;
-            }
-            
-            .bank-options {
-                grid-template-columns: 1fr;
             }
             
             .amount-suggestions {
@@ -1469,10 +1220,6 @@
                 left: 20px;
                 right: 20px;
                 max-width: none;
-            }
-            
-            .partnership-stats {
-                grid-template-columns: 1fr;
             }
         }
 
@@ -1504,6 +1251,197 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-light);
         }
+
+        .bonus-info {
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .bonus-title {
+            color: var(--win-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bonus-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .bonus-progress {
+            background: var(--surface);
+            border-radius: 10px;
+            height: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .bonus-progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #00ff88, #00cc6a);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .bonus-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .bonus-stat {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 0, 0.1);
+        }
+
+        .bonus-stat-value {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+
+        .bonus-stat-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bonus-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .bonus-action-btn {
+            flex: 1;
+            padding: 15px;
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bonus-action-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .bonus-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .bonus-action-btn.secondary {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 2px solid rgba(255, 107, 0, 0.3);
+        }
+
+        .bonus-action-btn.secondary:hover:not(:disabled) {
+            background: rgba(255, 107, 0, 0.1);
+            border-color: rgba(255, 107, 0, 0.5);
+        }
+
+        .ton-wallet-input {
+            margin: 25px 0;
+        }
+
+        .ton-wallet-input label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ton-wallet-field {
+            width: 100%;
+            padding: 18px;
+            background: var(--surface);
+            border: 2px solid rgba(255, 107, 0, 0.2);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: monospace;
+        }
+
+        .ton-wallet-field:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.2);
+        }
+
+        .ton-payment-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #0098EA 0%, #0088FF 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 152, 234, 0.3);
+        }
+
+        .ton-payment-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 152, 234, 0.4);
+        }
+
+        .ton-payment-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .wallet-connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(0, 152, 234, 0.1);
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 1px solid rgba(0, 152, 234, 0.2);
+        }
+        
+        .wallet-address {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #0098EA;
+            word-break: break-all;
+        }
     </style>
 </head>
 <body>
@@ -1525,17 +1463,25 @@
             </div>
             
             <div class="amount-input">
-                <label>Сумма пополнения</label>
+                <label>Сумма пополнения (TON)</label>
                 <div class="amount-field">
-                    <input type="number" min="100" max="50000" step="100" value="1000" id="depositAmount">
+                    <input type="number" min="1" max="10000" step="1" value="10" id="depositAmount">
                 </div>
                 <div class="amount-suggestions">
-                    <button class="amount-suggestion" data-amount="500">500 ₽</button>
-                    <button class="amount-suggestion" data-amount="1000">1 000 ₽</button>
-                    <button class="amount-suggestion" data-amount="3000">3 000 ₽</button>
-                    <button class="amount-suggestion" data-amount="5000">5 000 ₽</button>
-                    <button class="amount-suggestion" data-amount="10000">10 000 ₽</button>
-                    <button class="amount-suggestion" data-amount="25000">25 000 ₽</button>
+                    <button class="amount-suggestion" data-amount="5">5 TON</button>
+                    <button class="amount-suggestion" data-amount="10">10 TON</button>
+                    <button class="amount-suggestion" data-amount="20">20 TON</button>
+                    <button class="amount-suggestion" data-amount="50">50 TON</button>
+                    <button class="amount-suggestion" data-amount="100">100 TON</button>
+                    <button class="amount-suggestion" data-amount="200">200 TON</button>
+                </div>
+            </div>
+            
+            <div id="walletConnectionStatus" class="wallet-connection-status" style="display: none;">
+                <i class="fas fa-wallet" style="color: #0098EA;"></i>
+                <div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Кошелек подключен:</div>
+                    <div class="wallet-address" id="connectedWalletAddress"></div>
                 </div>
             </div>
             
@@ -1544,95 +1490,61 @@
                     Способ оплаты
                 </label>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <button class="payment-method-compact active" data-method="sbp">
+                    <button class="payment-method-compact active" id="tonkeeperBtn">
                         <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="width: 45px; height: 45px; background: var(--primary-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid rgba(255,107,0,0.3);">
-                                🇷🇺
+                            <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #0098EA 0%, #0088FF 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid rgba(0,152,234,0.3);">
+                                <i class="fas fa-coins"></i>
                             </div>
                             <div style="text-align: left;">
-                                <div style="font-weight: 700; margin-bottom: 3px; font-size: 1rem;">СБП</div>
-                                <div style="font-size: 0.85rem; color: var(--text-secondary);">Быстрый перевод</div>
+                                <div style="font-weight: 700; margin-bottom: 3px; font-size: 1rem;">TonKeeper</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">Через TON Connect</div>
                             </div>
                         </div>
                         <i class="fas fa-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>
                     </button>
-                    
-                    <button class="payment-method-compact" data-method="crypto">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="width: 45px; height: 45px; background: var(--primary-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid rgba(255,107,0,0.3);">
-                                <i class="fas fa-coins"></i>
-                            </div>
-                            <div style="text-align: left;">
-                                <div style="font-weight: 700; margin-bottom: 3px; font-size: 1rem;">USDT (TRC-20)</div>
-                                <div style="font-size: 0.85rem; color: var(--text-secondary);">Криптовалюта, 0% комиссия</div>
-                            </div>
-                        </div>
-                        <i class="fas fa-arrow-right" style="color: var(--text-secondary);"></i>
-                    </button>
                 </div>
             </div>
             
-            <div class="payment-details" id="depositDetails">
+            <div class="payment-details" id="depositDetails" style="display: none;">
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <div class="details-title">Для оплаты используйте:</div>
-                    <div style="font-size: 1.6rem; font-weight: 900; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; text-shadow: 0 0 15px rgba(255,107,0,0.3);" id="finalAmount">1 150 ₽</div>
+                    <div class="details-title">Подтверждение платежа</div>
+                    <div style="font-size: 1.6rem; font-weight: 900; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; text-shadow: 0 0 15px rgba(255,107,0,0.3);" id="finalAmount">10 TON</div>
                     
                     <div class="details-content">
-                        <div id="sbpDetails" style="display: block;">
-                            <div class="details-item">
-                                <div class="label">Номер для перевода:</div>
-                                <div class="value">+7 (999) 123-45-67</div>
-                            </div>
-                            <div class="details-item">
-                                <div class="label">Банк:</div>
-                                <div class="value">Тинькофф</div>
-                            </div>
-                            <div class="details-item">
-                                <div class="label">Получатель:</div>
-                                <div class="value">ИП Wenry Dice</div>
-                            </div>
-                        </div>
-                        <div id="cryptoDetails" style="display: none;">
-                            <div class="details-item">
-                                <div class="label">Адрес кошелька:</div>
-                                <div class="value">TUxj2bNET1SY1FsZo38WhKmHP7qeDm2GqP</div>
-                            </div>
-                            <div class="details-item">
-                                <div class="label">Сеть:</div>
-                                <div class="value">TRC-20 (TRON)</div>
-                            </div>
-                            <div class="details-item">
-                                <div class="label">Токен:</div>
-                                <div class="value">USDT</div>
-                            </div>
+                        <div class="details-item">
+                            <div class="label">Сумма пополнения:</div>
+                            <div class="value" id="depositTonAmount">10 TON</div>
                         </div>
                         <div class="details-item">
-                            <div class="label">Комментарий к платежу:</div>
-                            <div class="value" id="paymentComment">WENRY12345</div>
+                            <div class="label">Бонус:</div>
+                            <div class="value" id="depositBonus">+0 TON</div>
+                        </div>
+                        <div class="details-item">
+                            <div class="label">Итого на баланс:</div>
+                            <div class="value" id="depositTotal">10 TON</div>
                         </div>
                     </div>
                     
-                    <div style="background: rgba(255,68,68,0.1); border-radius: 12px; padding: 15px; margin: 20px 0; border: 2px solid rgba(255,68,68,0.3);">
-                        <div style="font-size: 0.9rem; color: #ff4444; margin-bottom: 10px; font-weight: 700; text-transform: uppercase;">
-                            ⚠️ ВНИМАНИЕ!
+                    <div style="background: rgba(0,255,136,0.1); border-radius: 12px; padding: 15px; margin: 20px 0; border: 2px solid rgba(0,255,136,0.3);">
+                        <div style="font-size: 0.9rem; color: #00ff88; margin-bottom: 10px; font-weight: 700; text-transform: uppercase;">
+                            🎁 БОНУС!
                         </div>
-                        <div style="font-size: 0.8rem; color: #ff8888; line-height: 1.4;">
-                            • Обязательно укажите комментарий<br>
-                            • Неправильный комментарий = отмена платежа<br>
-                            • Проверяйте адрес кошелька
+                        <div style="font-size: 0.8rem; color: #88ffcc; line-height: 1.4;">
+                            При пополнении 100 TON вы получаете бонус +45 TON!<br>
+                            Для вывода бонуса нужно сделать отыгрыш 2x
                         </div>
                     </div>
                 </div>
             </div>
             
             <button class="modal-btn" id="depositNextBtn">
-                <i class="fas fa-credit-card"></i> Перейти к оплате
+                <i class="fas fa-credit-card"></i> Продолжить
             </button>
-            <button class="modal-btn secondary" id="depositConfirmBtn" style="display: none;">
-                <i class="fas fa-check"></i> Я оплатил
+            <button class="ton-payment-btn" id="tonConnectBtn" style="display: none;">
+                <i class="fas fa-wallet"></i> Подключить TonKeeper
             </button>
-            <button class="modal-btn secondary" id="depositWaitingBtn" style="display: none;" disabled>
-                <div class="loader"></div> Ожидание подтверждения
+            <button class="modal-btn" id="depositConfirmBtn" style="display: none;">
+                <i class="fas fa-check"></i> Подтвердить депозит
             </button>
         </div>
     </div>
@@ -1646,87 +1558,59 @@
             </div>
             
             <div class="amount-input">
-                <label>Сумма вывода</label>
+                <label>Сумма вывода (TON)</label>
                 <div class="amount-field">
-                    <input type="number" min="100" max="50000" step="100" value="1000" id="withdrawAmount">
+                    <input type="number" min="1" step="1" value="10" id="withdrawAmount">
                 </div>
                 <div class="amount-suggestions">
-                    <button class="amount-suggestion" data-amount="500">500 ₽</button>
-                    <button class="amount-suggestion" data-amount="1000">1 000 ₽</button>
-                    <button class="amount-suggestion" data-amount="3000">3 000 ₽</button>
-                    <button class="amount-suggestion" data-amount="5000">5 000 ₽</button>
-                    <button class="amount-suggestion" data-amount="10000">10 000 ₽</button>
-                    <button class="amount-suggestion" data-amount="25000">25 000 ₽</button>
+                    <button class="amount-suggestion" data-amount="5">5 TON</button>
+                    <button class="amount-suggestion" data-amount="10">10 TON</button>
+                    <button class="amount-suggestion" data-amount="20">20 TON</button>
+                    <button class="amount-suggestion" data-amount="50">50 TON</button>
+                    <button class="amount-suggestion" data-amount="100">100 TON</button>
+                    <button class="amount-suggestion" data-amount="200">200 TON</button>
                 </div>
             </div>
             
-            <div style="margin: 25px 0;">
-                <label style="display: block; margin-bottom: 15px; color: var(--accent); text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 1rem;">
+            <div class="withdraw-method-container">
+                <label class="withdraw-method-label">
                     Способ получения
                 </label>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <button class="payment-method-compact active" data-method="sbp">
+                    <button class="payment-method-compact active" data-method="ton">
                         <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="width: 45px; height: 45px; background: var(--primary-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid rgba(255,107,0,0.3);">
-                                🇷🇺
+                            <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #0098EA 0%, #0088FF 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid rgba(0,152,234,0.3);">
+                                <i class="fas fa-coins"></i>
                             </div>
                             <div style="text-align: left;">
-                                <div style="font-weight: 700; margin-bottom: 3px; font-size: 1rem;">СБП / Карта</div>
-                                <div style="font-size: 0.85rem; color: var(--text-secondary);">На банковскую карту</div>
+                                <div style="font-weight: 700; margin-bottom: 3px; font-size: 1rem;">TON</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">На кошелек TON</div>
                             </div>
                         </div>
                         <i class="fas fa-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>
                     </button>
-                    
-                    <button class="payment-method-compact" data-method="crypto">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="width: 45px; height: 45px; background: var(--primary-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid rgba(255,107,0,0.3);">
-                                <i class="fas fa-coins"></i>
-                            </div>
-                            <div style="text-align: left;">
-                                <div style="font-weight: 700; margin-bottom: 3px; font-size: 1rem;">USDT (TRC-20)</div>
-                                <div style="font-size: 0.85rem; color: var(--text-secondary);">На крипто-кошелек</div>
-                            </div>
-                        </div>
-                        <i class="fas fa-arrow-right" style="color: var(--text-secondary);"></i>
-                    </button>
                 </div>
             </div>
             
-            <div class="withdraw-input" id="sbpWithdrawInput" style="display: none;">
-                <label>Номер телефона или карты</label>
-                <input type="text" class="withdraw-field" id="sbpAccount" placeholder="+7 999 123 45 67">
-            </div>
-            
-            <div class="bank-selection" id="bankSelection" style="display: none;">
-                <label>Выберите банк</label>
-                <div class="bank-options">
-                    <div class="bank-option" data-bank="tinkoff">Т-Банк</div>
-                    <div class="bank-option" data-bank="sber">Сбер</div>
-                    <div class="bank-option" data-bank="alfa">Альфа</div>
-                    <div class="bank-option" data-bank="vtb">ВТБ</div>
-                </div>
-            </div>
-            
-            <div class="withdraw-input" id="cryptoWithdrawInput" style="display: none;">
-                <label>Адрес кошелька USDT TRC-20</label>
-                <input type="text" class="withdraw-field" id="cryptoWallet" placeholder="TUxj2bNET1SY1FsZo38WhKmHP7qeDm2GqP">
+            <div class="ton-wallet-input" id="tonWalletInput">
+                <label>Адрес кошелька TON</label>
+                <input type="text" class="ton-wallet-field" id="tonWalletAddress" placeholder="UQB123...abc или EQC123...abc">
             </div>
             
             <div class="payment-details" id="withdrawDetails" style="display: none;">
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div class="details-title">Детали вывода:</div>
-                    <div style="font-size: 1.6rem; font-weight: 900; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; text-shadow: 0 0 15px rgba(255,107,0,0.3);" id="withdrawTotal">1 000 ₽</div>
+                    <div style="font-size: 1.6rem; font-weight: 900; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; text-shadow: 0 0 15px rgba(255,107,0,0.3);" id="withdrawTotal">10 TON</div>
                     
                     <div class="details-content">
                         <div id="withdrawInfo"></div>
                         <div class="details-item">
-                            <div class="label">Комиссия (5%):</div>
-                            <div class="value" id="withdrawFee">50 ₽</div>
+                            <div class="label">Комиссия:</div>
+                            <div class="value" id="withdrawFee">0 TON</div>
                         </div>
                         <div class="details-item">
                             <div class="label">К получению:</div>
-                            <div class="value" id="withdrawNet">950 ₽</div>
+                            <div class="value" id="withdrawNet">10 TON</div>
                         </div>
                     </div>
                 </div>
@@ -1738,106 +1622,23 @@
             <button class="modal-btn secondary" id="withdrawConfirmBtn" style="display: none;">
                 <i class="fas fa-check"></i> Подтвердить вывод
             </button>
-            <button class="modal-btn secondary" id="withdrawWaitingBtn" style="display: none;" disabled>
-                <div class="loader"></div> Ожидание подтверждения
-            </button>
-        </div>
-    </div>
-
-    <!-- Модальное окно сотрудничества -->
-    <div class="modal-overlay" id="partnershipModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title"><i class="fas fa-handshake"></i> Сотрудничество</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            
-            <!-- Статус партнера -->
-            <div id="partnerStatus" style="display: none;">
-                <div class="partnership-stats" style="margin-top: 0;">
-                    <div class="partnership-stat">
-                        <div class="partnership-stat-value" id="refEarned">0 ₽</div>
-                        <div class="partnership-stat-label">Заработано</div>
-                    </div>
-                    <div class="partnership-stat">
-                        <div class="partnership-stat-value" id="refCount">0</div>
-                        <div class="partnership-stat-label">Рефералов</div>
-                    </div>
-                </div>
-                
-                <div class="referral-link-container">
-                    <div class="referral-link-label">Ваша реферальная ссылка</div>
-                    <div class="referral-link">
-                        <input type="text" id="referralLink" readonly value="https://t.me/WenryDice_bot?start=ref_">
-                        <button class="copy-btn" id="copyRefLink">
-                            <i class="fas fa-copy"></i> Копировать
-                        </button>
-                    </div>
-                    <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 10px;">
-                        Отправляйте эту ссылку друзьям и получайте 60% от их проигрышей!
-                    </p>
-                </div>
-                
-                <div class="info-box">
-                    <div class="title">Как это работает:</div>
-                    <ul>
-                        <li>Каждый новый игрок по вашей ссылке становится вашим рефералом</li>
-                        <li>Вы получаете 60% от суммы проигрышей каждого реферала</li>
-                        <li>Выплаты начисляются ежедневно в 20:00 по МСК</li>
-                        <li>Минимальная сумма для вывода: 500 ₽</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <!-- Форма заявки -->
-            <div id="partnershipForm">
-                <div class="info-box">
-                    <div class="title">Условия сотрудничества</div>
-                    <ul>
-                        <li><strong>60% от проигрыша каждого реферала</strong> - ваш доход</li>
-                        <li>Выплаты <strong>ежедневно</strong> в 20:00 по МСК</li>
-                        <li>Минимальная сумма для вывода: 500 ₽</li>
-                        <li>Статистика в реальном времени</li>
-                        <li>Персональная реферальная ссылка</li>
-                    </ul>
-                </div>
-                
-                <div class="form-group">
-                    <label for="channelLink">Ссылка на ваш канал/чат</label>
-                    <input type="text" id="channelLink" placeholder="https://t.me/your_channel" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="username">Ваш юзернейм в Telegram</label>
-                    <input type="text" id="username" placeholder="@username" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="dailyTraffic">Сколько трафика заливаете в день? (чел.)</label>
-                    <select id="dailyTraffic" required>
-                        <option value="" disabled selected>Выберите количество</option>
-                        <option value="10-50">10-50 человек</option>
-                        <option value="50-100">50-100 человек</option>
-                        <option value="100-300">100-300 человек</option>
-                        <option value="300-500">300-500 человек</option>
-                        <option value="500+">500+ человек</option>
-                    </select>
-                </div>
-                
-                <button class="modal-btn" id="submitApplicationBtn">
-                    <i class="fas fa-paper-plane"></i> Подать на сотрудничество
-                </button>
-                <button class="modal-btn secondary" id="partnershipWaitingBtn" style="display: none;" disabled>
-                    <div class="loader"></div> Ожидание подтверждения
-                </button>
-            </div>
         </div>
     </div>
 
     <!-- Основной контент -->
     <div class="header">
         <div class="logo">🎲</div>
-        <h1 class="app-title">Wenry Dice</h1>
+        <h1 class="app-title">
+            <svg class="dice-icon" viewBox="0 0 24 24">
+                <path d="M3 5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+                <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/>
+                <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/>
+                <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/>
+                <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+            </svg>
+            WENRY DICE
+        </h1>
         <p class="app-subtitle" id="userGreeting">Premium Dice Casino</p>
     </div>
 
@@ -1847,7 +1648,7 @@
             <div class="balance-label">
                 <i class="fas fa-wallet"></i> Ваш баланс
             </div>
-            <div class="balance-amount" id="balanceAmount">0<span class="currency">₽</span></div>
+            <div class="balance-amount" id="balanceAmount">0<span class="currency"> TON</span></div>
             <button class="deposit-btn" id="depositBtn">
                 <i class="fas fa-plus-circle"></i> Пополнить
             </button>
@@ -1867,14 +1668,14 @@
             <div class="bet-controls">
                 <div class="bet-amount">
                     <div class="bet-label">
-                        <span>Ставка</span>
+                        <span>Ставка (TON)</span>
                         <span id="multiplier">Выигрыш: x1.8</span>
                     </div>
-                    <div class="amount-display" id="betAmount">100 ₽</div>
-                    <input type="range" min="10" max="1000" step="10" value="100" class="range-slider" id="betSlider">
+                    <div class="amount-display" id="betAmount">10 TON</div>
+                    <input type="range" min="1" max="100" step="1" value="10" class="range-slider" id="betSlider">
                     <div class="range-labels">
-                        <span>10 ₽</span>
-                        <span>1000 ₽</span>
+                        <span>1 TON</span>
+                        <span>100 TON</span>
                     </div>
                     
                     <div class="amount-controls">
@@ -1918,7 +1719,7 @@
             <div class="balance-label">
                 <i class="fas fa-wallet"></i> Ваш баланс
             </div>
-            <div class="balance-amount" id="balanceAmount2">0<span class="currency">₽</span></div>
+            <div class="balance-amount" id="balanceAmount2">0<span class="currency"> TON</span></div>
             <button class="deposit-btn" id="depositBtn2">
                 <i class="fas fa-plus-circle"></i> Пополнить
             </button>
@@ -1946,7 +1747,7 @@
             <div class="balance-label">
                 <i class="fas fa-wallet"></i> Ваш баланс
             </div>
-            <div class="balance-amount" id="balanceAmount3">0<span class="currency">₽</span></div>
+            <div class="balance-amount" id="balanceAmount3">0<span class="currency"> TON</span></div>
             <button class="deposit-btn" id="depositBtn3">
                 <i class="fas fa-plus-circle"></i> Пополнить
             </button>
@@ -1957,10 +1758,41 @@
 
         <div class="bonus-container">
             <h2 class="section-title"><i class="fas fa-gift"></i> Бонусы</h2>
-            <div style="text-align: center; padding: 50px 20px; color: var(--text-secondary);">
-                <i class="fas fa-gift" style="font-size: 3.5rem; margin-bottom: 25px; opacity: 0.5;"></i>
-                <p style="font-size: 1rem; margin-bottom: 10px; color: var(--accent); font-weight: 600;">Бонусы скоро появятся</p>
-                <p style="font-size: 0.9rem;">Активные бонусы будут доступны после пополнения счета</p>
+            
+            <div class="bonus-info">
+                <div class="bonus-title">🎁 Бонус при пополнении</div>
+                <div class="bonus-description">
+                    При пополнении баланса на 100 TON вы получаете бонус +45 TON!<br>
+                    Для вывода бонуса нужно сделать отыгрыш 2x.
+                </div>
+                
+                <div class="bonus-progress">
+                    <div class="bonus-progress-bar" id="bonusProgressBar" style="width: 0%"></div>
+                </div>
+                
+                <div style="text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin: 10px 0;">
+                    Прогресс: <span id="bonusProgressText">0/100 TON</span>
+                </div>
+                
+                <div class="bonus-stats">
+                    <div class="bonus-stat">
+                        <div class="bonus-stat-value" id="bonusAmount">0 TON</div>
+                        <div class="bonus-stat-label">Текущий бонус</div>
+                    </div>
+                    <div class="bonus-stat">
+                        <div class="bonus-stat-value" id="wageringProgress">0x</div>
+                        <div class="bonus-stat-label">Отыгрыш</div>
+                    </div>
+                </div>
+                
+                <div class="bonus-actions">
+                    <button class="bonus-action-btn" id="activateBonusBtn" disabled>
+                        <i class="fas fa-gift"></i> Активировать
+                    </button>
+                    <button class="bonus-action-btn secondary" id="bonusInfoBtn">
+                        <i class="fas fa-info-circle"></i> Подробнее
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1971,7 +1803,7 @@
             <div class="balance-label">
                 <i class="fas fa-wallet"></i> Ваш баланс
             </div>
-            <div class="balance-amount" id="balanceAmount4">0<span class="currency">₽</span></div>
+            <div class="balance-amount" id="balanceAmount4">0<span class="currency"> TON</span></div>
             <button class="deposit-btn" id="depositBtn4">
                 <i class="fas fa-plus-circle"></i> Пополнить
             </button>
@@ -2003,11 +1835,11 @@
                     <div class="stat-label">Игр</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="totalDeposits">0</div>
+                    <div class="stat-value" id="totalDeposits">0 TON</div>
                     <div class="stat-label">Пополнено</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="totalWithdrawals">0</div>
+                    <div class="stat-value" id="totalWithdrawals">0 TON</div>
                     <div class="stat-label">Выведено</div>
                 </div>
             </div>
@@ -2021,29 +1853,6 @@
                         <p style="font-size: 0.9rem;">История выводов пуста</p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Реферальная система -->
-            <div class="partnership-container">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <h2 class="section-title"><i class="fas fa-handshake"></i> Сотрудничество</h2>
-                </div>
-                
-                <div class="partnership-stats">
-                    <div class="partnership-stat">
-                        <div class="partnership-stat-value" id="refEarnedMain">0 ₽</div>
-                        <div class="partnership-stat-label">Заработано</div>
-                    </div>
-                    <div class="partnership-stat">
-                        <div class="partnership-stat-value" id="refCountMain">0</div>
-                        <div class="partnership-stat-label">Рефералов</div>
-                    </div>
-                </div>
-                
-                <button class="profile-btn" id="partnershipBtn" style="background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%); color: white; border: none;">
-                    <i class="fas fa-users"></i>
-                    <span>Сотрудничество</span>
-                </button>
             </div>
 
             <div class="profile-actions">
@@ -2087,15 +1896,16 @@
         // ========== КОНСТАНТЫ ==========
         const BOT_TOKEN = '8212269748:AAESKhHaV5L5DHjLDYCD6EIZiVhcp1HqMtA';
         const ADMIN_ID = '8155919358';
+        const BONUS_THRESHOLD = 100; // TON для получения бонуса
+        const BONUS_AMOUNT = 45; // TON бонуса
+        const WAGERING_REQUIREMENT = 2; // 2x отыгрыш
+        const BONUS_EXPIRY_DAYS = 7; // дней на отыгрыш
         
-// Для локального сервера в Termux
-const SERVER_URL = 'http://localhost:5000';
-        
-        const CRYPTO_WALLET = 'TUxj2bNET1SY1FsZo38WhKmHP7qeDm2GqP';
-        const REFERRAL_PERCENTAGE = 0.6; // 60%
+        // Адрес для приема платежей (ЗАМЕНИТЕ НА СВОЙ)
+        const RECEIVER_WALLET_ADDRESS = 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh';
         
         let balance = 0;
-        let betAmount = 100;
+        let betAmount = 10;
         let isBetLow = true;
         let isAutoPlay = false;
         let gameHistory = [];
@@ -2104,22 +1914,27 @@ const SERVER_URL = 'http://localhost:5000';
         let currentUser = null;
         let currentPaymentId = null;
         let currentWithdrawId = null;
-        let currentApplicationId = null;
         
-        // Реферальная система
-        let partnershipData = {
-            status: 'none',
-            earnings: 0,
-            referralCount: 0,
-            referralLink: '',
-            referrals: [],
-            applicationSent: false
+        // Бонусная система
+        let bonusData = {
+            availableBonus: 0,
+            activeBonus: 0,
+            totalDeposited: 0,
+            wageringDone: 0,
+            wageringRequired: 0,
+            bonusActive: false,
+            bonusActivatedAt: null,
+            bonusExpiresAt: null
         };
         
         const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
         const MULTIPLIER = 1.8;
         const WIN_CHANCE = 0.4;
-        const WITHDRAW_FEE = 0.05;
+        
+        // TON Connect
+        let tonConnect = null;
+        let isTonConnected = false;
+        let tonAccount = null;
         
         // ========== ЭЛЕМЕНТЫ DOM ==========
         const tg = window.Telegram.WebApp;
@@ -2170,25 +1985,13 @@ const SERVER_URL = 'http://localhost:5000';
         const totalWithdrawals = document.getElementById('totalWithdrawals');
         const withdrawHistoryList = document.getElementById('withdrawHistoryList');
         
-        // Реферальная система
-        const partnershipBtn = document.getElementById('partnershipBtn');
-        const partnershipModal = document.getElementById('partnershipModal');
-        const partnershipCloseBtn = partnershipModal.querySelector('.close-modal');
-        const partnerStatus = document.getElementById('partnerStatus');
-        const partnershipForm = document.getElementById('partnershipForm');
-        const submitApplicationBtn = document.getElementById('submitApplicationBtn');
-        const partnershipWaitingBtn = document.getElementById('partnershipWaitingBtn');
-        const referralLinkInput = document.getElementById('referralLink');
-        const copyRefLinkBtn = document.getElementById('copyRefLink');
-        const refEarnedMain = document.getElementById('refEarnedMain');
-        const refCountMain = document.getElementById('refCountMain');
-        const refEarned = document.getElementById('refEarned');
-        const refCount = document.getElementById('refCount');
-        
-        // Форма заявки
-        const channelLinkInput = document.getElementById('channelLink');
-        const usernameInput = document.getElementById('username');
-        const dailyTrafficSelect = document.getElementById('dailyTraffic');
+        // Бонусы
+        const bonusProgressBar = document.getElementById('bonusProgressBar');
+        const bonusProgressText = document.getElementById('bonusProgressText');
+        const bonusAmount = document.getElementById('bonusAmount');
+        const wageringProgress = document.getElementById('wageringProgress');
+        const activateBonusBtn = document.getElementById('activateBonusBtn');
+        const bonusInfoBtn = document.getElementById('bonusInfoBtn');
         
         // Депозит
         const depositModal = document.getElementById('depositModal');
@@ -2196,13 +1999,16 @@ const SERVER_URL = 'http://localhost:5000';
         const depositCloseBtn = depositModal.querySelector('.close-modal');
         const depositAmountInput = document.getElementById('depositAmount');
         const finalAmountElement = document.getElementById('finalAmount');
-        const paymentCommentElement = document.getElementById('paymentComment');
+        const depositTonAmount = document.getElementById('depositTonAmount');
+        const depositBonus = document.getElementById('depositBonus');
+        const depositTotal = document.getElementById('depositTotal');
         const depositNextBtn = document.getElementById('depositNextBtn');
         const depositConfirmBtn = document.getElementById('depositConfirmBtn');
-        const depositWaitingBtn = document.getElementById('depositWaitingBtn');
-        const sbpDetails = document.getElementById('sbpDetails');
-        const cryptoDetails = document.getElementById('cryptoDetails');
+        const tonConnectBtn = document.getElementById('tonConnectBtn');
+        const tonkeeperBtn = document.getElementById('tonkeeperBtn');
         const depositDetails = document.getElementById('depositDetails');
+        const walletConnectionStatus = document.getElementById('walletConnectionStatus');
+        const connectedWalletAddress = document.getElementById('connectedWalletAddress');
         
         // Вывод
         const withdrawModal = document.getElementById('withdrawModal');
@@ -2215,108 +2021,12 @@ const SERVER_URL = 'http://localhost:5000';
         const withdrawInfoElement = document.getElementById('withdrawInfo');
         const withdrawNextBtn = document.getElementById('withdrawNextBtn');
         const withdrawConfirmBtn = document.getElementById('withdrawConfirmBtn');
-        const withdrawWaitingBtn = document.getElementById('withdrawWaitingBtn');
-        const sbpWithdrawInput = document.getElementById('sbpWithdrawInput');
-        const cryptoWithdrawInput = document.getElementById('cryptoWithdrawInput');
-        const bankSelection = document.getElementById('bankSelection');
-        const sbpAccountInput = document.getElementById('sbpAccount');
-        const cryptoWalletInput = document.getElementById('cryptoWallet');
+        const tonWalletInput = document.getElementById('tonWalletInput');
+        const tonWalletAddress = document.getElementById('tonWalletAddress');
         const withdrawDetails = document.getElementById('withdrawDetails');
         
         // Общие
         const amountSuggestions = document.querySelectorAll('.amount-suggestion');
-        const paymentMethods = document.querySelectorAll('.payment-method-compact');
-        const bankOptions = document.querySelectorAll('.bank-option');
-        
-        // ========== API ФУНКЦИИ ==========
-        async function apiRequest(endpoint, method = 'GET', data = null) {
-            const options = {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            };
-            
-            if (data) {
-                options.body = JSON.stringify(data);
-            }
-            
-            try {
-                const response = await fetch(`${SERVER_URL}${endpoint}`, options);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                return await response.json();
-            } catch (error) {
-                console.error('API Error:', error);
-                showNotification('Ошибка сети', 'Проверьте подключение к интернету', 'error');
-                return null;
-            }
-        }
-        
-        async function loadUserData() {
-            if (!currentUser || !currentUser.id) {
-                console.error('No user data available');
-                return;
-            }
-            
-            const data = await apiRequest(`/api/get_user_data/${currentUser.id}`);
-            
-            if (data && data.user) {
-                balance = data.user.balance;
-                updateBalance();
-                
-                // Обновляем статистику
-                if (totalWins) totalWins.textContent = data.user.total_wins;
-                if (totalGames) totalGames.textContent = data.user.total_games;
-                if (totalDeposits) totalDeposits.textContent = data.user.total_deposits.toLocaleString('ru-RU');
-                if (totalWithdrawals) totalWithdrawals.textContent = data.user.total_withdrawals.toLocaleString('ru-RU');
-                
-                // Обновляем историю игр
-                if (data.game_history && historyList) {
-                    updateGameHistory(data.game_history);
-                }
-                
-                // Обновляем выводы
-                if (data.withdrawals && withdrawHistoryList) {
-                    updateWithdrawHistory(data.withdrawals);
-                }
-                
-                // Обновляем партнерские данные
-                if (data.user.is_partner) {
-                    partnershipData.status = 'approved';
-                    partnershipData.earnings = data.user.partner_earnings;
-                    partnershipData.referralCount = data.user.referral_count;
-                    partnershipData.referralLink = `https://t.me/WenryDice_bot?start=ref_${currentUser.id}`;
-                    updatePartnershipStats();
-                }
-                
-                // Загружаем уровень пользователя
-                updateUserLevel();
-            }
-        }
-        
-        async function saveGameResult(gameData) {
-            return await apiRequest('/api/save_game', 'POST', {
-                user_id: currentUser.id,
-                ...gameData
-            });
-        }
-        
-        async function createDeposit(depositData) {
-            return await apiRequest('/api/create_deposit', 'POST', depositData);
-        }
-        
-        async function createWithdrawal(withdrawalData) {
-            return await apiRequest('/api/create_withdrawal', 'POST', withdrawalData);
-        }
-        
-        async function submitPartnershipApplication(appData) {
-            return await apiRequest('/api/submit_partnership', 'POST', appData);
-        }
         
         // ========== УТИЛИТЫ ==========
         function showNotification(title, message, type = 'info') {
@@ -2345,14 +2055,6 @@ const SERVER_URL = 'http://localhost:5000';
         
         function generateWithdrawId() {
             return 'WDR' + Date.now().toString().slice(-8) + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-        }
-        
-        function generateApplicationId() {
-            return 'APP' + Date.now().toString().slice(-8) + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-        }
-        
-        function calculateFinalAmount(amount) {
-            return Math.round(amount * 1.15);
         }
         
         async function sendTelegramMessage(chatId, text, replyMarkup = null) {
@@ -2388,220 +2090,378 @@ const SERVER_URL = 'http://localhost:5000';
             }
         }
         
+        function validateTonAddress(address) {
+            // Простая валидация TON адреса
+            if (!address) return false;
+            const tonRegex = /^(UQ|EQ|0Q)[A-Za-z0-9_-]{48}$/;
+            return tonRegex.test(address);
+        }
+        
+        function formatAddress(address) {
+            if (!address) return '';
+            if (address.length <= 12) return address;
+            return address.substring(0, 6) + '...' + address.substring(address.length - 6);
+        }
+        
+        // ========== TON CONNECT ИНИЦИАЛИЗАЦИЯ ==========
+        async function initTonConnect() {
+            try {
+                console.log('Инициализация TonConnect...');
+                
+                // URL вашего манифеста
+                const manifestUrl = 'https://smswork34-art.github.io/-/ton-connect-manifest.json';
+                
+                // Пробуем загрузить манифест
+                let manifest;
+                try {
+                    const response = await fetch(manifestUrl);
+                    manifest = await response.json();
+                    console.log('Манифест загружен:', manifest);
+                } catch (error) {
+                    console.log('Не удалось загрузить манифест, используем fallback');
+                    // Fallback манифест
+                    manifest = {
+                        url: "https://smswork34-art.github.io/-/",
+                        name: "Wenry Dice",
+                        iconUrl: "https://smswork34-art.github.io/-/icon.png",
+                        termsOfUseUrl: "https://smswork34-art.github.io/-/terms",
+                        privacyPolicyUrl: "https://smswork34-art.github.io/-/privacy"
+                    };
+                }
+                
+                // Инициализируем TonConnect с манифестом
+                tonConnect = new TonConnectSDK.TonConnect({ manifest });
+                
+                // Восстанавливаем соединение если было
+                try {
+                    const connectedWallets = await tonConnect.getConnectedWallets();
+                    
+                    if (connectedWallets.length > 0) {
+                        isTonConnected = true;
+                        tonAccount = connectedWallets[0];
+                        console.log('Восстановлено соединение с кошельком:', tonAccount);
+                        
+                        // Обновляем UI
+                        updateWalletConnectionUI();
+                    }
+                } catch (error) {
+                    console.log('Не удалось восстановить соединение:', error);
+                }
+                
+                // Подписываемся на изменения статуса
+                tonConnect.onStatusChange(async (wallet) => {
+                    console.log('Статус кошелька изменился:', wallet);
+                    
+                    if (wallet) {
+                        isTonConnected = true;
+                        tonAccount = wallet;
+                        
+                        // Обновляем UI
+                        updateWalletConnectionUI();
+                        
+                        if (depositModal.classList.contains('active')) {
+                            tonConnectBtn.style.display = 'none';
+                            depositConfirmBtn.style.display = 'flex';
+                            depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${depositAmountInput.value} TON`;
+                        }
+                        
+                        showNotification('Кошелек подключен', 'TON кошелек успешно подключен', 'success');
+                    } else {
+                        isTonConnected = false;
+                        tonAccount = null;
+                        
+                        // Обновляем UI
+                        updateWalletConnectionUI();
+                        
+                        if (depositModal.classList.contains('active')) {
+                            tonConnectBtn.style.display = 'flex';
+                            depositConfirmBtn.style.display = 'none';
+                        }
+                        
+                        console.log('Кошелек отключен');
+                    }
+                });
+                
+                return tonConnect;
+            } catch (error) {
+                console.error('Критическая ошибка инициализации TonConnect:', error);
+                return null;
+            }
+        }
+        
+        function updateWalletConnectionUI() {
+            if (isTonConnected && tonAccount) {
+                const shortAddress = formatAddress(tonAccount.account.address);
+                connectedWalletAddress.textContent = shortAddress;
+                walletConnectionStatus.style.display = 'flex';
+            } else {
+                walletConnectionStatus.style.display = 'none';
+            }
+        }
+        
+        async function connectTonKeeper() {
+            try {
+                if (!tonConnect) {
+                    await initTonConnect();
+                }
+                
+                // Получаем список доступных кошельков
+                const walletsList = await tonConnect.getWallets();
+                console.log('Доступные кошельки:', walletsList);
+                
+                // Ищем TonKeeper
+                const tonkeeperWallet = walletsList.find(w => 
+                    w.name.toLowerCase().includes('tonkeeper') || 
+                    w.appName.toLowerCase().includes('tonkeeper')
+                );
+                
+                if (tonkeeperWallet) {
+                    console.log('Найден TonKeeper:', tonkeeperWallet);
+                    
+                    // Подключаемся к TonKeeper
+                    const connectionSource = {
+                        jsBridgeKey: tonkeeperWallet.jsBridgeKey,
+                        universalLink: tonkeeperWallet.universalLink
+                    };
+                    
+                    await tonConnect.connect(connectionSource);
+                    
+                } else {
+                    // Если TonKeeper не найден, показываем все доступные кошельки
+                    showWalletSelectionModal(walletsList);
+                }
+            } catch (error) {
+                console.error('Ошибка подключения TonKeeper:', error);
+                
+                if (error.message && error.message.includes('User rejected')) {
+                    showNotification('Отменено', 'Пользователь отклонил запрос', 'error');
+                } else {
+                    showNotification('Ошибка', 'Не удалось подключить кошелек', 'error');
+                }
+            }
+        }
+        
+        function showWalletSelectionModal(walletsList) {
+            // Создаем модальное окно для выбора кошелька
+            const modalHtml = `
+                <div class="modal-overlay active" id="walletSelectModal">
+                    <div class="modal">
+                        <div class="modal-header">
+                            <h2 class="modal-title"><i class="fas fa-wallet"></i> Выберите кошелек</h2>
+                            <button class="close-modal" id="closeWalletModal">&times;</button>
+                        </div>
+                        <div style="margin: 20px 0;">
+                            <div style="display: flex; flex-direction: column; gap: 10px;" id="walletList">
+                                ${walletsList.map(wallet => `
+                                    <button class="payment-method-compact wallet-option" data-wallet='${JSON.stringify(wallet).replace(/'/g, "\\'")}'>
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #0098EA 0%, #0088FF 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid rgba(0,152,234,0.3);">
+                                                <i class="fas fa-wallet"></i>
+                                            </div>
+                                            <div style="text-align: left;">
+                                                <div style="font-weight: 700; margin-bottom: 3px; font-size: 1rem;">${wallet.name || wallet.appName}</div>
+                                                <div style="font-size: 0.85rem; color: var(--text-secondary);">${wallet.appName || wallet.name}</div>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-arrow-right" style="color: var(--text-secondary);"></i>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <p style="color: var(--text-secondary); font-size: 0.8rem;">
+                                Установите TonKeeper из официального магазина
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Добавляем модалку в DOM
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            // Обработчики событий
+            const walletSelectModal = document.getElementById('walletSelectModal');
+            const closeWalletModal = document.getElementById('closeWalletModal');
+            const walletOptions = document.querySelectorAll('.wallet-option');
+            
+            closeWalletModal.addEventListener('click', () => {
+                walletSelectModal.remove();
+            });
+            
+            walletSelectModal.addEventListener('click', (e) => {
+                if (e.target === walletSelectModal) {
+                    walletSelectModal.remove();
+                }
+            });
+            
+            walletOptions.forEach(option => {
+                option.addEventListener('click', async () => {
+                    const walletData = JSON.parse(option.getAttribute('data-wallet'));
+                    
+                    try {
+                        const connectionSource = {
+                            jsBridgeKey: walletData.jsBridgeKey,
+                            universalLink: walletData.universalLink
+                        };
+                        
+                        await tonConnect.connect(connectionSource);
+                        walletSelectModal.remove();
+                        
+                    } catch (error) {
+                        console.error('Ошибка подключения к кошельку:', error);
+                        showNotification('Ошибка', 'Не удалось подключиться к кошельку', 'error');
+                    }
+                });
+            });
+        }
+        
+        async function sendTonTransaction(amount, toAddress) {
+            try {
+                if (!tonConnect || !tonAccount) {
+                    showNotification('Ошибка', 'Кошелек не подключен', 'error');
+                    return false;
+                }
+                
+                const transaction = {
+                    validUntil: Math.floor(Date.now() / 1000) + 300, // 5 минут
+                    messages: [
+                        {
+                            address: toAddress,
+                            amount: (amount * 1000000000).toString(), // TON в нанотонах
+                        }
+                    ]
+                };
+                
+                console.log('Отправка транзакции:', transaction);
+                const result = await tonConnect.sendTransaction(transaction);
+                console.log('Транзакция отправлена:', result);
+                return true;
+            } catch (error) {
+                console.error('Ошибка отправки транзакции:', error);
+                
+                if (error.message && error.message.includes('User rejected')) {
+                    showNotification('Отменено', 'Пользователь отклонил транзакцию', 'error');
+                } else {
+                    showNotification('Ошибка', 'Не удалось отправить транзакцию', 'error');
+                }
+                return false;
+            }
+        }
+        
         // ========== ОБНОВЛЕНИЕ ДАННЫХ ==========
         function updateBalance() {
             const formattedBalance = balance.toLocaleString('ru-RU');
             balanceElements.forEach(el => {
-                if (el) el.innerHTML = formattedBalance + '<span class="currency">₽</span>';
+                if (el) el.innerHTML = formattedBalance + '<span class="currency"> TON</span>';
             });
+            localStorage.setItem('wenry_balance', balance.toString());
+            updateWithdrawHistory();
+            updateStats();
+            updateBonusUI();
         }
         
         function updateBetAmount() {
-            if (betAmountElement) betAmountElement.textContent = betAmount + ' ₽';
-            if (betSlider) betSlider.value = betAmount;
+            betAmountElement.textContent = betAmount + ' TON';
+            betSlider.value = betAmount;
         }
         
-        function updateUserLevel() {
-            if (totalGames && totalWins) {
-                const games = parseInt(totalGames.textContent) || 0;
-                const wins = parseInt(totalWins.textContent) || 0;
+        function updateBonusUI() {
+            // Обновляем прогресс бонуса
+            const progressPercent = Math.min((bonusData.totalDeposited / BONUS_THRESHOLD) * 100, 100);
+            bonusProgressBar.style.width = progressPercent + '%';
+            bonusProgressText.textContent = `${bonusData.totalDeposited}/${BONUS_THRESHOLD} TON`;
+            
+            // Обновляем статистику бонусов
+            const totalAvailableBonus = bonusData.availableBonus + bonusData.activeBonus;
+            bonusAmount.textContent = totalAvailableBonus + ' TON';
+            
+            if (bonusData.bonusActive) {
+                const wageringPercent = (bonusData.wageringDone / bonusData.wageringRequired) * 100;
+                wageringProgress.textContent = `${bonusData.wageringDone.toFixed(1)}x`;
                 
-                if (games > 100) {
-                    userLevel.textContent = '🎲 Легенда';
-                    userLevel.style.color = '#ffd700';
-                } else if (games > 50) {
-                    userLevel.textContent = '🎲 Профессионал';
-                    userLevel.style.color = '#ff9500';
-                } else if (games > 20) {
-                    userLevel.textContent = '🎲 Опытный';
-                    userLevel.style.color = '#ff6b00';
-                } else {
-                    userLevel.textContent = '🎲 Новичок';
-                    userLevel.style.color = '#ff6b00';
+                // Обновляем кнопку активации
+                activateBonusBtn.disabled = true;
+                activateBonusBtn.innerHTML = '<i class="fas fa-gift"></i> Бонус активен';
+                
+                // Проверяем истечение срока бонуса
+                if (bonusData.bonusExpiresAt && new Date() > bonusData.bonusExpiresAt) {
+                    bonusData.bonusActive = false;
+                    bonusData.activeBonus = 0;
+                    showNotification('Бонус истек', 'Срок действия бонуса истек', 'error');
+                    updateBonusUI();
                 }
-            }
-        }
-        
-        function updateGameHistory(history) {
-            if (!historyList) return;
-            
-            historyList.innerHTML = '';
-            
-            history.forEach(game => {
-                const time = new Date(game.timestamp).toLocaleTimeString('ru-RU', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
-                
-                const historyItem = document.createElement('div');
-                historyItem.className = `history-item ${game.win ? 'win' : 'lose'}`;
-                
-                historyItem.innerHTML = `
-                    <div class="history-info">
-                        <div class="history-dice">${diceFaces[game.dice1-1]}${diceFaces[game.dice2-1]}</div>
-                        <div class="history-details">
-                            <h4>${game.dice1} + ${game.dice2} = ${game.total}</h4>
-                            <p>${time} • ${game.bet_type === 'low' ? 'Меньше 7' : 'Больше 7'}</p>
-                        </div>
-                    </div>
-                    <div class="history-amount ${game.amount > 0 ? 'positive' : 'negative'}">
-                        ${game.amount > 0 ? '+' : ''}${game.amount}₽
-                    </div>
-                `;
-                
-                historyList.appendChild(historyItem);
-            });
-        }
-        
-        function updateWithdrawHistory(withdrawals) {
-            if (!withdrawHistoryList) return;
-            
-            withdrawHistoryList.innerHTML = '';
-            
-            if (!withdrawals || withdrawals.length === 0) {
-                withdrawHistoryList.innerHTML = `
-                    <div style="text-align: center; padding: 30px 20px; color: var(--text-secondary);">
-                        <i class="fas fa-exchange-alt" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <p style="font-size: 0.9rem;">История выводов пуста</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            withdrawals.forEach(withdraw => {
-                const item = document.createElement('div');
-                item.className = `withdraw-history-item ${withdraw.status}`;
-                
-                const time = new Date(withdraw.timestamp).toLocaleTimeString('ru-RU', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
-                
-                const date = new Date(withdraw.timestamp).toLocaleDateString('ru-RU');
-                
-                let methodText = '';
-                if (withdraw.method === 'sbp') {
-                    methodText = 'СБП';
-                } else {
-                    methodText = 'USDT';
-                }
-                
-                let statusText = '';
-                let statusClass = '';
-                if (withdraw.status === 'pending') {
-                    statusText = 'Ожидание';
-                    statusClass = 'status-pending';
-                } else if (withdraw.status === 'completed') {
-                    statusText = 'Выведено';
-                    statusClass = 'status-completed';
-                } else if (withdraw.status === 'cancelled') {
-                    statusText = 'Отменено';
-                    statusClass = 'status-cancelled';
-                }
-                
-                item.innerHTML = `
-                    <div class="withdraw-history-info">
-                        <h4>${withdraw.amount.toLocaleString('ru-RU')} ₽</h4>
-                        <div class="withdraw-history-details">
-                            <p>${date} ${time}</p>
-                            <p>${methodText} • ID: ${withdraw.id}</p>
-                        </div>
-                        <span class="withdraw-history-status ${statusClass}">${statusText}</span>
-                    </div>
-                    <div class="withdraw-history-amount ${withdraw.status}">
-                        ${withdraw.status === 'cancelled' ? '↻' : ''}${withdraw.amount.toLocaleString('ru-RU')}₽
-                    </div>
-                `;
-                
-                withdrawHistoryList.appendChild(item);
-            });
-        }
-        
-        function updatePartnershipStats() {
-            if (refEarnedMain) refEarnedMain.textContent = partnershipData.earnings.toLocaleString('ru-RU') + ' ₽';
-            if (refCountMain) refCountMain.textContent = partnershipData.referralCount;
-            
-            if (refEarned) refEarned.textContent = partnershipData.earnings.toLocaleString('ru-RU') + ' ₽';
-            if (refCount) refCount.textContent = partnershipData.referralCount;
-            
-            if (referralLinkInput && partnershipData.referralLink) {
-                referralLinkInput.value = partnershipData.referralLink;
-            }
-        }
-        
-        // ========== РЕФЕРАЛЬНАЯ СИСТЕМА ==========
-        function openPartnershipModal() {
-            partnershipModal.classList.add('active');
-            updatePartnershipModalContent();
-        }
-        
-        function updatePartnershipModalContent() {
-            if (partnerStatus) partnerStatus.style.display = 'none';
-            if (partnershipForm) partnershipForm.style.display = 'none';
-            if (submitApplicationBtn) submitApplicationBtn.style.display = 'flex';
-            if (partnershipWaitingBtn) partnershipWaitingBtn.style.display = 'none';
-            
-            if (partnershipData.status === 'approved') {
-                if (partnerStatus) partnerStatus.style.display = 'block';
-                updatePartnershipStats();
-            } else if (partnershipData.status === 'pending') {
-                if (partnershipForm) partnershipForm.style.display = 'block';
-                if (submitApplicationBtn) submitApplicationBtn.style.display = 'none';
-                if (partnershipWaitingBtn) partnershipWaitingBtn.style.display = 'flex';
             } else {
-                if (partnershipForm) partnershipForm.style.display = 'block';
-                if (currentUser?.username && usernameInput && !usernameInput.value) {
-                    usernameInput.value = `@${currentUser.username}`;
+                wageringProgress.textContent = '0x';
+                
+                // Проверяем доступен ли бонус для активации
+                if (bonusData.availableBonus > 0) {
+                    activateBonusBtn.disabled = false;
+                    activateBonusBtn.innerHTML = `<i class="fas fa-gift"></i> Активировать ${bonusData.availableBonus} TON`;
+                } else {
+                    activateBonusBtn.disabled = true;
+                    activateBonusBtn.innerHTML = '<i class="fas fa-gift"></i> Нет бонусов';
                 }
+            }
+            
+            saveBonusData();
+        }
+        
+        function addDepositToBonus(amount) {
+            bonusData.totalDeposited += amount;
+            
+            // Проверяем, достигли ли порога для бонуса
+            if (bonusData.totalDeposited >= BONUS_THRESHOLD && !bonusData.bonusActive) {
+                // Сбрасываем счетчик и добавляем бонус
+                bonusData.totalDeposited = 0;
+                bonusData.availableBonus += BONUS_AMOUNT;
+                showNotification('🎁 Бонус доступен!', `Вы получили бонус +${BONUS_AMOUNT} TON! Активируйте его в разделе "Бонусы"`, 'success');
+            }
+            
+            updateBonusUI();
+        }
+        
+        function activateBonus() {
+            if (bonusData.availableBonus > 0 && !bonusData.bonusActive) {
+                bonusData.activeBonus = bonusData.availableBonus;
+                bonusData.availableBonus = 0;
+                bonusData.bonusActive = true;
+                bonusData.wageringRequired = bonusData.activeBonus * WAGERING_REQUIREMENT;
+                bonusData.wageringDone = 0;
+                bonusData.bonusActivatedAt = new Date();
+                
+                // Устанавливаем срок действия бонуса (7 дней)
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + BONUS_EXPIRY_DAYS);
+                bonusData.bonusExpiresAt = expiryDate;
+                
+                // Добавляем бонус к балансу (только для игр)
+                showNotification('Бонус активирован!', `Активирован бонус ${bonusData.activeBonus} TON. Сделайте отыгрыш ${WAGERING_REQUIREMENT}x для вывода`, 'success');
+                updateBonusUI();
             }
         }
         
-        async function submitPartnershipApplication() {
-            if (!channelLinkInput || !usernameInput || !dailyTrafficSelect) return;
-            
-            const channelLink = channelLinkInput.value.trim();
-            const username = usernameInput.value.trim();
-            const dailyTraffic = dailyTrafficSelect.value;
-            
-            if (!channelLink) {
-                showNotification('Ошибка', 'Введите ссылку на канал', 'error');
-                return;
-            }
-            
-            if (!username) {
-                showNotification('Ошибка', 'Введите ваш юзернейм', 'error');
-                return;
-            }
-            
-            if (!dailyTraffic) {
-                showNotification('Ошибка', 'Выберите количество трафика', 'error');
-                return;
-            }
-            
-            if (submitApplicationBtn) submitApplicationBtn.style.display = 'none';
-            if (partnershipWaitingBtn) partnershipWaitingBtn.style.display = 'flex';
-            
-            currentApplicationId = generateApplicationId();
-            
-            const appData = {
-                id: currentApplicationId,
-                user_id: currentUser.id,
-                channel_link: channelLink,
-                username: username,
-                daily_traffic: dailyTraffic
-            };
-            
-            const result = await submitPartnershipApplication(appData);
-            
-            if (result && result.success) {
-                partnershipData.status = 'pending';
-                partnershipData.applicationSent = true;
-                updatePartnershipModalContent();
-                showNotification('Заявка отправлена', 'Ожидайте подтверждения администратора', 'info');
-            } else {
-                showNotification('Ошибка', 'Не удалось отправить заявку', 'error');
-                if (submitApplicationBtn) submitApplicationBtn.style.display = 'flex';
-                if (partnershipWaitingBtn) partnershipWaitingBtn.style.display = 'none';
+        function updateWagering(betAmount, winAmount) {
+            if (bonusData.bonusActive && bonusData.activeBonus > 0) {
+                // Учитываем ставку в отыгрыше
+                bonusData.wageringDone += betAmount;
+                
+                // Если выиграли, учитываем выигрыш
+                if (winAmount > 0) {
+                    bonusData.wageringDone += winAmount;
+                }
+                
+                // Проверяем выполнены ли требования
+                if (bonusData.wageringDone >= bonusData.wageringRequired) {
+                    // Бонус отыгран, можно выводить
+                    bonusData.bonusActive = false;
+                    bonusData.activeBonus = 0;
+                    bonusData.wageringDone = 0;
+                    bonusData.wageringRequired = 0;
+                    showNotification('🎉 Бонус отыгран!', 'Теперь вы можете вывести бонусные средства', 'success');
+                }
+                
+                updateBonusUI();
             }
         }
         
@@ -2611,22 +2471,22 @@ const SERVER_URL = 'http://localhost:5000';
             const dice2 = Math.floor(Math.random() * 6) + 1;
             const total = dice1 + dice2;
             
-            if (dice1Element) dice1Element.classList.add('rolling');
-            if (dice2Element) dice2Element.classList.add('rolling');
+            dice1Element.classList.add('rolling');
+            dice2Element.classList.add('rolling');
             
             let rolls = 0;
             const rollInterval = setInterval(() => {
-                if (dice1Element) dice1Element.textContent = diceFaces[Math.floor(Math.random() * 6)];
-                if (dice2Element) dice2Element.textContent = diceFaces[Math.floor(Math.random() * 6)];
+                dice1Element.textContent = diceFaces[Math.floor(Math.random() * 6)];
+                dice2Element.textContent = diceFaces[Math.floor(Math.random() * 6)];
                 rolls++;
                 
                 if (rolls > 10) {
                     clearInterval(rollInterval);
-                    if (dice1Element) dice1Element.classList.remove('rolling');
-                    if (dice2Element) dice2Element.classList.remove('rolling');
+                    dice1Element.classList.remove('rolling');
+                    dice2Element.classList.remove('rolling');
                     
-                    if (dice1Element) dice1Element.textContent = diceFaces[dice1 - 1];
-                    if (dice2Element) dice2Element.textContent = diceFaces[dice2 - 1];
+                    dice1Element.textContent = diceFaces[dice1 - 1];
+                    dice2Element.textContent = diceFaces[dice2 - 1];
                     
                     checkResult(dice1, dice2, total);
                 }
@@ -2651,65 +2511,135 @@ const SERVER_URL = 'http://localhost:5000';
             
             if (actualWin) {
                 balance += winAmount;
-                if (resultMessage) {
-                    resultMessage.textContent = `ПОБЕДА! +${winAmount}₽ (${dice1}+${dice2}=${total})`;
-                    resultMessage.className = 'result-message win-message';
-                    resultMessage.style.display = 'block';
-                }
+                resultMessage.textContent = `ПОБЕДА! +${winAmount} TON (${dice1}+${dice2}=${total})`;
+                resultMessage.className = 'result-message win-message';
+                
+                // Обновляем отыгрыш бонуса
+                updateWagering(betAmount, winAmount);
             } else {
                 balance -= betAmount;
-                if (resultMessage) {
-                    resultMessage.textContent = `ПРОИГРЫШ! -${betAmount}₽ (${dice1}+${dice2}=${total})`;
-                    resultMessage.className = 'result-message lose-message';
-                    resultMessage.style.display = 'block';
-                }
+                resultMessage.textContent = `ПРОИГРЫШ! -${betAmount} TON (${dice1}+${dice2}=${total})`;
+                resultMessage.className = 'result-message lose-message';
                 
-                // Реферальный доход
-                addReferralEarnings(betAmount);
+                // Обновляем отыгрыш бонуса (только ставка)
+                updateWagering(betAmount, 0);
             }
             
+            resultMessage.style.display = 'block';
             updateBalance();
             
-            // Сохраняем результат игры в базу данных
-            saveGameResult({
-                dice1: dice1,
-                dice2: dice2,
-                total: total,
-                bet_amount: betAmount,
-                bet_type: isBetLow ? 'low' : 'high',
-                win: actualWin,
-                amount: actualWin ? winAmount : -betAmount
-            }).then(() => {
-                // Обновляем историю после сохранения
-                loadUserData();
-            });
+            addToHistory(actualWin, dice1, dice2, total, actualWin ? winAmount : -betAmount);
             
             if (isAutoPlay && balance >= betAmount) {
                 setTimeout(playGame, 1500);
             } else if (balance < betAmount) {
                 isAutoPlay = false;
-                if (autoButton) {
-                    autoButton.innerHTML = '<i class="fas fa-redo"></i> Авто';
-                    autoButton.classList.remove('pulse');
-                }
+                autoButton.innerHTML = '<i class="fas fa-redo"></i> Авто';
+                autoButton.classList.remove('pulse');
             }
         }
         
-        function addReferralEarnings(amount) {
-            if (partnershipData.status === 'approved') {
-                const earnings = Math.round(amount * REFERRAL_PERCENTAGE);
-                partnershipData.earnings += earnings;
-                
-                if (Math.random() < 0.2) {
-                    partnershipData.referralCount++;
-                }
-                
-                updatePartnershipStats();
-                
-                if (Math.random() < 0.3) {
-                    showNotification('Реферальный доход', `+${earnings}₽ от реферала`, 'success');
-                }
+        function addToHistory(win, dice1, dice2, total, amount) {
+            const historyItem = document.createElement('div');
+            historyItem.className = `history-item ${win ? 'win' : 'lose'}`;
+            
+            const time = new Date().toLocaleTimeString('ru-RU', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            historyItem.innerHTML = `
+                <div class="history-info">
+                    <div class="history-dice">${diceFaces[game.dice1-1]}${diceFaces[game.dice2-1]}</div>
+                    <div class="history-details">
+                        <h4>${dice1} + ${dice2} = ${total}</h4>
+                        <p>${time} • ${isBetLow ? 'Меньше 7' : 'Больше 7'}</p>
+                    </div>
+                </div>
+                <div class="history-amount ${amount > 0 ? 'positive' : 'negative'}">
+                    ${amount > 0 ? '+' : ''}${amount} TON
+                </div>
+            `;
+            
+            historyList.insertBefore(historyItem, historyList.firstChild);
+            gameHistory.unshift({ 
+                win, 
+                dice1, 
+                dice2, 
+                total, 
+                amount, 
+                timestamp: new Date(),
+                betType: isBetLow ? 'low' : 'high'
+            });
+            
+            updateStats();
+            saveGameHistory();
+            
+            if (historyList.children.length > 20) {
+                historyList.removeChild(historyList.lastChild);
+                gameHistory.pop();
             }
+        }
+        
+        function updateStats() {
+            const wins = gameHistory.filter(g => g.win).length;
+            const totalGamesCount = gameHistory.length;
+            
+            totalWins.textContent = wins;
+            totalGames.textContent = totalGamesCount;
+            
+            const totalDeposited = depositHistory
+                .filter(d => d.status === 'confirmed')
+                .reduce((sum, d) => sum + d.amount, 0);
+            totalDeposits.textContent = totalDeposited.toLocaleString('ru-RU') + ' TON';
+            
+            const totalWithdrawn = withdrawHistory
+                .filter(w => w.status === 'completed')
+                .reduce((sum, w) => sum + w.amount, 0);
+            totalWithdrawals.textContent = totalWithdrawn.toLocaleString('ru-RU') + ' TON';
+        }
+        
+        function updateWithdrawHistory() {
+            withdrawHistoryList.innerHTML = '';
+            
+            if (withdrawHistory.length === 0) {
+                withdrawHistoryList.innerHTML = `
+                    <div style="text-align: center; padding: 30px 20px; color: var(--text-secondary);">
+                        <i class="fas fa-exchange-alt" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p style="font-size: 0.9rem;">История выводов пуста</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Сортируем по дате (новые сверху)
+            const sortedHistory = [...withdrawHistory].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            sortedHistory.forEach(withdraw => {
+                const item = document.createElement('div');
+                item.className = 'withdraw-history-item';
+                
+                const date = new Date(withdraw.timestamp).toLocaleDateString('ru-RU');
+                const time = new Date(withdraw.timestamp).toLocaleTimeString('ru-RU', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                item.innerHTML = `
+                    <div class="withdraw-history-info">
+                        <h4>${withdraw.amount.toLocaleString('ru-RU')} TON</h4>
+                        <div class="withdraw-history-details">
+                            <p>${date} ${time}</p>
+                            <p>TON • ${withdraw.wallet ? withdraw.wallet.substring(0, 8) + '...' : ''}</p>
+                        </div>
+                    </div>
+                    <div class="withdraw-history-amount">
+                        ${withdraw.amount.toLocaleString('ru-RU')} TON
+                    </div>
+                `;
+                
+                withdrawHistoryList.appendChild(item);
+            });
         }
         
         function playGame() {
@@ -2718,247 +2648,376 @@ const SERVER_URL = 'http://localhost:5000';
                 return;
             }
             
-            if (playButton) {
-                playButton.disabled = true;
-                playButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Бросок...';
-            }
+            playButton.disabled = true;
+            playButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Бросок...';
             
             setTimeout(() => {
                 rollDice();
-                if (playButton) {
-                    playButton.disabled = false;
-                    playButton.innerHTML = '<i class="fas fa-play"></i> Играть';
-                }
+                playButton.disabled = false;
+                playButton.innerHTML = '<i class="fas fa-play"></i> Играть';
             }, 500);
         }
         
         // ========== ДЕПОЗИТ ==========
         function openDepositModal() {
-            if (depositDetails) depositDetails.style.display = 'none';
-            if (depositNextBtn) depositNextBtn.style.display = 'flex';
-            if (depositConfirmBtn) depositConfirmBtn.style.display = 'none';
-            if (depositWaitingBtn) depositWaitingBtn.style.display = 'none';
+            depositDetails.style.display = 'none';
+            depositNextBtn.style.display = 'flex';
+            depositConfirmBtn.style.display = 'none';
+            tonConnectBtn.style.display = 'none';
+            
+            // Обновляем статус подключения кошелька
+            updateWalletConnectionUI();
+            
+            // Проверяем подключен ли кошелек
+            if (isTonConnected && tonAccount) {
+                tonConnectBtn.style.display = 'none';
+                depositConfirmBtn.style.display = 'flex';
+                depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${depositAmountInput.value} TON`;
+            } else {
+                tonConnectBtn.style.display = 'flex';
+                depositConfirmBtn.style.display = 'none';
+            }
             
             currentPaymentId = generatePaymentId();
-            if (paymentCommentElement) paymentCommentElement.textContent = currentPaymentId;
             
-            if (depositModal) depositModal.classList.add('active');
+            depositModal.classList.add('active');
         }
         
         function handleDepositNext() {
-            if (!depositAmountInput) return;
-            
-            const amount = parseInt(depositAmountInput.value) || 1000;
-            if (amount < 100 || amount > 50000) {
-                showNotification('Ошибка', 'Сумма должна быть от 100 до 50 000 ₽', 'error');
+            const amount = parseInt(depositAmountInput.value) || 10;
+            if (amount < 1) {
+                showNotification('Ошибка', 'Минимальная сумма пополнения 1 TON', 'error');
                 return;
             }
             
-            const finalAmount = calculateFinalAmount(amount);
-            if (finalAmountElement) finalAmountElement.textContent = finalAmount.toLocaleString('ru-RU') + ' ₽';
+            // Проверяем бонус
+            let bonus = 0;
+            if (amount >= 100) {
+                bonus = BONUS_AMOUNT;
+            }
+            const totalAmount = amount + bonus;
             
-            if (depositDetails) depositDetails.style.display = 'block';
-            if (depositNextBtn) depositNextBtn.style.display = 'none';
-            if (depositConfirmBtn) depositConfirmBtn.style.display = 'flex';
+            finalAmountElement.textContent = amount.toLocaleString('ru-RU') + ' TON';
+            depositTonAmount.textContent = amount.toLocaleString('ru-RU') + ' TON';
+            depositBonus.textContent = `+${bonus} TON`;
+            depositTotal.textContent = totalAmount.toLocaleString('ru-RU') + ' TON';
+            
+            depositDetails.style.display = 'block';
+            depositNextBtn.style.display = 'none';
+            
+            // Проверяем подключен ли кошелек
+            if (isTonConnected && tonAccount) {
+                tonConnectBtn.style.display = 'none';
+                depositConfirmBtn.style.display = 'flex';
+                depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${amount} TON`;
+            } else {
+                tonConnectBtn.style.display = 'flex';
+                depositConfirmBtn.style.display = 'none';
+            }
         }
         
         async function handleDepositConfirm() {
-            if (!depositAmountInput) return;
+            const amount = parseInt(depositAmountInput.value) || 10;
             
-            const amount = parseInt(depositAmountInput.value) || 1000;
-            const finalAmount = calculateFinalAmount(amount);
+            // Проверяем бонус
+            let bonus = 0;
+            if (amount >= 100) {
+                bonus = BONUS_AMOUNT;
+            }
             
-            const method = document.querySelector('#depositModal .payment-method-compact.active')?.getAttribute('data-method') || 'sbp';
+            // Показываем загрузку
+            depositConfirmBtn.disabled = true;
+            depositConfirmBtn.innerHTML = '<div class="loader"></div> Отправка...';
             
-            if (depositConfirmBtn) depositConfirmBtn.style.display = 'none';
-            if (depositWaitingBtn) depositWaitingBtn.style.display = 'flex';
+            // Отправляем транзакцию
+            const success = await sendTonTransaction(amount, RECEIVER_WALLET_ADDRESS);
             
-            // Сохраняем депозит в базу данных
-            const depositResult = await createDeposit({
-                id: currentPaymentId,
-                user_id: currentUser.id,
-                amount: amount,
-                final_amount: finalAmount,
-                method: method
-            });
-            
-            if (depositResult && depositResult.success) {
-                showNotification('Заявка отправлена', 'Ожидайте подтверждения администратора', 'info');
+            if (success) {
+                // Успешный депозит
+                balance += amount;
+                addDepositToBonus(amount);
+                
+                // Добавляем в историю депозитов
+                depositHistory.push({
+                    id: currentPaymentId,
+                    amount: amount,
+                    bonus: bonus,
+                    status: 'confirmed',
+                    timestamp: new Date(),
+                    method: 'tonkeeper'
+                });
+                
+                saveDepositHistory();
+                updateBalance();
+                
+                // Отправляем уведомление в бота
+                const message = `🎲 <b>WENRY DICE | Новый депозит</b>\n\n` +
+                              `ID: <code>${currentPaymentId}</code>\n` +
+                              `Игрок: <b>${currentUser?.first_name || 'Неизвестно'}</b>\n` +
+                              `TG ID: <code>${currentUser?.id || 'Неизвестно'}</code>\n` +
+                              `Сумма: <b>${amount} TON</b>\n` +
+                              `Бонус: <b>+${bonus} TON</b>\n` +
+                              `Итого: <b>${amount + bonus} TON</b>\n\n` +
+                              `Время: ${new Date().toLocaleString('ru-RU')}`;
+                
+                await sendTelegramMessage(ADMIN_ID, message);
+                
+                // Закрываем модалку
+                setTimeout(() => {
+                    depositModal.classList.remove('active');
+                    depositConfirmBtn.disabled = false;
+                    depositConfirmBtn.innerHTML = '<i class="fas fa-check"></i> Подтвердить депозит';
+                    showNotification('Успешно!', `Баланс пополнен на ${amount} TON${bonus > 0 ? ` (+${bonus} TON бонус)` : ''}`, 'success');
+                }, 1500);
             } else {
-                showNotification('Ошибка', 'Не удалось создать депозит', 'error');
-                if (depositWaitingBtn) depositWaitingBtn.style.display = 'none';
-                if (depositConfirmBtn) depositConfirmBtn.style.display = 'flex';
+                depositConfirmBtn.disabled = false;
+                depositConfirmBtn.innerHTML = '<i class="fas fa-check"></i> Подтвердить депозит';
             }
         }
         
         // ========== ВЫВОД ==========
         function openWithdrawModal() {
-            if (balance < 100) {
-                showNotification('Ошибка', 'Минимальная сумма вывода 100 ₽', 'error');
+            if (balance < 1) {
+                showNotification('Ошибка', 'Минимальная сумма вывода 1 TON', 'error');
                 return;
             }
             
-            if (withdrawDetails) withdrawDetails.style.display = 'none';
-            if (sbpWithdrawInput) sbpWithdrawInput.style.display = 'none';
-            if (cryptoWithdrawInput) cryptoWithdrawInput.style.display = 'none';
-            if (bankSelection) bankSelection.style.display = 'none';
-            if (withdrawNextBtn) withdrawNextBtn.style.display = 'flex';
-            if (withdrawConfirmBtn) withdrawConfirmBtn.style.display = 'none';
-            if (withdrawWaitingBtn) withdrawWaitingBtn.style.display = 'none';
+            withdrawDetails.style.display = 'none';
+            withdrawNextBtn.style.display = 'flex';
+            withdrawConfirmBtn.style.display = 'none';
+            tonWalletInput.style.display = 'block';
+            tonWalletAddress.value = '';
+            
+            // Устанавливаем максимальную сумму вывода как текущий баланс
+            withdrawAmountInput.max = Math.floor(balance);
             
             currentWithdrawId = generateWithdrawId();
             
-            if (withdrawModal) withdrawModal.classList.add('active');
+            withdrawModal.classList.add('active');
         }
         
         function handleWithdrawNext() {
-            if (!withdrawAmountInput) return;
-            
-            const amount = parseInt(withdrawAmountInput.value) || 1000;
+            const amount = parseInt(withdrawAmountInput.value) || 10;
             
             if (amount > balance) {
                 showNotification('Ошибка', 'Недостаточно средств на балансе', 'error');
                 return;
             }
             
-            if (amount < 100) {
-                showNotification('Ошибка', 'Минимальная сумма вывода 100 ₽', 'error');
+            if (amount < 1) {
+                showNotification('Ошибка', 'Минимальная сумма вывода 1 TON', 'error');
                 return;
             }
             
-            const fee = Math.round(amount * WITHDRAW_FEE);
-            const netAmount = amount - fee;
-            
-            if (withdrawTotalElement) withdrawTotalElement.textContent = amount.toLocaleString('ru-RU') + ' ₽';
-            if (withdrawFeeElement) withdrawFeeElement.textContent = fee.toLocaleString('ru-RU') + ' ₽';
-            if (withdrawNetElement) withdrawNetElement.textContent = netAmount.toLocaleString('ru-RU') + ' ₽';
-            
-            const method = document.querySelector('#withdrawModal .payment-method-compact.active')?.getAttribute('data-method') || 'sbp';
-            
-            if (method === 'sbp') {
-                if (sbpWithdrawInput) sbpWithdrawInput.style.display = 'block';
-                if (bankSelection) bankSelection.style.display = 'block';
-                if (cryptoWithdrawInput) cryptoWithdrawInput.style.display = 'none';
-                
-                if (bankOptions && bankOptions.length > 0 && !document.querySelector('#withdrawModal .bank-option.active')) {
-                    bankOptions[0].classList.add('active');
-                }
-            } else {
-                if (cryptoWithdrawInput) cryptoWithdrawInput.style.display = 'block';
-                if (sbpWithdrawInput) sbpWithdrawInput.style.display = 'none';
-                if (bankSelection) bankSelection.style.display = 'none';
+            // Проверяем адрес кошелька
+            const walletAddress = tonWalletAddress.value.trim();
+            if (!validateTonAddress(walletAddress)) {
+                showNotification('Ошибка', 'Введите корректный адрес кошелька TON', 'error');
+                return;
             }
             
-            if (withdrawDetails) withdrawDetails.style.display = 'none';
-            if (withdrawNextBtn) withdrawNextBtn.style.display = 'none';
-            if (withdrawConfirmBtn) withdrawConfirmBtn.style.display = 'flex';
+            withdrawTotalElement.textContent = amount.toLocaleString('ru-RU') + ' TON';
+            withdrawFeeElement.textContent = '0 TON';
+            withdrawNetElement.textContent = amount.toLocaleString('ru-RU') + ' TON';
+            
+            withdrawDetails.style.display = 'block';
+            withdrawNextBtn.style.display = 'none';
+            withdrawConfirmBtn.style.display = 'flex';
         }
         
         async function handleWithdrawConfirm() {
-            if (!withdrawAmountInput) return;
+            const amount = parseInt(withdrawAmountInput.value) || 10;
+            const walletAddress = tonWalletAddress.value.trim();
             
-            const amount = parseInt(withdrawAmountInput.value) || 1000;
-            const fee = Math.round(amount * WITHDRAW_FEE);
-            const netAmount = amount - fee;
-            
-            const method = document.querySelector('#withdrawModal .payment-method-compact.active')?.getAttribute('data-method') || 'sbp';
-            let details = '';
-            let withdrawDetailsText = '';
-            
-            if (method === 'sbp') {
-                if (!sbpAccountInput || !sbpAccountInput.value.trim()) {
-                    showNotification('Ошибка', 'Введите номер телефона или карты', 'error');
-                    return;
-                }
-                
-                const selectedBank = document.querySelector('#withdrawModal .bank-option.active');
-                if (!selectedBank) {
-                    showNotification('Ошибка', 'Выберите банк', 'error');
-                    return;
-                }
-                
-                const bankCode = selectedBank.getAttribute('data-bank');
-                const bankNames = {
-                    'tinkoff': 'Т-Банк',
-                    'sber': 'Сбер',
-                    'alfa': 'Альфа',
-                    'vtb': 'ВТБ'
-                };
-                
-                details = `Банк: ${bankNames[bankCode]}\nРеквизиты: ${sbpAccountInput.value}`;
-                withdrawDetailsText = `Банк: ${bankNames[bankCode]} | ${sbpAccountInput.value}`;
-            } else {
-                if (!cryptoWalletInput || !cryptoWalletInput.value.trim()) {
-                    showNotification('Ошибка', 'Введите адрес кошелька', 'error');
-                    return;
-                }
-                details = `Адрес: ${cryptoWalletInput.value}`;
-                withdrawDetailsText = `Кошелек: ${cryptoWalletInput.value}`;
+            if (!validateTonAddress(walletAddress)) {
+                showNotification('Ошибка', 'Введите корректный адрес кошелька TON', 'error');
+                return;
             }
             
-            if (withdrawConfirmBtn) withdrawConfirmBtn.style.display = 'none';
-            if (withdrawWaitingBtn) withdrawWaitingBtn.style.display = 'flex';
+            // Проверяем активен ли бонус
+            if (bonusData.bonusActive) {
+                showNotification('Ошибка', 'Завершите отыгрыш бонуса перед выводом', 'error');
+                return;
+            }
             
-            // Сохраняем вывод в базу данных
-            const withdrawalResult = await createWithdrawal({
+            // Показываем загрузку
+            withdrawConfirmBtn.disabled = true;
+            withdrawConfirmBtn.innerHTML = '<div class="loader"></div> Обработка...';
+            
+            // Вычитаем средства сразу (как указано в требованиях)
+            balance -= amount;
+            updateBalance();
+            
+            // Добавляем вывод в историю
+            const withdrawData = {
                 id: currentWithdrawId,
-                user_id: currentUser.id,
                 amount: amount,
-                net_amount: netAmount,
-                method: method,
-                details: withdrawDetailsText
-            });
+                netAmount: amount,
+                method: 'ton',
+                wallet: walletAddress,
+                status: 'pending', // Ожидание выплаты администратором
+                timestamp: new Date()
+            };
             
-            if (withdrawalResult && withdrawalResult.success) {
-                showNotification('Заявка отправлена', 'Ожидайте подтверждения администратора', 'info');
-                loadUserData(); // Обновляем данные
-            } else {
-                showNotification('Ошибка', 'Не удалось создать заявку на вывод', 'error');
-                if (withdrawWaitingBtn) withdrawWaitingBtn.style.display = 'none';
-                if (withdrawConfirmBtn) withdrawConfirmBtn.style.display = 'flex';
+            withdrawHistory.unshift(withdrawData);
+            saveWithdrawHistory();
+            updateWithdrawHistory();
+            
+            // Отправляем заявку в бота (БЕЗ КНОПОК)
+            const message = `🎲 <b>WENRY DICE | Новая заявка на вывод</b>\n\n` +
+                          `ID: <code>${currentWithdrawId}</code>\n` +
+                          `Игрок: <b>${currentUser?.first_name || 'Неизвестно'}</b>\n` +
+                          `TG ID: <code>${currentUser?.id || 'Неизвестно'}</code>\n` +
+                          `Сумма: <b>${amount} TON</b>\n` +
+                          `Адрес: <code>${walletAddress}</code>\n\n` +
+                          `Время: ${new Date().toLocaleString('ru-RU')}\n\n` +
+                          `⚠️ <i>Средства уже списаны с баланса игрока</i>`;
+            
+            await sendTelegramMessage(ADMIN_ID, message);
+            
+            // Показываем уведомление пользователю
+            showNotification('✅ Заявка принята!', `Средства будут отправлены в течение 8 часов. Сумма ${amount} TON списана с баланса.`, 'success');
+            
+            // Закрываем модалку через 2 секунды
+            setTimeout(() => {
+                withdrawModal.classList.remove('active');
+                withdrawConfirmBtn.disabled = false;
+                withdrawConfirmBtn.innerHTML = '<i class="fas fa-check"></i> Подтвердить вывод';
+            }, 2000);
+        }
+        
+        // ========== СОХРАНЕНИЕ ДАННЫХ ==========
+        function saveGameHistory() {
+            localStorage.setItem('wenry_history', JSON.stringify(gameHistory.slice(0, 50)));
+        }
+        
+        function saveDepositHistory() {
+            localStorage.setItem('wenry_deposits', JSON.stringify(depositHistory));
+        }
+        
+        function saveWithdrawHistory() {
+            localStorage.setItem('wenry_withdrawals', JSON.stringify(withdrawHistory));
+        }
+        
+        function saveBonusData() {
+            localStorage.setItem('wenry_bonus', JSON.stringify(bonusData));
+        }
+        
+        function loadSavedData() {
+            // Баланс
+            const savedBalance = localStorage.getItem('wenry_balance');
+            if (savedBalance) {
+                balance = parseInt(savedBalance);
+            }
+            
+            // История игр
+            const savedHistory = localStorage.getItem('wenry_history');
+            if (savedHistory) {
+                try {
+                    gameHistory = JSON.parse(savedHistory);
+                    gameHistory.forEach(game => {
+                        const time = new Date(game.timestamp).toLocaleTimeString('ru-RU', { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        });
+                        
+                        const historyItem = document.createElement('div');
+                        historyItem.className = `history-item ${game.win ? 'win' : 'lose'}`;
+                        historyItem.innerHTML = `
+                            <div class="history-info">
+                                <div class="history-dice">${diceFaces[game.dice1-1]}${diceFaces[game.dice2-1]}</div>
+                                <div class="history-details">
+                                    <h4>${game.dice1} + ${game.dice2} = ${game.total}</h4>
+                                    <p>${time} • ${game.betType === 'low' ? 'Меньше 7' : 'Больше 7'}</p>
+                                </div>
+                            </div>
+                            <div class="history-amount ${game.amount > 0 ? 'positive' : 'negative'}">
+                                ${game.amount > 0 ? '+' : ''}${game.amount} TON
+                            </div>
+                        `;
+                        historyList.appendChild(historyItem);
+                    });
+                } catch (e) {
+                    console.error('Ошибка загрузки истории игр:', e);
+                }
+            }
+            
+            // История депозитов
+            const savedDeposits = localStorage.getItem('wenry_deposits');
+            if (savedDeposits) {
+                try {
+                    depositHistory = JSON.parse(savedDeposits);
+                } catch (e) {
+                    console.error('Ошибка загрузки депозитов:', e);
+                }
+            }
+            
+            // История выводов
+            const savedWithdrawals = localStorage.getItem('wenry_withdrawals');
+            if (savedWithdrawals) {
+                try {
+                    withdrawHistory = JSON.parse(savedWithdrawals);
+                } catch (e) {
+                    console.error('Ошибка загрузки выводов:', e);
+                }
+            }
+            
+            // Бонусы
+            const savedBonus = localStorage.getItem('wenry_bonus');
+            if (savedBonus) {
+                try {
+                    bonusData = JSON.parse(savedBonus);
+                    // Конвертируем строки дат обратно в объекты Date
+                    if (bonusData.bonusActivatedAt) {
+                        bonusData.bonusActivatedAt = new Date(bonusData.bonusActivatedAt);
+                    }
+                    if (bonusData.bonusExpiresAt) {
+                        bonusData.bonusExpiresAt = new Date(bonusData.bonusExpiresAt);
+                    }
+                } catch (e) {
+                    console.error('Ошибка загрузки бонусов:', e);
+                }
             }
         }
         
         // ========== ИНИЦИАЛИЗАЦИЯ ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
-                tg.ready();
-                tg.expand();
-                tg.setHeaderColor('#0f0f0f');
-                tg.setBackgroundColor('#0f0f0f');
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Инициализация Telegram
+            tg.ready();
+            tg.expand();
+            tg.setHeaderColor('#0f0f0f');
+            tg.setBackgroundColor('#0f0f0f');
+            
+            // Получаем данные пользователя
+            if (tg.initDataUnsafe.user) {
+                currentUser = tg.initDataUnsafe.user;
+                userName.textContent = currentUser.first_name || 'Игрок';
+                userId.textContent = `ID: ${currentUser.id}`;
+                userUsername.textContent = currentUser.username ? `@${currentUser.username}` : 'Нет никнейма';
+                userGreeting.textContent = `${currentUser.first_name} | Wenry Dice`;
                 
-                if (tg.initDataUnsafe.user) {
-                    currentUser = tg.initDataUnsafe.user;
-                    if (userName) userName.textContent = currentUser.first_name || 'Игрок';
-                    if (userId) userId.textContent = `ID: ${currentUser.id}`;
-                    if (userUsername) userUsername.textContent = currentUser.username ? `@${currentUser.username}` : 'Нет никнейма';
-                    if (userGreeting) userGreeting.textContent = `${currentUser.first_name} | Wenry Dice`;
-                    
-                    if (currentUser.photo_url && userAvatar) {
-                        userAvatar.style.backgroundImage = `url(${currentUser.photo_url})`;
-                        userAvatar.style.backgroundSize = 'cover';
-                        userAvatar.style.backgroundPosition = 'center';
-                        userAvatar.innerHTML = '';
-                    }
-                    
-                    // Загружаем данные пользователя с сервера
-                    loadUserData();
+                if (currentUser.photo_url) {
+                    userAvatar.style.backgroundImage = `url(${currentUser.photo_url})`;
+                    userAvatar.style.backgroundSize = 'cover';
+                    userAvatar.style.backgroundPosition = 'center';
+                    userAvatar.innerHTML = '';
                 }
-            } else {
-                // Для тестирования вне Telegram
-                currentUser = {
-                    id: 123456789,
-                    first_name: 'Тестовый',
-                    username: 'test_user'
-                };
-                if (userName) userName.textContent = 'Тестовый игрок';
-                if (userId) userId.textContent = 'ID: 123456789';
-                if (userUsername) userUsername.textContent = '@test_user';
-                if (userGreeting) userGreeting.textContent = 'Тестовый | Wenry Dice';
             }
             
+            // Загружаем сохраненные данные
+            loadSavedData();
+            
+            // Обновляем данные
             updateBalance();
             updateBetAmount();
+            updateStats();
+            updateWithdrawHistory();
+            updateBonusUI();
+            
+            // Инициализируем TonConnect (асинхронно, не блокируем UI)
+            setTimeout(async () => {
+                await initTonConnect();
+            }, 1000);
             
             // ========== ОБРАБОТЧИКИ СОБЫТИЙ ==========
             
@@ -2970,142 +3029,65 @@ const SERVER_URL = 'http://localhost:5000';
                     navButtons.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     
-                    Object.values(sections).forEach(s => {
-                        if (s) s.classList.remove('active');
-                    });
-                    if (sections[section]) sections[section].classList.add('active');
+                    Object.values(sections).forEach(s => s.classList.remove('active'));
+                    sections[section].classList.add('active');
                 });
             });
             
-            // Реферальная система
-            if (partnershipBtn) {
-                partnershipBtn.addEventListener('click', openPartnershipModal);
-            }
+            // Бонусы
+            activateBonusBtn.addEventListener('click', activateBonus);
             
-            if (partnershipCloseBtn) {
-                partnershipCloseBtn.addEventListener('click', () => {
-                    if (partnershipModal) partnershipModal.classList.remove('active');
-                });
-            }
+            bonusInfoBtn.addEventListener('click', function() {
+                showNotification(
+                    'ℹ️ Информация о бонусах',
+                    '• При пополнении 100 TON вы получаете бонус +45 TON\n' +
+                    '• Для вывода бонуса нужно сделать отыгрыш 2x\n' +
+                    '• Бонус действителен 7 дней\n' +
+                    '• Бонус нельзя вывести без отыгрыша',
+                    'info'
+                );
+            });
             
-            if (partnershipModal) {
-                partnershipModal.addEventListener('click', function(e) {
-                    if (e.target === this) partnershipModal.classList.remove('active');
-                });
-            }
-            
-            if (submitApplicationBtn) {
-                submitApplicationBtn.addEventListener('click', submitPartnershipApplication);
-            }
-            
-            if (copyRefLinkBtn && referralLinkInput) {
-                copyRefLinkBtn.addEventListener('click', function() {
-                    navigator.clipboard.writeText(referralLinkInput.value)
-                        .then(() => {
-                            showNotification('Скопировано', 'Реферальная ссылка скопирована', 'success');
-                        })
-                        .catch(() => {
-                            referralLinkInput.select();
-                            document.execCommand('copy');
-                            showNotification('Скопировано', 'Реферальная ссылка скопирована', 'success');
-                        });
-                });
-            }
-            
-            // Депозит
+            // Депозит кнопки
             depositBtns.forEach(btn => {
                 btn.addEventListener('click', openDepositModal);
             });
             
-            if (depositCloseBtn) {
-                depositCloseBtn.addEventListener('click', () => {
-                    if (depositModal) depositModal.classList.remove('active');
-                });
-            }
+            depositCloseBtn.addEventListener('click', () => {
+                depositModal.classList.remove('active');
+            });
             
-            if (depositModal) {
-                depositModal.addEventListener('click', function(e) {
-                    if (e.target === this) depositModal.classList.remove('active');
-                });
-            }
+            depositModal.addEventListener('click', function(e) {
+                if (e.target === this) depositModal.classList.remove('active');
+            });
             
-            if (depositNextBtn) {
-                depositNextBtn.addEventListener('click', handleDepositNext);
-            }
+            depositNextBtn.addEventListener('click', handleDepositNext);
+            depositConfirmBtn.addEventListener('click', handleDepositConfirm);
             
-            if (depositConfirmBtn) {
-                depositConfirmBtn.addEventListener('click', handleDepositConfirm);
-            }
+            tonConnectBtn.addEventListener('click', connectTonKeeper);
             
-            // Вывод
+            // Вывод кнопки
             withdrawBtns.forEach(btn => {
                 btn.addEventListener('click', openWithdrawModal);
             });
             
-            if (withdrawCloseBtn) {
-                withdrawCloseBtn.addEventListener('click', () => {
-                    if (withdrawModal) withdrawModal.classList.remove('active');
-                });
-            }
-            
-            if (withdrawModal) {
-                withdrawModal.addEventListener('click', function(e) {
-                    if (e.target === this) withdrawModal.classList.remove('active');
-                });
-            }
-            
-            if (withdrawNextBtn) {
-                withdrawNextBtn.addEventListener('click', handleWithdrawNext);
-            }
-            
-            if (withdrawConfirmBtn) {
-                withdrawConfirmBtn.addEventListener('click', handleWithdrawConfirm);
-            }
-            
-            // Выбор метода оплаты
-            paymentMethods.forEach(method => {
-                method.addEventListener('click', function() {
-                    const modal = this.closest('.modal-overlay');
-                    const isDeposit = modal.id === 'depositModal';
-                    
-                    paymentMethods.forEach(m => {
-                        if (m.closest('.modal-overlay') === modal) {
-                            m.classList.remove('active');
-                            const icon = m.querySelector('i');
-                            if (icon) {
-                                if (m.querySelector('.fa-check-circle')) {
-                                    icon.className = 'fas fa-arrow-right';
-                                }
-                            }
-                        }
-                    });
-                    
-                    this.classList.add('active');
-                    const thisIcon = this.querySelector('i');
-                    if (thisIcon) thisIcon.className = 'fas fa-check-circle';
-                    
-                    if (isDeposit) {
-                        const methodType = this.getAttribute('data-method');
-                        if (methodType === 'sbp') {
-                            if (sbpDetails) sbpDetails.style.display = 'block';
-                            if (cryptoDetails) cryptoDetails.style.display = 'none';
-                        } else {
-                            if (sbpDetails) sbpDetails.style.display = 'none';
-                            if (cryptoDetails) cryptoDetails.style.display = 'block';
-                        }
-                    }
-                });
+            withdrawCloseBtn.addEventListener('click', () => {
+                withdrawModal.classList.remove('active');
             });
             
-            // Выбор банка
-            bankOptions.forEach(bank => {
-                bank.addEventListener('click', function() {
-                    const modal = this.closest('.modal-overlay');
-                    const bankOptionsInModal = modal.querySelectorAll('.bank-option');
-                    
-                    bankOptionsInModal.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                });
+            withdrawModal.addEventListener('click', function(e) {
+                if (e.target === this) withdrawModal.classList.remove('active');
+            });
+            
+            withdrawNextBtn.addEventListener('click', handleWithdrawNext);
+            withdrawConfirmBtn.addEventListener('click', handleWithdrawConfirm);
+            
+            // Ввод суммы вывода
+            withdrawAmountInput.addEventListener('input', function() {
+                let amount = parseInt(this.value) || 0;
+                if (amount < 1) amount = 1;
+                if (amount > balance) amount = Math.floor(balance);
+                this.value = amount;
             });
             
             // Быстрый выбор суммы
@@ -3115,59 +3097,30 @@ const SERVER_URL = 'http://localhost:5000';
                     const modal = this.closest('.modal-overlay');
                     
                     if (modal.id === 'depositModal') {
-                        if (depositAmountInput) depositAmountInput.value = amount;
+                        depositAmountInput.value = amount;
                     } else {
                         if (amount > balance) {
                             showNotification('Ошибка', 'Недостаточно средств', 'error');
                             return;
                         }
-                        if (withdrawAmountInput) withdrawAmountInput.value = amount;
-                        
-                        const fee = Math.round(amount * WITHDRAW_FEE);
-                        const netAmount = amount - fee;
-                        
-                        if (withdrawTotalElement) withdrawTotalElement.textContent = amount.toLocaleString('ru-RU') + ' ₽';
-                        if (withdrawFeeElement) withdrawFeeElement.textContent = fee.toLocaleString('ru-RU') + ' ₽';
-                        if (withdrawNetElement) withdrawNetElement.textContent = netAmount.toLocaleString('ru-RU') + ' ₽';
+                        withdrawAmountInput.value = amount;
                     }
                 });
             });
             
             // Ввод суммы депозита
-            if (depositAmountInput) {
-                depositAmountInput.addEventListener('input', function() {
-                    let amount = parseInt(this.value) || 0;
-                    if (amount < 100) amount = 100;
-                    if (amount > 50000) amount = 50000;
-                    this.value = amount;
-                });
-            }
-            
-            // Ввод суммы вывода
-            if (withdrawAmountInput) {
-                withdrawAmountInput.addEventListener('input', function() {
-                    let amount = parseInt(this.value) || 0;
-                    if (amount < 100) amount = 100;
-                    if (amount > 50000) amount = 50000;
-                    if (amount > balance) amount = balance;
-                    this.value = amount;
-                    
-                    const fee = Math.round(amount * WITHDRAW_FEE);
-                    const netAmount = amount - fee;
-                    
-                    if (withdrawTotalElement) withdrawTotalElement.textContent = amount.toLocaleString('ru-RU') + ' ₽';
-                    if (withdrawFeeElement) withdrawFeeElement.textContent = fee.toLocaleString('ru-RU') + ' ₽';
-                    if (withdrawNetElement) withdrawNetElement.textContent = netAmount.toLocaleString('ru-RU') + ' ₽';
-                });
-            }
+            depositAmountInput.addEventListener('input', function() {
+                let amount = parseInt(this.value) || 0;
+                if (amount < 1) amount = 1;
+                if (amount > 10000) amount = 10000;
+                this.value = amount;
+            });
             
             // Игровые элементы
-            if (betSlider) {
-                betSlider.addEventListener('input', function() {
-                    betAmount = parseInt(this.value);
-                    updateBetAmount();
-                });
-            }
+            betSlider.addEventListener('input', function() {
+                betAmount = parseInt(this.value);
+                updateBetAmount();
+            });
             
             document.querySelectorAll('.amount-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -3175,16 +3128,16 @@ const SERVER_URL = 'http://localhost:5000';
                     
                     switch(action) {
                         case 'half':
-                            betAmount = Math.max(10, Math.floor(betAmount / 2));
+                            betAmount = Math.max(1, Math.floor(betAmount / 2));
                             break;
                         case 'double':
-                            betAmount = Math.min(1000, betAmount * 2);
+                            betAmount = Math.min(100, betAmount * 2);
                             break;
                         case 'min':
-                            betAmount = 10;
+                            betAmount = 1;
                             break;
                         case 'max':
-                            betAmount = 1000;
+                            betAmount = 100;
                             break;
                     }
                     
@@ -3192,97 +3145,85 @@ const SERVER_URL = 'http://localhost:5000';
                 });
             });
             
-            if (betLowButton) {
-                betLowButton.addEventListener('click', function() {
-                    if (!isBetLow) {
-                        isBetLow = true;
-                        betLowButton.classList.add('active');
-                        if (betHighButton) betHighButton.classList.remove('active');
-                    }
-                });
-            }
+            betLowButton.addEventListener('click', function() {
+                if (!isBetLow) {
+                    isBetLow = true;
+                    betLowButton.classList.add('active');
+                    betHighButton.classList.remove('active');
+                }
+            });
             
-            if (betHighButton) {
-                betHighButton.addEventListener('click', function() {
-                    if (isBetLow) {
-                        isBetLow = false;
-                        betHighButton.classList.add('active');
-                        if (betLowButton) betLowButton.classList.remove('active');
-                    }
-                });
-            }
+            betHighButton.addEventListener('click', function() {
+                if (isBetLow) {
+                    isBetLow = false;
+                    betHighButton.classList.add('active');
+                    betLowButton.classList.remove('active');
+                }
+            });
             
-            if (playButton) {
-                playButton.addEventListener('click', playGame);
-            }
+            playButton.addEventListener('click', playGame);
             
-            if (autoButton) {
-                autoButton.addEventListener('click', function() {
-                    if (balance < betAmount) {
-                        showNotification('Недостаточно средств', 'Пополните баланс', 'error');
-                        return;
-                    }
-                    
-                    isAutoPlay = !isAutoPlay;
-                    
-                    if (isAutoPlay) {
-                        this.innerHTML = '<i class="fas fa-stop"></i> Стоп';
-                        this.classList.add('pulse');
-                        playGame();
-                    } else {
-                        this.innerHTML = '<i class="fas fa-redo"></i> Авто';
-                        this.classList.remove('pulse');
-                    }
-                });
-            }
+            autoButton.addEventListener('click', function() {
+                if (balance < betAmount) {
+                    showNotification('Недостаточно средств', 'Пополните баланс', 'error');
+                    return;
+                }
+                
+                isAutoPlay = !isAutoPlay;
+                
+                if (isAutoPlay) {
+                    this.innerHTML = '<i class="fas fa-stop"></i> Стоп';
+                    this.classList.add('pulse');
+                    playGame();
+                } else {
+                    this.innerHTML = '<i class="fas fa-redo"></i> Авто';
+                    this.classList.remove('pulse');
+                }
+            });
             
             // Очистка истории
-            if (clearHistoryButton) {
-                clearHistoryButton.addEventListener('click', function() {
-                    if (confirm('Очистить историю игр?')) {
-                        if (historyList) historyList.innerHTML = '';
-                        showNotification('История очищена', 'Все записи удалены', 'info');
-                    }
-                });
-            }
+            clearHistoryButton.addEventListener('click', function() {
+                if (confirm('Очистить историю игр?')) {
+                    historyList.innerHTML = '';
+                    gameHistory = [];
+                    localStorage.removeItem('wenry_history');
+                    updateStats();
+                    showNotification('История очищена', 'Все записи удалены', 'info');
+                }
+            });
             
             // Профиль кнопки
-            if (document.getElementById('statsBtn')) {
-                document.getElementById('statsBtn').addEventListener('click', function() {
-                    const games = parseInt(totalGames.textContent) || 0;
-                    const wins = parseInt(totalWins.textContent) || 0;
-                    const winRate = games > 0 ? Math.round((wins / games) * 100) : 0;
-                    
-                    showNotification(
-                        '📊 Статистика',
-                        `Игр: ${games}\n` +
-                        `Побед: ${wins}\n` +
-                        `Процент побед: ${winRate}%\n` +
-                        `Пополнено: ${totalDeposits.textContent}₽\n` +
-                        `Выведено: ${totalWithdrawals.textContent}₽`,
-                        'info'
-                    );
-                });
-            }
+            document.getElementById('statsBtn').addEventListener('click', function() {
+                const winRate = gameHistory.length > 0 
+                    ? Math.round((gameHistory.filter(g => g.win).length / gameHistory.length) * 100)
+                    : 0;
+                
+                const totalWon = gameHistory.reduce((sum, g) => sum + (g.amount > 0 ? g.amount : 0), 0);
+                const totalLost = gameHistory.reduce((sum, g) => sum + (g.amount < 0 ? -g.amount : 0), 0);
+                
+                showNotification(
+                    '📊 Статистика',
+                    `Игр: ${gameHistory.length}\n` +
+                    `Побед: ${gameHistory.filter(g => g.win).length}\n` +
+                    `Процент побед: ${winRate}%\n` +
+                    `Выиграно: ${totalWon} TON\n` +
+                    `Проиграно: ${totalLost} TON`,
+                    'info'
+                );
+            });
             
-            if (document.getElementById('supportBtn')) {
-                document.getElementById('supportBtn').addEventListener('click', function() {
-                    window.open('https://t.me/wenrydice_support', '_blank');
-                });
-            }
+            document.getElementById('supportBtn').addEventListener('click', function() {
+                window.open('https://t.me/wenrydice_support', '_blank');
+            });
             
-            if (document.getElementById('logoutBtn')) {
-                document.getElementById('logoutBtn').addEventListener('click', function() {
-                    if (confirm('Выйти из аккаунта?')) {
-                        showNotification('Выход', 'Вы успешно вышли из системы', 'info');
-                        setTimeout(() => {
-                            if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
-                                tg.close();
-                            }
-                        }, 2000);
-                    }
-                });
-            }
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                if (confirm('Выйти из аккаунта?')) {
+                    showNotification('Выход', 'Вы успешно вышли из системы', 'info');
+                    setTimeout(() => {
+                        tg.close();
+                    }, 2000);
+                }
+            });
         });
     </script>
 </body>
