@@ -1543,9 +1543,10 @@
             <button class="modal-btn" id="depositNextBtn">
                 <i class="fas fa-credit-card"></i> Продолжить
             </button>
-            <button class="ton-payment-btn" id="tonConnectBtn" style="display: none;">
-                <i class="fas fa-wallet"></i> Подключить TonKeeper
-            </button>
+<!-- В модальном окне депозита найдите эту кнопку: -->
+<button class="ton-payment-btn" id="tonConnectBtn" style="display: none;">
+    <i class="fas fa-wallet"></i> Подключить TonKeeper
+</button>
             <button class="modal-btn" id="depositConfirmBtn" style="display: none;">
                 <i class="fas fa-check"></i> Подтвердить депозит
             </button>
@@ -2166,58 +2167,44 @@ async function initTonConnect() {
             }
         }
         
+// ДОБАВЬТЕ В НАЧАЛЕ функции connectTonKeeper():
 async function connectTonKeeper() {
+    console.log('Кнопка "Подключить TonKeeper" нажата!');
+    
     try {
+        // Проверяем инициализацию
         if (!tonConnect) {
+            console.log('Инициализируем TonConnect...');
             await initTonConnect();
         }
         
+        // Показываем уведомление
+        showNotification('Подключение', 'Откройте TonKeeper для подключения...', 'info');
+        
         // Получаем список кошельков
         const wallets = await tonConnect.getWallets();
-        console.log('Доступные кошельки:', wallets);
+        console.log('Найдено кошельков:', wallets.length);
         
-        // Ищем TonKeeper
-        const tonkeeperWallet = wallets.find(w => 
-            w.name.toLowerCase().includes('tonkeeper') || 
-            w.appName.toLowerCase().includes('tonkeeper')
-        );
-        
-        if (tonkeeperWallet) {
-            console.log('Подключаемся к TonKeeper...');
-            
-            // Простой способ подключения
-            const connectionSource = {
-                universalLink: tonkeeperWallet.universalLink,
-                bridgeUrl: 'https://bridge.tonapi.io/bridge'
-            };
-            
-            await tonConnect.connect(connectionSource);
-            return true;
-        } else {
-            // Если TonKeeper не найден, показываем все кошельки
-            if (wallets.length > 0) {
-                // Просто подключаемся к первому доступному
-                const firstWallet = wallets[0];
-                const connectionSource = {
-                    universalLink: firstWallet.universalLink,
-                    bridgeUrl: 'https://bridge.tonapi.io/bridge'
-                };
-                await tonConnect.connect(connectionSource);
-                return true;
-            } else {
-                showNotification('Ошибка', 'Не найден ни один кошелек TON', 'error');
-                return false;
-            }
+        if (wallets.length === 0) {
+            showNotification('Ошибка', 'Не найден TonKeeper. Установите приложение.', 'error');
+            return;
         }
+        
+        // Ищем TonKeeper или берем первый доступный
+        const wallet = wallets.find(w => w.name.toLowerCase().includes('tonkeeper')) || wallets[0];
+        console.log('Выбран кошелек:', wallet.name);
+        
+        // Подключаемся
+        await tonConnect.connect({
+            universalLink: wallet.universalLink,
+            bridgeUrl: 'https://bridge.tonapi.io/bridge'
+        });
+        
+        console.log('Запрос на подключение отправлен!');
+        
     } catch (error) {
-        console.error('Ошибка подключения:', error);
-        
-        if (error.message && error.message.includes('User rejected')) {
-            showNotification('Отменено', 'Вы отменили подключение', 'error');
-        } else {
-            showNotification('Ошибка', 'Не удалось подключить кошелек: ' + error.message, 'error');
-        }
-        return false;
+        console.error('Ошибка при подключении:', error);
+        showNotification('Ошибка', 'Не удалось подключиться: ' + (error.message || 'неизвестная ошибка'), 'error');
     }
 }
         
