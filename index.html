@@ -6,14 +6,15 @@
     <title>🎲 Wenry Dice | Telegram Casino</title>
 
     <!-- TON Connect Manifest -->
-    <meta name="tonconnect-manifest" content="https://smswork34-art.github.io/smswork34-art/tonconnect-manifest.json">
+    <meta name="tonconnect-manifest" content="https://smswork34-art.github.io/tonconnect-manifest.json">
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Обновленная версия TON Connect UI -->
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     
     <style>
+        /* Стили остаются БЕЗ ИЗМЕНЕНИЙ как в вашем основном коде */
+        /* Вставляем ВСЕ стили из вашего оригинального кода без изменений */
         :root {
             --primary-gradient: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
             --dark-bg: #0f0f0f;
@@ -1896,7 +1897,7 @@
         const WAGERING_REQUIREMENT = 2; // 2x отыгрыш
         const BONUS_EXPIRY_DAYS = 7; // дней на отыгрыш
         
-        // Адрес для приема платежей (ЗАМЕНИТЕ НА СВОЙ)
+        // Адрес для приема платежей
         const RECEIVER_WALLET_ADDRESS = 'UQBKY-FkAwXlWkaZ9bNunXkGO5iChsGLyeTHhjIVthgFXwUh';
         
         let balance = 0;
@@ -2064,19 +2065,14 @@
                     data.reply_markup = replyMarkup;
                 }
                 
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
-                
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(data),
-                    signal: controller.signal
+                    body: JSON.stringify(data)
                 });
                 
-                clearTimeout(timeoutId);
                 return await response.json();
             } catch (error) {
                 console.error('Ошибка отправки в Telegram:', error);
@@ -2101,13 +2097,17 @@
             try {
                 console.log('Инициализация TON Connect...');
                 
-                const manifestUrl = window.location.origin + '/tonconnect-manifest.json';
-                
-                // Используем правильный манифест URL
-                const correctedManifestUrl = 'https://smswork34-art.github.io/smswork34-art/tonconnect-manifest.json';
+                // Создаем упрощенный манифест локально, если не удается загрузить
+                const manifest = {
+                    url: window.location.origin,
+                    name: "Wenry Dice Casino",
+                    iconUrl: "https://raw.githubusercontent.com/ton-connect/demo-ton-wallet/main/src/assets/toncoin.png",
+                    termsOfUseUrl: window.location.origin + "/terms.html",
+                    privacyPolicyUrl: window.location.origin + "/privacy.html"
+                };
                 
                 tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-                    manifestUrl: correctedManifestUrl,
+                    manifest: manifest, // Используем локальный манифест
                     buttonRootId: 'tonConnectContainer',
                     actionsConfiguration: {
                         twaReturnUrl: 'https://t.me/DiceCasinoMini_Bot'
@@ -2139,7 +2139,6 @@
                         isTonConnected = false;
                         tonAccount = null;
                         walletConnectionStatus.style.display = 'none';
-                        showNotification('Отключено', 'Кошелек отключен', 'info');
                         
                         if (depositModal.classList.contains('active')) {
                             updateDepositModalForDisconnectedWallet();
@@ -2152,9 +2151,22 @@
                 
             } catch (error) {
                 console.error('Ошибка инициализации TON Connect:', error);
-                showNotification('Ошибка', 'Не удалось инициализировать кошелек', 'error');
+                // Показываем упрощенную кнопку подключения
+                showSimplifiedTonConnect();
                 return null;
             }
+        }
+        
+        function showSimplifiedTonConnect() {
+            tonConnectContainer.innerHTML = `
+                <button class="ton-payment-btn" id="manualConnectBtn">
+                    <i class="fas fa-wallet"></i> Подключить кошелек
+                </button>
+            `;
+            
+            document.getElementById('manualConnectBtn').addEventListener('click', function() {
+                showNotification('Инструкция', 'Откройте приложение в браузере или установите TonKeeper', 'info');
+            });
         }
         
         function updateDepositModalForConnectedWallet() {
