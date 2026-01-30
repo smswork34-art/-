@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎲 Wenry Dice | Telegram Casino</title>
+
+<!-- Добавьте после <title>: -->
+<meta name="tonconnect-manifest" content="https://smswork34-art.github.io/-/ton-connect-manifest.json">
     
     <!-- TON Connect Manifest -->
     <link rel="manifest" href="https://smswork34-art.github.io/-/ton-connect-manifest.json">
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://ton-connect.github.io/tonconnect-sdk/tonconnect-sdk.min.js"></script>
+<script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
     
     <style>
         :root {
@@ -2104,90 +2107,54 @@
         }
         
         // ========== TON CONNECT ИНИЦИАЛИЗАЦИЯ ==========
-        async function initTonConnect() {
-            try {
-                console.log('Инициализация TonConnect...');
-                
-                // URL вашего манифеста
-                const manifestUrl = 'https://smswork34-art.github.io/-/ton-connect-manifest.json';
-                
-                // Пробуем загрузить манифест
-                let manifest;
-                try {
-                    const response = await fetch(manifestUrl);
-                    manifest = await response.json();
-                    console.log('Манифест загружен:', manifest);
-                } catch (error) {
-                    console.log('Не удалось загрузить манифест, используем fallback');
-                    // Fallback манифест
-                    manifest = {
-                        url: "https://smswork34-art.github.io/-/",
-                        name: "Wenry Dice",
-                        iconUrl: "https://smswork34-art.github.io/-/icon.png",
-                        termsOfUseUrl: "https://smswork34-art.github.io/-/terms",
-                        privacyPolicyUrl: "https://smswork34-art.github.io/-/privacy"
-                    };
-                }
-                
-                // Инициализируем TonConnect с манифестом
-                tonConnect = new TonConnectSDK.TonConnect({ manifest });
-                
-                // Восстанавливаем соединение если было
-                try {
-                    const connectedWallets = await tonConnect.getConnectedWallets();
-                    
-                    if (connectedWallets.length > 0) {
-                        isTonConnected = true;
-                        tonAccount = connectedWallets[0];
-                        console.log('Восстановлено соединение с кошельком:', tonAccount);
-                        
-                        // Обновляем UI
-                        updateWalletConnectionUI();
-                    }
-                } catch (error) {
-                    console.log('Не удалось восстановить соединение:', error);
-                }
-                
-                // Подписываемся на изменения статуса
-                tonConnect.onStatusChange(async (wallet) => {
-                    console.log('Статус кошелька изменился:', wallet);
-                    
-                    if (wallet) {
-                        isTonConnected = true;
-                        tonAccount = wallet;
-                        
-                        // Обновляем UI
-                        updateWalletConnectionUI();
-                        
-                        if (depositModal.classList.contains('active')) {
-                            tonConnectBtn.style.display = 'none';
-                            depositConfirmBtn.style.display = 'flex';
-                            depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${depositAmountInput.value} TON`;
-                        }
-                        
-                        showNotification('Кошелек подключен', 'TON кошелек успешно подключен', 'success');
-                    } else {
-                        isTonConnected = false;
-                        tonAccount = null;
-                        
-                        // Обновляем UI
-                        updateWalletConnectionUI();
-                        
-                        if (depositModal.classList.contains('active')) {
-                            tonConnectBtn.style.display = 'flex';
-                            depositConfirmBtn.style.display = 'none';
-                        }
-                        
-                        console.log('Кошелек отключен');
-                    }
-                });
-                
-                return tonConnect;
-            } catch (error) {
-                console.error('Критическая ошибка инициализации TonConnect:', error);
-                return null;
+async function initTonConnect() {
+    try {
+        console.log('Инициализация TonConnect...');
+        
+        // Создаем упрощенный манифест локально
+        const manifest = {
+            url: window.location.origin,
+            name: "Wenry Dice",
+            iconUrl: "https://raw.githubusercontent.com/ton-connect/demo-ton-wallet/main/src/assets/toncoin.png",
+            termsOfUseUrl: "https://smswork34-art.github.io/-/terms.html",
+            privacyPolicyUrl: "https://smswork34-art.github.io/-/privacy.html"
+        };
+        
+        // Инициализируем TonConnect
+        tonConnect = new TonConnectSDK.TonConnect({ manifest });
+        
+        // Восстанавливаем соединение если было
+        try {
+            const wallets = await tonConnect.getConnectedWallets();
+            if (wallets && wallets.length > 0) {
+                isTonConnected = true;
+                tonAccount = wallets[0];
+                console.log('Кошелек уже подключен:', tonAccount);
+                updateWalletConnectionUI();
             }
+        } catch (e) {
+            console.log('Нет сохраненного подключения');
         }
+        
+        // Подписываемся на изменения
+        tonConnect.onStatusChange((wallet) => {
+            console.log('Статус изменился:', wallet);
+            if (wallet) {
+                isTonConnected = true;
+                tonAccount = wallet;
+            } else {
+                isTonConnected = false;
+                tonAccount = null;
+            }
+            updateWalletConnectionUI();
+        });
+        
+        return tonConnect;
+    } catch (error) {
+        console.error('Ошибка инициализации TonConnect:', error);
+        return null;
+    }
+}
         
         function updateWalletConnectionUI() {
             if (isTonConnected && tonAccount) {
@@ -2199,47 +2166,60 @@
             }
         }
         
-        async function connectTonKeeper() {
-            try {
-                if (!tonConnect) {
-                    await initTonConnect();
-                }
-                
-                // Получаем список доступных кошельков
-                const walletsList = await tonConnect.getWallets();
-                console.log('Доступные кошельки:', walletsList);
-                
-                // Ищем TonKeeper
-                const tonkeeperWallet = walletsList.find(w => 
-                    w.name.toLowerCase().includes('tonkeeper') || 
-                    w.appName.toLowerCase().includes('tonkeeper')
-                );
-                
-                if (tonkeeperWallet) {
-                    console.log('Найден TonKeeper:', tonkeeperWallet);
-                    
-                    // Подключаемся к TonKeeper
-                    const connectionSource = {
-                        jsBridgeKey: tonkeeperWallet.jsBridgeKey,
-                        universalLink: tonkeeperWallet.universalLink
-                    };
-                    
-                    await tonConnect.connect(connectionSource);
-                    
-                } else {
-                    // Если TonKeeper не найден, показываем все доступные кошельки
-                    showWalletSelectionModal(walletsList);
-                }
-            } catch (error) {
-                console.error('Ошибка подключения TonKeeper:', error);
-                
-                if (error.message && error.message.includes('User rejected')) {
-                    showNotification('Отменено', 'Пользователь отклонил запрос', 'error');
-                } else {
-                    showNotification('Ошибка', 'Не удалось подключить кошелек', 'error');
-                }
+async function connectTonKeeper() {
+    try {
+        if (!tonConnect) {
+            await initTonConnect();
+        }
+        
+        // Получаем список кошельков
+        const wallets = await tonConnect.getWallets();
+        console.log('Доступные кошельки:', wallets);
+        
+        // Ищем TonKeeper
+        const tonkeeperWallet = wallets.find(w => 
+            w.name.toLowerCase().includes('tonkeeper') || 
+            w.appName.toLowerCase().includes('tonkeeper')
+        );
+        
+        if (tonkeeperWallet) {
+            console.log('Подключаемся к TonKeeper...');
+            
+            // Простой способ подключения
+            const connectionSource = {
+                universalLink: tonkeeperWallet.universalLink,
+                bridgeUrl: 'https://bridge.tonapi.io/bridge'
+            };
+            
+            await tonConnect.connect(connectionSource);
+            return true;
+        } else {
+            // Если TonKeeper не найден, показываем все кошельки
+            if (wallets.length > 0) {
+                // Просто подключаемся к первому доступному
+                const firstWallet = wallets[0];
+                const connectionSource = {
+                    universalLink: firstWallet.universalLink,
+                    bridgeUrl: 'https://bridge.tonapi.io/bridge'
+                };
+                await tonConnect.connect(connectionSource);
+                return true;
+            } else {
+                showNotification('Ошибка', 'Не найден ни один кошелек TON', 'error');
+                return false;
             }
         }
+    } catch (error) {
+        console.error('Ошибка подключения:', error);
+        
+        if (error.message && error.message.includes('User rejected')) {
+            showNotification('Отменено', 'Вы отменили подключение', 'error');
+        } else {
+            showNotification('Ошибка', 'Не удалось подключить кошелек: ' + error.message, 'error');
+        }
+        return false;
+    }
+}
         
         function showWalletSelectionModal(walletsList) {
             // Создаем модальное окно для выбора кошелька
@@ -2659,29 +2639,42 @@
         }
         
         // ========== ДЕПОЗИТ ==========
-        function openDepositModal() {
-            depositDetails.style.display = 'none';
-            depositNextBtn.style.display = 'flex';
-            depositConfirmBtn.style.display = 'none';
-            tonConnectBtn.style.display = 'none';
-            
-            // Обновляем статус подключения кошелька
-            updateWalletConnectionUI();
-            
-            // Проверяем подключен ли кошелек
-            if (isTonConnected && tonAccount) {
-                tonConnectBtn.style.display = 'none';
-                depositConfirmBtn.style.display = 'flex';
-                depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${depositAmountInput.value} TON`;
-            } else {
-                tonConnectBtn.style.display = 'flex';
-                depositConfirmBtn.style.display = 'none';
-            }
-            
-            currentPaymentId = generatePaymentId();
-            
-            depositModal.classList.add('active');
-        }
+function openDepositModal() {
+    depositDetails.style.display = 'none';
+    depositNextBtn.style.display = 'flex';
+    depositConfirmBtn.style.display = 'none';
+    tonConnectBtn.style.display = 'none';
+    
+    // === ДОБАВЬТЕ ЭТОТ КОД ===
+    console.log('=== DEBUG: Открыто модальное окно депозита ===');
+    console.log('1. TonConnect инициализирован:', tonConnect ? 'Да' : 'Нет');
+    console.log('2. Кошелек подключен:', isTonConnected);
+    console.log('3. Текущий аккаунт:', tonAccount);
+    console.log('4. Баланс пользователя:', balance);
+    console.log('5. Текущий пользователь Telegram:', currentUser);
+    // === КОНЕЦ ОТЛАДОЧНОГО КОДА ===
+    
+    // Обновляем статус подключения кошелька
+    updateWalletConnectionUI();
+    
+    // Проверяем подключен ли кошелек
+    if (isTonConnected && tonAccount) {
+        tonConnectBtn.style.display = 'none';
+        depositConfirmBtn.style.display = 'flex';
+        depositConfirmBtn.innerHTML = `<i class="fas fa-check"></i> Отправить ${depositAmountInput.value} TON`;
+        
+        console.log('DEBUG: Кошелек уже подключен, показываем кнопку подтверждения');
+    } else {
+        tonConnectBtn.style.display = 'flex';
+        depositConfirmBtn.style.display = 'none';
+        
+        console.log('DEBUG: Кошелек не подключен, показываем кнопку подключения');
+    }
+    
+    currentPaymentId = generatePaymentId();
+    
+    depositModal.classList.add('active');
+}
         
         function handleDepositNext() {
             const amount = parseInt(depositAmountInput.value) || 10;
